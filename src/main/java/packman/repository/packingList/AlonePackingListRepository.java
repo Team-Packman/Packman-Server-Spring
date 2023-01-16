@@ -5,5 +5,5 @@ import org.springframework.stereotype.Repository;
 import packman.entity.packingList.AlonePackingList;
 
 @Repository
-public interface AlonerPackingListRepository extends JpaRepository<AlonePackingList, Long> {
+public interface AlonePackingListRepository extends JpaRepository<AlonePackingList, Long> {
 }

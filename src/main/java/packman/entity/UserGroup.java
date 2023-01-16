@@ -1,4 +1,4 @@
-package com.packman.server.entity;
+package packman.entity;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,15 +12,17 @@ import static javax.persistence.FetchType.LAZY;
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name = "template_pack")
-public class TemplatePack {
+public class UserGroup {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "template_pack_id", nullable = false, unique = true)
+    @Column(name = "user_group_id",  nullable = false, unique = true)
     private Long id;
+
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "category_id")
-    private TemplateCategory category;
-    @Column(length = 12, nullable = false)
-    private String name;
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "group_id", nullable = false)
+    private Group group;
 }

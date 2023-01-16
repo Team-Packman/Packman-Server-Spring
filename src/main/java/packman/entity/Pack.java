@@ -1,4 +1,4 @@
-package com.packman.server.entity;
+package packman.entity;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -6,30 +6,29 @@ import lombok.Setter;
 
 import javax.persistence.*;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static javax.persistence.FetchType.LAZY;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name = "category")
-public class Category {
+public class Pack {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "category_id", nullable = false, unique = true)
+    @Column(name = "pack_id", nullable = false, unique = true)
     private Long id;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "list_id")
-    private PackingList packingList;
+    @JoinColumn(name = "category_id")
+    private Category category;
+
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "user_id")
+    private User packer;
 
     @Column(length = 12, nullable = false)
     private String name;
 
-    @OneToMany(mappedBy = "pack", cascade = CascadeType.ALL)
-    private List<Pack> packs = new ArrayList<>();
-
+    @Column(nullable = false)
+    private boolean isChecked = false;
 }

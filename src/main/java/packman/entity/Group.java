@@ -1,21 +1,18 @@
-package com.packman.server.entity;
+package packman.entity;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import packman.entity.packingList.TogetherPackingList;
 
 import javax.persistence.*;
-
 import java.util.ArrayList;
 import java.util.List;
-
-import static javax.persistence.FetchType.LAZY;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name = "group")
 public class Group {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

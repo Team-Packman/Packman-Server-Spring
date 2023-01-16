@@ -1,4 +1,4 @@
-package com.packman.server.entity;
+package packman.entity.packingList;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -1,11 +1,12 @@
-package com.packman.server.entity;
+package packman.entity.template;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import packman.entity.User;
+import packman.entity.packingList.AlonePackingList;
 
 import javax.persistence.*;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,7 +16,6 @@ import static javax.persistence.FetchType.LAZY;
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name = "template")
 public class Template {
 
     @Id
@@ -33,13 +33,13 @@ public class Template {
     private boolean isDeleted = false;
 
     @OneToOne(fetch = LAZY)
-    @JoinColumn(name = "packing_list_id")
+    @JoinColumn(name = "alone_packing_list_id")
     private AlonePackingList alonePackingList;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(mappedBy = "template_category", cascade = CascadeType.ALL)
-    private List<TemplateCategory> categorys = new ArrayList<>();
+    @OneToMany(mappedBy = "template", cascade = CascadeType.ALL)
+    private List<TemplateCategory> categories = new ArrayList<>();
 }
