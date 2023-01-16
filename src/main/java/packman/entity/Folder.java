@@ -33,6 +33,6 @@ public class Folder extends TimeStamped {
     @Column(nullable = false)
     private int listNum = 0;
 
-    @OneToMany(mappedBy = "folder_packing_list", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "folder", cascade = CascadeType.ALL)
     private List<FolderPackingList> folderPackingList;
 }

@@ -28,6 +28,6 @@ public class TemplateCategory {
     @Column(length = 12, nullable = false)
     private String name;
 
-    @OneToMany(mappedBy = "template_pack", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "template_category", cascade = CascadeType.ALL)
     private List<TemplatePack> packs = new ArrayList<>();
 }

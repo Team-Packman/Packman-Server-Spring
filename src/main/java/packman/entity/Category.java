@@ -22,13 +22,13 @@ public class Category {
     private Long id;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "list_id")
+    @JoinColumn(name = "packing_list_id")
     private PackingList packingList;
 
     @Column(length = 12, nullable = false)
     private String name;
 
-    @OneToMany(mappedBy = "pack", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
     private List<Pack> packs = new ArrayList<>();
 
 }

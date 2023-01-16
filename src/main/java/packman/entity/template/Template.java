@@ -33,13 +33,13 @@ public class Template {
     private boolean isDeleted = false;
 
     @OneToOne(fetch = LAZY)
-    @JoinColumn(name = "packing_list_id")
+    @JoinColumn(name = "alone_packing_list_id")
     private AlonePackingList alonePackingList;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(mappedBy = "template_category", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "template", cascade = CascadeType.ALL)
     private List<TemplateCategory> categories = new ArrayList<>();
 }

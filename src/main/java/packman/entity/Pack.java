@@ -23,7 +23,7 @@ public class Pack {
     private Category category;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "packer_id")
+    @JoinColumn(name = "user_id")
     private User packer;
 
     @Column(length = 12, nullable = false)
