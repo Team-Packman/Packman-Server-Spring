@@ -5,8 +5,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-
-import java.util.ArrayList;
 import java.util.List;
 
 import static javax.persistence.FetchType.LAZY;
@@ -15,7 +13,6 @@ import static javax.persistence.FetchType.LAZY;
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name = "folder")
 public class Folder extends TimeStamped {
 
     @Id
@@ -36,6 +33,6 @@ public class Folder extends TimeStamped {
     @Column(nullable = false)
     private int listNum = 0;
 
-    @OneToOne(mappedBy = "folder_packing_list", cascade = CascadeType.ALL)
-    private FolderPackingList folderPackingList;
+    @OneToMany(mappedBy = "folder_packing_list", cascade = CascadeType.ALL)
+    private List<FolderPackingList> folderPackingList;
 }

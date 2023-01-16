@@ -1,11 +1,11 @@
-package com.packman.server.entity;
+package packman.entity.template;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import packman.entity.TemplatePack;
 
 import javax.persistence.*;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,7 +15,6 @@ import static javax.persistence.FetchType.LAZY;
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name = "template_category")
 public class TemplateCategory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

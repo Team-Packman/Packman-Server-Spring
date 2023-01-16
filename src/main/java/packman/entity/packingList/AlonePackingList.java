@@ -1,8 +1,10 @@
-package com.packman.server.entity;
+package packman.entity.packingList;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import packman.entity.FolderPackingList;
+import packman.entity.template.Template;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -14,7 +16,6 @@ import static javax.persistence.FetchType.LAZY;
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name = "alone_packing_list")
 public class AlonePackingList {
     @Id
     @Column(name = "alone_packing_list_id", nullable = false, unique = true)
@@ -27,14 +28,15 @@ public class AlonePackingList {
 
     @Column(nullable = false)
     private boolean isAloned = false;
+
     @Column(length = 5, unique = true)
     private String inviteCode;
 
     @OneToMany(mappedBy = "alone_packing_list", cascade = CascadeType.ALL)
     private List<Template> templates = new ArrayList<>();
 
-    @OneToMany(mappedBy = "alone_packing_list", cascade = CascadeType.ALL)
-    private List<FolderPackingList> folderPackingLists = new ArrayList<>();
+    @OneToOne(mappedBy = "alone_packing_list", cascade = CascadeType.ALL)
+    private FolderPackingList folderPackingList;
 
     @OneToMany(mappedBy = "alone_packing_list", cascade = CascadeType.ALL)
     private List<TogetherAlonePackingList> togetherAlonePackingLists = new ArrayList<>();

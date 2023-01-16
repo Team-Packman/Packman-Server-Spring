@@ -1,21 +1,23 @@
-package com.packman.server.entity;
+package packman.entity.packingList;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
+import packman.entity.Category;
+import packman.entity.TimeStamped;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.time.LocalDate;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @Table(name = "packing_list")
-public class PackingList extends TimeStamped{
+public class PackingList extends TimeStamped {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "packing_list_id", nullable = false, unique = true)
