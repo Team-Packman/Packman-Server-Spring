@@ -20,10 +20,10 @@ public class TogetherAlonePackingList {
     private Long id;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "togetherPackingList_id", nullable = false)
+    @JoinColumn(name = "together_packing_list_id", nullable = false)
     private TogetherPackingList togetherPackingList;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "myPackingList_id", nullable = false, unique = true)
-    private AlonePackingList myPackingList;
+    @JoinColumn(name = "my_packing_list_id", nullable = false, unique = true)
+    private AlonePackingList alonePackingList;
 }

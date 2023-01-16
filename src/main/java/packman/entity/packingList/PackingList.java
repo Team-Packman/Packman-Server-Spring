@@ -40,8 +40,8 @@ public class PackingList extends TimeStamped {
     private List<Category> categories = new ArrayList<>();
 
     @OneToOne(mappedBy = "packing_list", cascade = CascadeType.ALL)
-    private AlonePackingList alonePackingList;
+    private AlonePackingList alonePackingLists;
 
     @OneToOne(mappedBy = "packing_list", cascade = CascadeType.ALL)
-    private TogetherPackingList togetherPackingList;
+    private TogetherPackingList togetherPackingLists;
 }

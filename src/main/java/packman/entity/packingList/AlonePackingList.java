@@ -23,7 +23,7 @@ public class AlonePackingList {
 
     @OneToOne(fetch = LAZY)
     @MapsId
-    @JoinColumn(name = "packingList_id")
+    @JoinColumn(name = "alone_packing_list_id")
     private PackingList packingList;
 
     @Column(nullable = false)
