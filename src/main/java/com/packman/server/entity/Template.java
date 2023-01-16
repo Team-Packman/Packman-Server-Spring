@@ -34,7 +34,7 @@ public class Template {
 
     @OneToOne(fetch = LAZY)
     @JoinColumn(name = "packing_list_id")
-    private PackingList packingList;
+    private AlonePackingList alonePackingList;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "user_id")
