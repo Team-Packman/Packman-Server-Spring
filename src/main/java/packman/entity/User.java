@@ -36,7 +36,7 @@ public class User extends TimeStamped {
     @Column(length = 20, nullable = false)
     private String name;
 
-    @Column(columnDefinition = "TEXT", nullable = false, unique = true)
+    @Column(columnDefinition = "TEXT", nullable = false)
     private String refreshToken;
 
     @Column(length = 1, nullable = false)
