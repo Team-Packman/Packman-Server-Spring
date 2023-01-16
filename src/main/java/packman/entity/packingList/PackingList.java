@@ -20,7 +20,7 @@ import java.util.List;
 public class PackingList extends TimeStamped {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "packing_list_id", nullable = false, unique = true)
+    @Column(name = "packing_list_id")
     private Long id;
 
     @Column(length = 12, nullable = false)
@@ -36,12 +36,12 @@ public class PackingList extends TimeStamped {
     @Column(nullable = false)
     private boolean isDeleted = false;
 
-    @OneToMany(mappedBy = "packing_list", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "packingList", cascade = CascadeType.ALL)
     private List<Category> categories = new ArrayList<>();
 
-    @OneToOne(mappedBy = "packing_list", cascade = CascadeType.ALL)
-    private AlonePackingList alonePackingLists;
+    @OneToOne(mappedBy = "packingList", cascade = CascadeType.ALL)
+    private AlonePackingList alonePackingList;
 
-    @OneToOne(mappedBy = "packing_list", cascade = CascadeType.ALL)
-    private TogetherPackingList togetherPackingLists;
+    @OneToOne(mappedBy = "packingList", cascade = CascadeType.ALL)
+    private TogetherPackingList togetherPackingList;
 }

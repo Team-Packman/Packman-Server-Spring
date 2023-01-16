@@ -18,12 +18,12 @@ import static javax.persistence.FetchType.LAZY;
 @NoArgsConstructor
 public class AlonePackingList {
     @Id
-    @Column(name = "alone_packing_list_id", nullable = false, unique = true)
+    @Column(name = "alone_packing_list_id")
     private Long id;
 
     @OneToOne(fetch = LAZY)
     @MapsId
-    @JoinColumn(name = "alone_packing_list_id")
+    @JoinColumn(name = "packing_list_id")
     private PackingList packingList;
 
     @Column(nullable = false)
@@ -32,12 +32,12 @@ public class AlonePackingList {
     @Column(length = 5, unique = true)
     private String inviteCode;
 
-    @OneToMany(mappedBy = "alone_packing_list", cascade = CascadeType.ALL)
-    private List<Template> templates = new ArrayList<>();
+    @OneToOne(mappedBy = "alonePackingList", cascade = CascadeType.ALL)
+    private Template template;
 
-    @OneToOne(mappedBy = "alone_packing_list", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "alonePackingList", cascade = CascadeType.ALL)
     private FolderPackingList folderPackingList;
 
-    @OneToMany(mappedBy = "alone_packing_list", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "alonePackingList", cascade = CascadeType.ALL)
     private List<TogetherAlonePackingList> togetherAlonePackingLists = new ArrayList<>();
 }

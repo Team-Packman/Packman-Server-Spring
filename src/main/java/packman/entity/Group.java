@@ -13,10 +13,11 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
+@Table(name = "groups")
 public class Group {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "group_id", nullable = false, unique = true)
+    @Column(name = "group_id")
     private Long id;
 
     @OneToMany(mappedBy = "group", cascade = CascadeType.ALL)

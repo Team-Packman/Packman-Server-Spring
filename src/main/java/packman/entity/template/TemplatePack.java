@@ -1,9 +1,8 @@
-package packman.entity;
+package packman.entity.template;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import packman.entity.template.TemplateCategory;
 
 import javax.persistence.*;
 
@@ -16,12 +15,12 @@ import static javax.persistence.FetchType.LAZY;
 public class TemplatePack {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "template_pack_id", nullable = false, unique = true)
+    @Column(name = "template_pack_id")
     private Long id;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "category_id")
-    private TemplateCategory category;
+    @JoinColumn(name = "template_category_id")
+    private TemplateCategory templateCategory;
 
     @Column(length = 12, nullable = false)
     private String name;

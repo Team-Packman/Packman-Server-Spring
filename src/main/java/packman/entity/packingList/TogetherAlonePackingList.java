@@ -16,7 +16,7 @@ import static javax.persistence.FetchType.LAZY;
 public class TogetherAlonePackingList {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "together_alone_packing_list_id", nullable = false, unique = true)
+    @Column(name = "together_alone_packing_list_id")
     private Long id;
 
     @ManyToOne(fetch = LAZY)

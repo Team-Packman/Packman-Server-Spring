@@ -3,7 +3,6 @@ package packman.entity.template;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import packman.entity.TemplatePack;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -18,7 +17,7 @@ import static javax.persistence.FetchType.LAZY;
 public class TemplateCategory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "template_category_id", nullable = false, unique = true)
+    @Column(name = "template_category_id")
     private Long id;
 
     @ManyToOne(fetch = LAZY)
@@ -28,6 +27,6 @@ public class TemplateCategory {
     @Column(length = 12, nullable = false)
     private String name;
 
-    @OneToMany(mappedBy = "template_category", cascade = CascadeType.ALL)
-    private List<TemplatePack> packs = new ArrayList<>();
+    @OneToMany(mappedBy = "templateCategory", cascade = CascadeType.ALL)
+    private List<TemplatePack> templatePacks = new ArrayList<>();
 }

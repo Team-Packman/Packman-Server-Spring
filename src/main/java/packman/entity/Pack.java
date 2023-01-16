@@ -15,7 +15,7 @@ import static javax.persistence.FetchType.LAZY;
 public class Pack {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "pack_id", nullable = false, unique = true)
+    @Column(name = "pack_id")
     private Long id;
 
     @ManyToOne(fetch = LAZY)

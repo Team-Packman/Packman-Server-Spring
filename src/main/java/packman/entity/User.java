@@ -13,11 +13,12 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
+@Table(name = "users")
 public class User extends TimeStamped {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id", nullable = false, unique = true)
+    @Column(name = "user_id")
     private Long id;
 
     @Column(length = 50, nullable = false, unique = true)
@@ -39,18 +40,18 @@ public class User extends TimeStamped {
     private String refreshToken;
 
     @Column(length = 1, nullable = false)
-    private String path;
+    private String path = "0";
 
-    @Column(length = 6, nullable = false)
-    private String gender;
+    @Column(length = 6)
+    private String gender = null;
 
-    @Column(length = 5, nullable = false)
-    private String age_range;
+    @Column(length = 5)
+    private String age_range = null;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Folder> folders = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "packer", cascade = CascadeType.ALL)
     private List<Pack> packs = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)

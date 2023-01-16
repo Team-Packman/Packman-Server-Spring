@@ -17,7 +17,7 @@ public class Folder extends TimeStamped {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "folder_id", nullable = false, unique = true)
+    @Column(name = "folder_id")
     private Long id;
 
     @ManyToOne(fetch = LAZY)

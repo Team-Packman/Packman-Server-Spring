@@ -15,7 +15,7 @@ import static javax.persistence.FetchType.LAZY;
 public class UserGroup {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_group_id",  nullable = false, unique = true)
+    @Column(name = "user_group_id")
     private Long id;
 
     @ManyToOne(fetch = LAZY)

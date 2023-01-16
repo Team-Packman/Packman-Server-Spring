@@ -19,7 +19,7 @@ import static javax.persistence.FetchType.LAZY;
 public class TogetherPackingList {
 
     @Id
-    @Column(name = "together_packing_list_id", nullable = false, unique = true)
+    @Column(name = "together_packing_list_id")
     private Long id;
 
     @OneToOne(fetch = LAZY)
@@ -34,6 +34,6 @@ public class TogetherPackingList {
     @JoinColumn(name = "group_id")
     private Group group;
 
-    @OneToMany(mappedBy = "together_packing_list", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "togetherPackingList", cascade = CascadeType.ALL)
     private List<TogetherAlonePackingList> togetherAlonePackingLists = new ArrayList<>();
 }

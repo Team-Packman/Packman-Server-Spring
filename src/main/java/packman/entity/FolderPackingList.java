@@ -16,7 +16,7 @@ import static javax.persistence.FetchType.LAZY;
 public class FolderPackingList {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "folder_id", nullable = false, unique = true)
+    @Column(name = "folder_packing_list_id")
     private Long id;
 
     @ManyToOne(fetch = LAZY)
