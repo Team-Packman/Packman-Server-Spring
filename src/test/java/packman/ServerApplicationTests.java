@@ -1,4 +1,4 @@
-package com.packman.server;
+package packman;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

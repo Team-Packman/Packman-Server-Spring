@@ -12,15 +12,15 @@ import static javax.persistence.FetchType.LAZY;
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name = "folder")
-public class Folder {
-
+@Table(name = "template_pack")
+public class TemplatePack {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "folder_id")
+    @Column(name = "template_pack_id", nullable = false, unique = true)
     private Long id;
-
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "category_id")
+    private TemplateCategory category;
+    @Column(length = 12, nullable = false)
+    private String name;
 }
