@@ -19,7 +19,8 @@ public enum ResponseCode {
 
     // folder
     SUCCESS_CREATE_FOLDER(HttpStatus.OK, true, "폴더 생성 성공"),
-    FAIL_CREATE_FOLDER(HttpStatus.BAD_REQUEST, false, "제한된 글자수를 초과하였습니다");
+    FAIL_CREATE_FOLDER(HttpStatus.BAD_REQUEST, false, "제한된 글자수를 초과하였습니다"),
+    SUCCESS_GET_FOLDERS(HttpStatus.OK, true, "폴더 조회 성공");
 
     private final HttpStatus httpStatus;
     private final Boolean success;
