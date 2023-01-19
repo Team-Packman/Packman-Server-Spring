@@ -46,4 +46,18 @@ public class FolderService {
         );
     }
 
+    public FolderResponseDto getFolders(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new CustomException(ResponseCode.NO_USER)
+        );
+
+        ArrayList<FolderMapping> aloneFolders = folderRepository.findByUserIdAndIsAlonedOrderByUserIdDesc(userId, true);
+        ArrayList<FolderMapping> togetherFolders = folderRepository.findByUserIdAndIsAlonedOrderByUserIdDesc(userId, false);
+
+        return new FolderResponseDto(
+                aloneFolders,
+                togetherFolders
+        );
+    }
+
 }
