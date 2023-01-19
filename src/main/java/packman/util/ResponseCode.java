@@ -18,8 +18,8 @@ public enum ResponseCode {
     NO_USER(HttpStatus.NOT_FOUND, false, "존재하지 않는 유저입니다"),
 
     // folder
-    CREATE_FOLDER_SUCCESS(HttpStatus.OK, true, "폴더 생성 성공"),
-    CREATE_FOLDER_FAIL(HttpStatus.BAD_REQUEST, false, "제한된 글자수를 초과하였습니다");
+    SUCCESS_CREATE_FOLDER(HttpStatus.OK, true, "폴더 생성 성공"),
+    FAIL_CREATE_FOLDER(HttpStatus.BAD_REQUEST, false, "제한된 글자수를 초과하였습니다");
 
     private final HttpStatus httpStatus;
     private final Boolean success;

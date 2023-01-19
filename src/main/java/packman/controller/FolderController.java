@@ -24,7 +24,7 @@ public class FolderController {
     public ResponseEntity<ResponseMessage> createFolder(@RequestBody @Valid FolderRequestDto folderRequestDto, HttpServletRequest request) {
         Long userId = 1L;
         return ResponseMessage.toResponseEntity(
-                ResponseCode.CREATE_FOLDER_SUCCESS,
+                ResponseCode.SUCCESS_CREATE_FOLDER,
                 folderService.createFolder(folderRequestDto, userId)
         );
     }

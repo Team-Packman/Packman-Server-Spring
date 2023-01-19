@@ -31,7 +31,7 @@ public class FolderService {
 
         // validation
         if (name.length() > 8) {
-            throw new CustomException(ResponseCode.CREATE_FOLDER_FAIL);
+            throw new CustomException(ResponseCode.FAIL_CREATE_FOLDER);
         }
 
         Folder folder = new Folder(request, user);
