@@ -15,7 +15,7 @@ import packman.util.ResponseCode;
 public class UserService {
     private final UserRepository userRepository;
 
-    public UserInfoResponseDto getUserInfo(Long userId) {
+    public UserInfoResponseDto getUser(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new CustomException(ResponseCode.NO_USER)
         );

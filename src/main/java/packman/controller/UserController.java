@@ -18,12 +18,12 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping
-    public ResponseEntity<ResponseMessage> getUserInfo(HttpServletRequest request) {
+    public ResponseEntity<ResponseMessage> getUser(HttpServletRequest request) {
         Long userId = 1L;  //  임시 userId 1
 
         return ResponseMessage.toResponseEntity(
                 ResponseCode.SUCCESS_GET_USER,
-                userService.getUserInfo(userId)
+                userService.getUser(userId)
         );
     }
 }
