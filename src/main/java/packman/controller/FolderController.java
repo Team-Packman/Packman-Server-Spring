@@ -35,4 +35,13 @@ public class FolderController {
         );
     }
 
+    @DeleteMapping("/{folderId}")
+    public ResponseEntity<ResponseMessage> deleteFolder(@PathVariable("folderId") String folderId, HttpServletRequest request) {
+        Long userId = 1L;
+        return ResponseMessage.toResponseEntity(
+                ResponseCode.SUCCESS_DELETE_FOLDER,
+                folderService.deleteFolder(Long.parseLong(folderId), userId)
+        );
+    }
+
 }
