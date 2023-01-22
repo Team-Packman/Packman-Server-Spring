@@ -1,5 +1,6 @@
 package packman.entity;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -27,19 +28,23 @@ public class Folder extends TimeStamped {
 
     @Column(length = 8, nullable = false)
     private String name;
-
+    @Getter(AccessLevel.NONE)
     @Column(nullable = false)
     private boolean isAloned = true;
 
     @Column(nullable = false)
     private int listNum = 0;
 
-    @OneToMany(mappedBy = "folder", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "folder")
     private List<FolderPackingList> folderPackingList;
 
     public Folder(FolderRequestDto folderRequestDto, User user) {
         this.user = user;
         this.name = folderRequestDto.getName();
         this.isAloned = folderRequestDto.getIsAloned();
+    }
+
+    public boolean getIsAloned() {
+        return this.isAloned;
     }
 }

@@ -1,5 +1,6 @@
 package packman.entity.packingList;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -33,6 +34,7 @@ public class PackingList extends TimeStamped {
     @Column(nullable = false)
     private boolean isSaved = false;
 
+    @Setter(AccessLevel.NONE)
     @Column(nullable = false)
     private boolean isDeleted = false;
 
@@ -44,4 +46,8 @@ public class PackingList extends TimeStamped {
 
     @OneToOne(mappedBy = "packingList", cascade = CascadeType.ALL)
     private TogetherPackingList togetherPackingList;
+
+    public void setIdDeleted(boolean isDeleted) {
+        this.isDeleted = isDeleted;
+    }
 }
