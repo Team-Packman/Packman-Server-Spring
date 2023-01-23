@@ -22,7 +22,7 @@ public class FolderController {
         Long userId = 1L;  //  임시 userId 1
 
         return ResponseMessage.toResponseEntity(
-                ResponseCode.SUCCESS_GET_TOGETHER_FOLDERS,
+                ResponseCode.SUCCESS_GET_ALONE_FOLDERS,
                 folderService.getAloneFolders(userId)
         );
     }
