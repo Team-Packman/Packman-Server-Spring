@@ -2,12 +2,12 @@ package packman.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import packman.dto.folder.AloneFolderMapping;
+import packman.dto.folder.FolderIdNameMapping;
 import packman.entity.Folder;
 
 import java.util.ArrayList;
 
 @Repository
 public interface FolderRepository extends JpaRepository<Folder, Long> {
-    ArrayList<AloneFolderMapping> findByUserIdAndIsAlonedOrderByCreatedAtDesc(Long userId, boolean isAloned);
+    ArrayList<FolderIdNameMapping> findByUserIdAndIsAlonedOrderByCreatedAtDesc(Long userId, boolean isAloned);
 }

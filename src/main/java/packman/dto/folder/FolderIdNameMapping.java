@@ -1,6 +1,6 @@
 package packman.dto.folder;
 
-public interface AloneFolderMapping {
+public interface FolderIdNameMapping {
     String getId();
 
     String getName();

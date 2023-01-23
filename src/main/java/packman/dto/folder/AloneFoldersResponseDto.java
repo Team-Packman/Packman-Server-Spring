@@ -6,9 +6,9 @@ import java.util.ArrayList;
 
 @Data
 public class AloneFoldersResponseDto {
-    private ArrayList<AloneFolderMapping> aloneFolder;
+    private ArrayList<FolderIdNameMapping> aloneFolder;
 
-    public AloneFoldersResponseDto(ArrayList<AloneFolderMapping> aloneFolderMappings) {
-        this.aloneFolder = aloneFolderMappings;
+    public AloneFoldersResponseDto(ArrayList<FolderIdNameMapping> folderIdNameMappings) {
+        this.aloneFolder = folderIdNameMappings;
     }
 }
