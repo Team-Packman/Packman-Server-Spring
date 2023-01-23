@@ -20,7 +20,8 @@ public enum ResponseCode {
     SUCCESS_DELETE_USER(HttpStatus.OK, true, "유저 탈퇴 성공"),
 
     // 폴더
-    SUCCESS_GET_ALONE_FOLDERS(HttpStatus.OK, true, "혼자 패킹리스트 폴더 조회 성공");
+    SUCCESS_GET_ALONE_FOLDERS(HttpStatus.OK, true, "혼자 패킹리스트 폴더 조회 성공"),
+    SUCCESS_GET_TOGETHER_FOLDERS(HttpStatus.OK, true, "함께 패킹리스트 폴더 조회 성공");
 
     private final HttpStatus httpStatus;
     private final Boolean success;
