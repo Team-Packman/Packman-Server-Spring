@@ -3,8 +3,9 @@ package packman.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import packman.dto.folder.FolderIdNameMapping;
 import packman.dto.folder.AloneFoldersResponseDto;
+import packman.dto.folder.FolderIdNameMapping;
+import packman.dto.folder.TogetherFoldersResponseDto;
 import packman.repository.FolderRepository;
 import packman.repository.UserRepository;
 import packman.util.CustomException;
@@ -27,5 +28,15 @@ public class FolderService {
         ArrayList<FolderIdNameMapping> folderIdNameMappings = folderRepository.findByUserIdAndIsAlonedOrderByCreatedAtDesc(userId, true);
 
         return new AloneFoldersResponseDto(folderIdNameMappings);
+    }
+
+    public TogetherFoldersResponseDto getTogetherFolders(Long userId) {
+        userRepository.findByIdAndIsDeleted(userId, false).orElseThrow(
+                () -> new CustomException(ResponseCode.NO_USER)
+        );
+
+        ArrayList<FolderIdNameMapping> folderIdNameMappings = folderRepository.findByUserIdAndIsAlonedOrderByCreatedAtDesc(userId, false);
+
+        return new TogetherFoldersResponseDto(folderIdNameMappings);
     }
 }
