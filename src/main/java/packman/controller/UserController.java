@@ -19,10 +19,9 @@ public class UserController {
 
     @PostMapping("/profile")
     public ResponseEntity<ResponseMessage> createUser(@RequestBody UserRequestDto userRequestDto) {
-        Long userId = 1L;
         return ResponseMessage.toResponseEntity(
                 ResponseCode.CREATE_USER_SUCCESS,
-                userService.createUser(userRequestDto, userId)
+                userService.createUser(userRequestDto)
         );
     }
 
