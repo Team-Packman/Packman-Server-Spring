@@ -3,6 +3,7 @@ package packman.entity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import packman.dto.user.UserRequestDto;
 import packman.entity.template.Template;
 
 import javax.persistence.*;
@@ -46,7 +47,7 @@ public class User extends TimeStamped {
     private String gender = null;
 
     @Column(length = 5)
-    private String age_range = null;
+    private String ageRange = null;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Folder> folders = new ArrayList<>();
@@ -59,4 +60,15 @@ public class User extends TimeStamped {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<UserGroup> userGroups = new ArrayList<>();
+
+    public User(UserRequestDto userRequestDto, String refreshToken){
+        this.email = userRequestDto.getEmail();
+        this.nickname = userRequestDto.getNickname();
+        this.profileImage = userRequestDto.getProfileImage();
+        this.name = userRequestDto.getName();
+        this.path=userRequestDto.getPath();
+        this.gender = userRequestDto.getGender();
+        this.ageRange=userRequestDto.getAgeRange();
+        this.refreshToken = refreshToken;
+    }
 }
