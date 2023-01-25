@@ -28,4 +28,14 @@ public class FolderController {
                 folderService.getAloneListsInFolder(userId, folderId)
         );
     }
+
+    @GetMapping("/list/together/{folderId}")
+    public ResponseEntity<ResponseMessage> getTogetherListsInFolder(@PathVariable Long folderId, HttpServletRequest request) {
+        Long userId = 1L;  //  임시 userId 1
+
+        return ResponseMessage.toResponseEntity(
+                ResponseCode.SUCCESS_GET_TOGETHER_LISTS_IN_FOLDER,
+                folderService.getTogetherListsInFolder(userId, folderId)
+        );
+    }
 }
