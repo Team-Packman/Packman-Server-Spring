@@ -17,6 +17,7 @@ public enum ResponseCode {
     // 폴더
 
     SUCCESS_GET_ALONE_LISTS_IN_FOLDER(HttpStatus.OK, true, "폴더 속 혼자 패킹리스트 조회 성공"),
+    SUCCESS_GET_TOGETHER_LISTS_IN_FOLDER(HttpStatus.OK, true, "폴더 속 함께 패킹리스트 조회 성공"),
 
     NO_USER_FOLDER(HttpStatus.BAD_REQUEST, false, "유저에 존재하지 않는 폴더입니다"),
 
