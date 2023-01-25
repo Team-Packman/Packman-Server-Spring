@@ -1,5 +1,6 @@
 package packman.entity;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -28,7 +29,11 @@ public class Pack {
 
     @Column(length = 12, nullable = false)
     private String name;
-
+    @Getter(AccessLevel.NONE)
     @Column(nullable = false)
     private boolean isChecked = false;
+
+    public boolean getIsChecked() {
+        return this.isChecked;
+    }
 }
