@@ -3,10 +3,12 @@ package packman.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import packman.dto.category.CategoryPackMapping;
 import packman.dto.folder.AloneListsInFolderResponseDto;
 import packman.dto.folder.FolderIdNameMapping;
 import packman.dto.list.ListIdDtoMapping;
 import packman.dto.list.ListInFolderDto;
+import packman.dto.pack.PackCountMapping;
 import packman.entity.packingList.PackingList;
 import packman.repository.CategoryRepository;
 import packman.repository.FolderPackingListRepository;
@@ -59,9 +61,28 @@ public class FolderService {
             if (list.isPresent()) {
                 String title = list.get().getTitle();
                 String departureDate = String.valueOf(list.get().getDepartureDate());
+                long packTotalNum = 0L;
+                long packRemainNum = 0L;
+
+                if (list.get().getCategory().size() != 0) {
+                    CategoryPackMapping categoryPackMapping = categoryRepository.findByPackingListId(id);
+
+                    for (PackCountMapping packCountMapping : categoryPackMapping.getPack()) {
+                        packTotalNum++;
+
+                        if (!packCountMapping.getIsChecked()) {
+                            packRemainNum++;
+                        }
+                    }
+                }
+
+                ListInFolderDto listInFolderDto =
+                        new ListInFolderDto(String.valueOf(id), title, departureDate, String.valueOf(packTotalNum), String.valueOf(packRemainNum));
+                listInFolderDtos.add(listInFolderDto);
             } else {
                 throw new CustomException(ResponseCode.NO_LIST);
             }
         }
+        return new AloneListsInFolderResponseDto(currentFolder, folders, listNum, listInFolderDtos);
     }
 }
