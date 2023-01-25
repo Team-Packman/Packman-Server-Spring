@@ -6,6 +6,8 @@ import org.springframework.transaction.annotation.Transactional;
 import packman.dto.folder.AloneListsInFolderResponseDto;
 import packman.dto.folder.FolderIdNameMapping;
 import packman.dto.list.ListIdDtoMapping;
+import packman.dto.list.ListInFolderDto;
+import packman.entity.packingList.PackingList;
 import packman.repository.CategoryRepository;
 import packman.repository.FolderPackingListRepository;
 import packman.repository.FolderRepository;
@@ -14,7 +16,9 @@ import packman.repository.packingList.PackingListRepository;
 import packman.util.CustomException;
 import packman.util.ResponseCode;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -46,5 +50,18 @@ public class FolderService {
                 folderPackingListRepository.findByFolderIdAndAlonePackingList_IsAlonedAndAlonePackingList_PackingList_IsDeletedOrderByIdDesc(folderId, true, false);
 
         String listNum = String.valueOf(alonePackingLists.size());
+
+        List<ListInFolderDto> listInFolderDtos = new ArrayList<>();
+        for (ListIdDtoMapping alonePackingList : alonePackingLists) {
+            Long id = alonePackingList.getId();
+
+            Optional<PackingList> list = packingListRepository.findById(id);
+            if (list.isPresent()) {
+                String title = list.get().getTitle();
+                String departureDate = String.valueOf(list.get().getDepartureDate());
+            } else {
+                throw new CustomException(ResponseCode.NO_LIST);
+            }
+        }
     }
 }
