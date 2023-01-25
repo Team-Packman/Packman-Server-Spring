@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import packman.dto.folder.AloneListsInFolderResponseDto;
 import packman.dto.folder.FolderIdNameMapping;
+import packman.dto.list.ListIdDtoMapping;
 import packman.repository.CategoryRepository;
 import packman.repository.FolderPackingListRepository;
 import packman.repository.FolderRepository;
@@ -12,6 +13,8 @@ import packman.repository.UserRepository;
 import packman.repository.packingList.PackingListRepository;
 import packman.util.CustomException;
 import packman.util.ResponseCode;
+
+import java.util.List;
 
 @Service
 @Transactional
@@ -37,5 +40,11 @@ public class FolderService {
         FolderIdNameMapping currentFolder = folderRepository.findByIdAndIsAloned(folderId, true).orElseThrow(
                 () -> new CustomException(ResponseCode.NO_FOLDER)
         );
+
+        List<FolderIdNameMapping> folders = folderRepository.findByUserIdAndIsAlonedOrderByIdDesc(userId, true);
+        List<ListIdDtoMapping> alonePackingLists =
+                folderPackingListRepository.findByFolderIdAndAlonePackingList_IsAlonedAndAlonePackingList_PackingList_IsDeletedOrderByIdDesc(folderId, true, false);
+
+        String listNum = String.valueOf(alonePackingLists.size());
     }
 }
