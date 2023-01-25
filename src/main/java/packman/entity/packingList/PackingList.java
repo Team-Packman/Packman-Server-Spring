@@ -37,7 +37,7 @@ public class PackingList extends TimeStamped {
     private boolean isDeleted = false;
 
     @OneToMany(mappedBy = "packingList", cascade = CascadeType.ALL)
-    private List<Category> categories = new ArrayList<>();
+    private List<Category> category = new ArrayList<>();
 
     @OneToOne(mappedBy = "packingList", cascade = CascadeType.ALL)
     private AlonePackingList alonePackingList;
