@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import packman.dto.folder.FolderRequestDto;
+import packman.dto.folder.FolderUpdateRequestDto;
 import packman.service.FolderService;
 import packman.util.ResponseCode;
 import packman.util.ResponseMessage;
@@ -34,5 +35,15 @@ public class FolderController {
                 folderService.getFolders(userId)
         );
     }
+
+    @PatchMapping
+    public ResponseEntity<ResponseMessage> updateFolder(@RequestBody @Valid FolderUpdateRequestDto folderUpdateRequestDto, HttpServletRequest request) {
+        Long userId = 1L;
+        return ResponseMessage.toResponseEntity(
+                ResponseCode.SUCCESS_UPDATE_FOLDER,
+                folderService.updateFolder(folderUpdateRequestDto, userId)
+        );
+    }
+
 
 }
