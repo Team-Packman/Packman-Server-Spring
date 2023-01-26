@@ -27,7 +27,7 @@ public class FolderService {
     private final UserRepository userRepository;
 
     public FolderResponseDto createFolder(FolderRequestDto request, Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(
+        User user = userRepository.findByIdAndIsDeleted(userId, false).orElseThrow(
                 () -> new CustomException(ResponseCode.NO_USER)
         );
         String name = request.getName();
@@ -40,8 +40,8 @@ public class FolderService {
         Folder folder = new Folder(request, user);
         folderRepository.save(folder);
 
-        ArrayList<Folder> aloneFolders = folderRepository.findByUserIdAndIsAlonedOrderByUserIdDesc(userId, true);
-        ArrayList<Folder> togetherFolders = folderRepository.findByUserIdAndIsAlonedOrderByUserIdDesc(userId, false);
+        ArrayList<Folder> aloneFolders = folderRepository.findByUserIdAndIsAlonedOrderByIdDesc(userId, true);
+        ArrayList<Folder> togetherFolders = folderRepository.findByUserIdAndIsAlonedOrderByIdDesc(userId, false);
 
         List<FolderInfo> aloneFoldersResponse = aloneFolders.stream().map(f -> {
             Long folderId = f.getId();
@@ -64,12 +64,12 @@ public class FolderService {
     }
 
     public FolderResponseDto getFolders(Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(
+        User user = userRepository.findByIdAndIsDeleted(userId, false).orElseThrow(
                 () -> new CustomException(ResponseCode.NO_USER)
         );
 
-        ArrayList<Folder> aloneFolders = folderRepository.findByUserIdAndIsAlonedOrderByUserIdDesc(userId, true);
-        ArrayList<Folder> togetherFolders = folderRepository.findByUserIdAndIsAlonedOrderByUserIdDesc(userId, false);
+        ArrayList<Folder> aloneFolders = folderRepository.findByUserIdAndIsAlonedOrderByIdDesc(userId, true);
+        ArrayList<Folder> togetherFolders = folderRepository.findByUserIdAndIsAlonedOrderByIdDesc(userId, false);
 
         List<FolderInfo> aloneFoldersResponse = aloneFolders.stream().map(f -> {
             Long folderId = f.getId();
@@ -92,7 +92,7 @@ public class FolderService {
     }
 
     public FolderResponseDto updateFolder(FolderUpdateRequestDto folderUpdateRequestDto, Long userId) {
-        userRepository.findById(userId).orElseThrow(
+        userRepository.findByIdAndIsDeleted(userId, false).orElseThrow(
                 () -> new CustomException(ResponseCode.NO_USER)
         );
         String name = folderUpdateRequestDto.getName();
@@ -109,8 +109,8 @@ public class FolderService {
         folder.setName(folderUpdateRequestDto.getName());
         folderRepository.save(folder);
 
-        ArrayList<Folder> aloneFolders = folderRepository.findByUserIdAndIsAlonedOrderByUserIdDesc(userId, true);
-        ArrayList<Folder> togetherFolders = folderRepository.findByUserIdAndIsAlonedOrderByUserIdDesc(userId, false);
+        ArrayList<Folder> aloneFolders = folderRepository.findByUserIdAndIsAlonedOrderByIdDesc(userId, true);
+        ArrayList<Folder> togetherFolders = folderRepository.findByUserIdAndIsAlonedOrderByIdDesc(userId, false);
 
         List<FolderInfo> aloneFoldersResponse = aloneFolders.stream().map(f -> {
             Long folderId = f.getId();
