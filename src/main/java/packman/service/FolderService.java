@@ -37,8 +37,8 @@ public class FolderService {
         Folder folder = new Folder(request, user);
         folderRepository.save(folder);
 
-        ArrayList<FolderMapping> aloneFolders = folderRepository.findByUserIdAndIsAlonedOrderByUserIdDesc(userId, true);
-        ArrayList<FolderMapping> togetherFolders = folderRepository.findByUserIdAndIsAlonedOrderByUserIdDesc(userId, false);
+        ArrayList<FolderMapping> aloneFolders = folderRepository.findByUserIdAndIsAlonedOrderByIdDesc(userId, true);
+        ArrayList<FolderMapping> togetherFolders = folderRepository.findByUserIdAndIsAlonedOrderByIdDesc(userId, false);
 
         return new FolderResponseDto(
                 aloneFolders,
