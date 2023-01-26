@@ -8,6 +8,7 @@ import lombok.Setter;
 import packman.dto.folder.FolderRequestDto;
 
 import javax.persistence.*;
+import javax.validation.constraints.Null;
 import java.util.List;
 
 import static javax.persistence.FetchType.LAZY;
@@ -41,10 +42,17 @@ public class Folder extends TimeStamped {
         this.name = folderRequestDto.getName();
         this.isAloned = folderRequestDto.getIsAloned();
     }
+
     @Transient
     @Getter(AccessLevel.NONE)
     private String listNum;
+
     public String getListNum() {
-        return String.valueOf(folderPackingList.size());
+
+        if (this.folderPackingList == null) {
+            return "0";
+        } else {
+            return String.valueOf(folderPackingList.size());
+        }
     }
 }
