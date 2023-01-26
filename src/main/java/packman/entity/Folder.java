@@ -1,5 +1,7 @@
 package packman.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -38,5 +40,11 @@ public class Folder extends TimeStamped {
         this.user = user;
         this.name = folderRequestDto.getName();
         this.isAloned = folderRequestDto.getIsAloned();
+    }
+    @Transient
+    @Getter(AccessLevel.NONE)
+    private String listNum;
+    public String getListNum() {
+        return String.valueOf(folderPackingList.size());
     }
 }
