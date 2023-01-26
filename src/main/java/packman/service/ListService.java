@@ -57,8 +57,6 @@ public class ListService {
     public DepartureDateResponseDto updateDepartureDate(DepartureDateRequestDto departureDateRequestDto, Long userId) {
         Long listId = Long.parseLong(departureDateRequestDto.getId());
         LocalDate departureDate = LocalDate.parse(departureDateRequestDto.getDepartureDate(), DateTimeFormatter.ISO_DATE);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
-        String returnDepartureDate = departureDate.format(formatter);
 
         //유저 검증
         userRepository.findByIdAndIsDeleted(userId, false).orElseThrow(
@@ -75,6 +73,6 @@ public class ListService {
             t.setDepartureDate(departureDate);
         }, () -> {throw new CustomException(ResponseCode.NO_LIST);});
 
-        return new DepartureDateResponseDto(departureDateRequestDto.getId(), returnDepartureDate);
+        return new DepartureDateResponseDto(departureDateRequestDto.getId(), departureDateRequestDto.getDepartureDate());
     }
 }
