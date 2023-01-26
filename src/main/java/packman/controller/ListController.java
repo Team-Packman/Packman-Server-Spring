@@ -31,7 +31,7 @@ public class ListController {
         Long userId = 1L;
 
         if(bindingResult.hasErrors()){
-            throw new CustomException(ResponseCode.NOT_FOUND);
+            throw new CustomException(ResponseCode.NULL_VALUE);
         }
         return ResponseMessage.toResponseEntity(
                 ResponseCode.UPDATE_LIST_TITLE_SUCCESS,

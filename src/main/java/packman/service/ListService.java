@@ -44,7 +44,7 @@ public class ListService {
         if (!listTitleRequestDto.getIsAloned()) {
             listId = togetherAlonePackingListRepository.findById(listId).orElseThrow(
                     () -> new CustomException(ResponseCode.NO_LIST))
-                    .getTogetherPackingList().getPackingList().getId();
+                    .getTogetherPackingList().getId();
         }
 
         listRepository.findByIdAndIsDeleted(listId, false).ifPresentOrElse(t -> {
