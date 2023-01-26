@@ -49,9 +49,10 @@ public class ListController {
         if(bindingResult.hasErrors()){
             throw new CustomException(ResponseCode.NOT_FOUND);
         }
+
         return ResponseMessage.toResponseEntity(
                 ResponseCode.UPDATE_LIST_DEPARTURE_DATE_SUCCESS,
-                listService.updateDepatrueDate(departureDateRequestDto, userId)
+                listService.updateDepartureDate(departureDateRequestDto, userId)
         );
     }
 
