@@ -28,6 +28,11 @@ public class ListService {
                 () -> new CustomException(ResponseCode.NO_USER)
         );
 
+        //제목 글자수 검증
+        if (title.length() > 12) {
+            throw new CustomException(ResponseCode.EXCEED_LENGTH);
+        }
+
         if (!listTitleRequestDto.getIsAloned()) {
             listId = togetherAlonePackingListRepository.findById(listId).orElseThrow(
                     () -> new CustomException(ResponseCode.NO_LIST))
