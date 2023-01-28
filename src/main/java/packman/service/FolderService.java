@@ -3,7 +3,7 @@ package packman.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import packman.dto.folder.AloneFolderMapping;
+import packman.dto.folder.FolderIdNameMapping;
 import packman.repository.FolderRepository;
 import packman.repository.UserRepository;
 import packman.util.CustomException;
@@ -18,7 +18,7 @@ public class FolderService {
     private final UserRepository userRepository;
     private final FolderRepository folderRepository;
 
-    public ArrayList<AloneFolderMapping> getAloneFolders(Long userId) {
+    public ArrayList<FolderIdNameMapping> getAloneFolders(Long userId) {
         userRepository.findByIdAndIsDeleted(userId, false).orElseThrow(
                 () -> new CustomException(ResponseCode.NO_USER)
         );
@@ -26,13 +26,11 @@ public class FolderService {
         return folderRepository.findByUserIdAndIsAlonedOrderByIdDesc(userId, true);
     }
 
-    public TogetherFoldersResponseDto getTogetherFolders(Long userId) {
+    public ArrayList<FolderIdNameMapping> getTogetherFolders(Long userId) {
         userRepository.findByIdAndIsDeleted(userId, false).orElseThrow(
                 () -> new CustomException(ResponseCode.NO_USER)
         );
 
-        ArrayList<FolderIdNameMapping> folderIdNameMappings = folderRepository.findByUserIdAndIsAlonedOrderByCreatedAtDesc(userId, false);
-
-        return new TogetherFoldersResponseDto(folderIdNameMappings);
+        return folderRepository.findByUserIdAndIsAlonedOrderByIdDesc(userId, false);
     }
 }
