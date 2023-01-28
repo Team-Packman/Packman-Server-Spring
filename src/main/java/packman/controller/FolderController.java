@@ -27,4 +27,13 @@ public class FolderController {
         );
     }
 
+    @GetMapping("/together")
+    public ResponseEntity<ResponseMessage> getTogetherFolders(HttpServletRequest request) {
+        Long userId = 1L;  //  임시 userId 1
+
+        return ResponseMessage.toResponseEntity(
+                ResponseCode.SUCCESS_GET_TOGETHER_FOLDERS,
+                folderService.getTogetherFolders(userId)
+        );
+    }
 }
