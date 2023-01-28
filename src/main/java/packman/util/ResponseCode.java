@@ -14,6 +14,10 @@ public enum ResponseCode {
     BAD_REQUEST(HttpStatus.BAD_REQUEST, false, "잘못된 요청"),
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, false, "서버 내부 오류입니다"),
 
+    // user
+    SUCCESS_GET_USER(HttpStatus.OK, true, "유저 조회 성공"),
+    NO_USER(HttpStatus.UNAUTHORIZED, false, "존재하지 않는 유저입니다"),
+
     // alonePackingList
     SUCCESS_CREATE_ALONE_CATEGORY(HttpStatus.OK, true, "혼자 패킹리스트 카테고리 생성 성공"),
 
