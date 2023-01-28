@@ -24,7 +24,7 @@ public class FolderService {
                 () -> new CustomException(ResponseCode.NO_USER)
         );
 
-        ArrayList<AloneFolderMapping> aloneFolderMappings = folderRepository.findByUserIdAndIsAlonedOrderByCreatedAtDesc(userId, true);
+        ArrayList<AloneFolderMapping> aloneFolderMappings = folderRepository.findByUserIdAndIsAlonedOrderByIdDesc(userId, true);
 
         return new AloneFoldersResponseDto(aloneFolderMappings);
     }
