@@ -9,5 +9,5 @@ import java.util.ArrayList;
 
 @Repository
 public interface FolderRepository extends JpaRepository<Folder, Long> {
-    ArrayList<FolderIdNameMapping> findByUserIdAndIsAlonedOrderByCreatedAtDesc(Long userId, boolean isAloned);
+    ArrayList<AloneFolderMapping> findByUserIdAndIsAlonedOrderByIdDesc(Long userId, boolean isAloned);
 }

@@ -16,7 +16,7 @@ public class UserService {
     private final UserRepository userRepository;
 
     public UserInfoResponseDto getUser(Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(
+        User user = userRepository.findByIdAndIsDeleted(userId, false).orElseThrow(
                 () -> new CustomException(ResponseCode.NO_USER)
         );
         return new UserInfoResponseDto(userId.toString(), user.getEmail(), user.getNickname(), user.getProfileImage());
@@ -28,6 +28,5 @@ public class UserService {
         );
 
         user.setDeleted(true);
-        userRepository.save(user);
     }
 }
