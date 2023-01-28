@@ -21,4 +21,12 @@ public class UserService {
         );
         return new UserInfoResponseDto(userId.toString(), user.getEmail(), user.getNickname(), user.getProfileImage());
     }
+
+    public void deleteUser(Long userId) {
+        User user = userRepository.findByIdAndIsDeleted(userId, false).orElseThrow(
+                () -> new CustomException(ResponseCode.NO_USER)
+        );
+
+        user.setDeleted(true);
+    }
 }
