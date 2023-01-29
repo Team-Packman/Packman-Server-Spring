@@ -1,5 +1,5 @@
 package packman.dto.list;
 
-public interface ListIdDtoMapping {
+public interface ListIdMapping {
     Long getId();
 }
