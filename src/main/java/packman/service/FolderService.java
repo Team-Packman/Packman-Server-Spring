@@ -136,7 +136,7 @@ public class FolderService {
 
 
     public FolderResponseDto createFolder(FolderRequestDto request, Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(
+        User user = userRepository.findByIdAndIsDeleted(userId, false).orElseThrow(
                 () -> new CustomException(ResponseCode.NO_USER)
         );
         String name = request.getName();
@@ -159,7 +159,7 @@ public class FolderService {
     }
 
     public FolderResponseDto getFolders(Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(
+        userRepository.findByIdAndIsDeleted(userId, false).orElseThrow(
                 () -> new CustomException(ResponseCode.NO_USER)
         );
 
