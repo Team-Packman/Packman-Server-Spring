@@ -1,17 +1,13 @@
 package packman.dto.folder;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
-import java.util.ArrayList;
+import java.util.List;
 
 @Data
+@AllArgsConstructor
 public class FolderResponseDto {
-    private ArrayList<FolderMapping> aloneFolder;
-    private ArrayList<FolderMapping> togetherFolder;
-
-
-    public FolderResponseDto(ArrayList<FolderMapping> aloneFolder, ArrayList<FolderMapping> togetherFolder) {
-        this.aloneFolder = aloneFolder;
-        this.togetherFolder = togetherFolder;
-    }
+    private List<FolderIdNameMapping> aloneFolder;
+    private List<FolderIdNameMapping> togetherFolder;
 }
