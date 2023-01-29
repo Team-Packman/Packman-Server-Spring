@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.Getter;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Data
 @Getter
@@ -16,5 +17,6 @@ public class ListRequestDto {
     private String folderId;
     @NotBlank
     private String title;
+    @NotNull
     private String templateId;
 }
