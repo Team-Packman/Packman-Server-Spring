@@ -4,13 +4,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import packman.dto.category.CategoryPackMapping;
-import packman.dto.folder.AloneListsInFolderResponseDto;
-import packman.dto.folder.FolderAloneListMapping;
-import packman.dto.folder.FolderIdNameMapping;
-import packman.dto.folder.TogetherListsInFolderResponseDto;
+import packman.dto.folder.*;
 import packman.dto.list.ListInFolderDto;
 import packman.dto.list.TogetherAloneListMapping;
 import packman.dto.pack.PackCountMapping;
+import packman.entity.Folder;
+import packman.entity.User;
 import packman.entity.packingList.PackingList;
 import packman.repository.CategoryRepository;
 import packman.repository.FolderPackingListRepository;
@@ -20,20 +19,9 @@ import packman.repository.packingList.PackingListRepository;
 import packman.repository.packingList.TogetherAlonePackingListRepository;
 import packman.util.CustomException;
 import packman.util.ResponseCode;
-import packman.dto.folder.FolderMapping;
-import packman.dto.folder.FolderRequestDto;
-import packman.dto.folder.FolderResponseDto;
-import packman.entity.Folder;
-import packman.entity.User;
-import packman.repository.FolderRepository;
-import packman.repository.UserRepository;
-import packman.util.CustomException;
-import packman.util.ResponseCode;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import java.util.ArrayList;
 
 @Service
 @Transactional
@@ -90,7 +78,7 @@ public class FolderService {
         }
         return new AloneListsInFolderResponseDto(currentFolder, folders, listNum, listInFolderDtos);
     }
-    
+
     public TogetherListsInFolderResponseDto getTogetherListsInFolder(Long userId, Long folderId) {
         userRepository.findByIdAndIsDeleted(userId, false).orElseThrow(
                 () -> new CustomException(ResponseCode.NO_USER)
@@ -146,8 +134,6 @@ public class FolderService {
         listInFolderDtos.add(listInFolderDto);
     }
 
-    private final FolderRepository folderRepository;
-    private final UserRepository userRepository;
 
     public FolderResponseDto createFolder(FolderRequestDto request, Long userId) {
         User user = userRepository.findById(userId).orElseThrow(
@@ -163,8 +149,8 @@ public class FolderService {
         Folder folder = new Folder(request, user);
         folderRepository.save(folder);
 
-        ArrayList<FolderMapping> aloneFolders = folderRepository.findByUserIdAndIsAlonedOrderByIdDesc(userId, true);
-        ArrayList<FolderMapping> togetherFolders = folderRepository.findByUserIdAndIsAlonedOrderByIdDesc(userId, false);
+        List<FolderIdNameMapping> aloneFolders = folderRepository.findByUserIdAndIsAlonedOrderByIdDesc(userId, true);
+        List<FolderIdNameMapping> togetherFolders = folderRepository.findByUserIdAndIsAlonedOrderByIdDesc(userId, false);
 
         return new FolderResponseDto(
                 aloneFolders,
