@@ -3,6 +3,7 @@ package packman.entity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import packman.dto.folder.FolderRequestDto;
 
 import javax.persistence.*;
 import java.util.List;
@@ -32,4 +33,10 @@ public class Folder extends TimeStamped {
 
     @OneToMany(mappedBy = "folder", cascade = CascadeType.ALL)
     private List<FolderPackingList> folderPackingList;
+
+    public Folder(FolderRequestDto folderRequestDto, User user) {
+        this.user = user;
+        this.name = folderRequestDto.getName();
+        this.isAloned = folderRequestDto.getIsAloned();
+    }
 }

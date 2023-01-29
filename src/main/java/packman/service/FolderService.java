@@ -4,13 +4,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import packman.dto.category.CategoryPackMapping;
-import packman.dto.folder.AloneListsInFolderResponseDto;
-import packman.dto.folder.FolderAloneListMapping;
-import packman.dto.folder.FolderIdNameMapping;
-import packman.dto.folder.TogetherListsInFolderResponseDto;
+import packman.dto.folder.*;
 import packman.dto.list.ListInFolderDto;
 import packman.dto.list.TogetherAloneListMapping;
 import packman.dto.pack.PackCountMapping;
+import packman.entity.Folder;
+import packman.entity.User;
 import packman.entity.packingList.PackingList;
 import packman.repository.CategoryRepository;
 import packman.repository.FolderPackingListRepository;
@@ -79,7 +78,7 @@ public class FolderService {
         }
         return new AloneListsInFolderResponseDto(currentFolder, folders, listNum, listInFolderDtos);
     }
-    
+
     public TogetherListsInFolderResponseDto getTogetherListsInFolder(Long userId, Long folderId) {
         userRepository.findByIdAndIsDeleted(userId, false).orElseThrow(
                 () -> new CustomException(ResponseCode.NO_USER)
@@ -134,4 +133,29 @@ public class FolderService {
                 new ListInFolderDto(String.valueOf(representativeId), title, departureDate, String.valueOf(packTotalNum), String.valueOf(packRemainNum));
         listInFolderDtos.add(listInFolderDto);
     }
+
+
+    public FolderResponseDto createFolder(FolderRequestDto request, Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new CustomException(ResponseCode.NO_USER)
+        );
+        String name = request.getName();
+
+        // validation
+        if (name.length() > 8) {
+            throw new CustomException(ResponseCode.FAIL_CREATE_FOLDER);
+        }
+
+        Folder folder = new Folder(request, user);
+        folderRepository.save(folder);
+
+        List<FolderIdNameMapping> aloneFolders = folderRepository.findByUserIdAndIsAlonedOrderByIdDesc(userId, true);
+        List<FolderIdNameMapping> togetherFolders = folderRepository.findByUserIdAndIsAlonedOrderByIdDesc(userId, false);
+
+        return new FolderResponseDto(
+                aloneFolders,
+                togetherFolders
+        );
+    }
+
 }
