@@ -9,5 +9,6 @@ import java.util.List;
 
 @Repository
 public interface FolderPackingListRepository extends JpaRepository<FolderPackingList, Long> {
+    List<ListIdDtoMapping> findByFolderIdAndAlonePackingList_IsAlonedOrderByIdDesc(Long folderId, boolean isAloned);
     List<FolderAloneListMapping> findByFolderIdAndAlonePackingList_IsAlonedAndAlonePackingList_PackingList_IsDeletedOrderByIdDesc(Long folderId, boolean isAloned, boolean isDeleted);
 }
