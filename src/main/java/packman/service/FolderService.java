@@ -163,8 +163,8 @@ public class FolderService {
                 () -> new CustomException(ResponseCode.NO_USER)
         );
 
-        ArrayList<FolderMapping> aloneFolders = folderRepository.findByUserIdAndIsAlonedOrderByUserIdDesc(userId, true);
-        ArrayList<FolderMapping> togetherFolders = folderRepository.findByUserIdAndIsAlonedOrderByUserIdDesc(userId, false);
+        List<FolderIdNameMapping> aloneFolders = folderRepository.findByUserIdAndIsAlonedOrderByIdDesc(userId, true);
+        List<FolderIdNameMapping> togetherFolders = folderRepository.findByUserIdAndIsAlonedOrderByIdDesc(userId, false);
 
         return new FolderResponseDto(
                 aloneFolders,

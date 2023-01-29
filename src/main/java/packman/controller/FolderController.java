@@ -2,22 +2,15 @@ package packman.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.*;
 import packman.dto.folder.FolderRequestDto;
 import packman.service.FolderService;
 import packman.util.ResponseCode;
 import packman.util.ResponseMessage;
-import packman.dto.folder.FolderRequestDto;
 
 import javax.servlet.http.HttpServletRequest;
-
 import javax.validation.Valid;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/folder")
@@ -63,6 +56,7 @@ public class FolderController {
                 folderService.getTogetherListsInFolder(userId, folderId)
         );
     }
+
     @PostMapping
     public ResponseEntity<ResponseMessage> createFolder(@RequestBody @Valid FolderRequestDto folderRequestDto, HttpServletRequest request) {
         Long userId = 1L;
