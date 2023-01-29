@@ -6,8 +6,14 @@ import packman.dto.folder.FolderIdNameMapping;
 import packman.entity.Folder;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface FolderRepository extends JpaRepository<Folder, Long> {
-    ArrayList<FolderIdNameMapping> findByUserIdAndIsAlonedOrderByIdDesc(Long userId, boolean isAloned);
+    Optional<Folder> findByIdAndUserId(Long folderId, Long userId);
+
+    Optional<FolderIdNameMapping> findByIdAndIsAloned(Long folderId, boolean isAloned);
+
+    List<FolderIdNameMapping> findByUserIdAndIsAlonedOrderByIdDesc(Long userId, boolean isAloned);
 }
