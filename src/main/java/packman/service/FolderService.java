@@ -72,31 +72,30 @@ public class FolderService {
         for (ListIdDtoMapping alonePackingList : alonePackingLists) {
             Long id = alonePackingList.getId();
 
-            Optional<PackingList> list = packingListRepository.findById(id);
-            if (list.isPresent()) {
-                String title = list.get().getTitle();
-                String departureDate = String.valueOf(list.get().getDepartureDate());
-                long packTotalNum = 0L;
-                long packRemainNum = 0L;
+            PackingList list = packingListRepository.findById(id).orElseThrow(
+                    () -> new CustomException(ResponseCode.NO_LIST)
+            );
 
-                if (list.get().getCategory().size() != 0) {
-                    CategoryPackMapping categoryPackMapping = categoryRepository.findByPackingListId(id);
+            String title = list.getTitle();
+            String departureDate = String.valueOf(list.getDepartureDate());
+            long packTotalNum = 0L;
+            long packRemainNum = 0L;
 
-                    for (PackCountMapping packCountMapping : categoryPackMapping.getPack()) {
-                        packTotalNum++;
+            if (list.getCategory().size() != 0) {
+                CategoryPackMapping categoryPackMapping = categoryRepository.findByPackingListId(id);
 
-                        if (!packCountMapping.getIsChecked()) {
-                            packRemainNum++;
-                        }
+                for (PackCountMapping packCountMapping : categoryPackMapping.getPack()) {
+                    packTotalNum++;
+
+                    if (!packCountMapping.getIsChecked()) {
+                        packRemainNum++;
                     }
                 }
-
-                ListInFolderDto listInFolderDto =
-                        new ListInFolderDto(String.valueOf(id), title, departureDate, String.valueOf(packTotalNum), String.valueOf(packRemainNum));
-                listInFolderDtos.add(listInFolderDto);
-            } else {
-                throw new CustomException(ResponseCode.NO_LIST);
             }
+
+            ListInFolderDto listInFolderDto =
+                    new ListInFolderDto(String.valueOf(id), title, departureDate, String.valueOf(packTotalNum), String.valueOf(packRemainNum));
+            listInFolderDtos.add(listInFolderDto);
         }
         return new AloneListsInFolderResponseDto(currentFolder, folders, listNum, listInFolderDtos);
     }
