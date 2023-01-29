@@ -67,9 +67,7 @@ public class FolderService {
         );
 
         List<FolderIdNameMapping> folders = folderRepository.findByUserIdAndIsAlonedOrderByIdDesc(userId, true);
-        List<ListIdDtoMapping> alonePackingLists =
-                folderPackingListRepository.findByFolderIdAndAlonePackingList_IsAlonedOrderByIdDesc(folderId, true);
-        // List<FolderAloneListMapping> alonePackingLists = folderPackingListRepository.findByFolderIdAndAlonePackingList_IsAlonedAndAlonePackingList_PackingList_IsDeletedOrderByIdDesc(folderId, true, false);
+        List<ListIdDtoMapping> alonePackingLists = folderPackingListRepository.findByFolderIdAndAlonePackingList_IsAlonedOrderByIdDesc(folderId, true);
 
         String listNum = String.valueOf(alonePackingLists.size());
 
@@ -96,8 +94,7 @@ public class FolderService {
         );
 
         List<FolderIdNameMapping> folders = folderRepository.findByUserIdAndIsAlonedOrderByIdDesc(userId, false);
-        List<FolderAloneListMapping> myPackingLists =
-                folderPackingListRepository.findByFolderIdAndAlonePackingList_IsAlonedAndAlonePackingList_PackingList_IsDeletedOrderByIdDesc(folderId, false, false);
+        List<FolderAloneListMapping> myPackingLists = folderPackingListRepository.findByFolderIdAndAlonePackingList_IsAlonedOrderByIdDesc(folderId, false);
 
         String listNum = String.valueOf(myPackingLists.size());
 
@@ -115,9 +112,7 @@ public class FolderService {
     }
 
     private void addListInFolderDto(List<ListInFolderDto> listInFolderDtos, Long representativeId, Long listId) {
-        PackingList list = packingListRepository.findById(id).orElseThrow(
-                () -> new CustomException(ResponseCode.NO_LIST)
-        );
+        PackingList list = packingListRepository.findById(listId).orElseThrow(() -> new CustomException(ResponseCode.NO_LIST));
 
         String title = list.getTitle();
         String departureDate = String.valueOf(list.getDepartureDate());
@@ -125,7 +120,7 @@ public class FolderService {
         long packRemainNum = 0L;
 
         if (list.getCategory().size() != 0) {
-             CategoryPackMapping categoryPackMapping = categoryRepository.findByPackingListId(id);
+            CategoryPackMapping categoryPackMapping = categoryRepository.findByPackingListId(listId);
 
             for (PackCountMapping packCountMapping : categoryPackMapping.getPack()) {
                 packTotalNum++;
