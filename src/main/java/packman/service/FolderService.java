@@ -3,24 +3,23 @@ package packman.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import packman.dto.folder.FolderIdNameMapping;
-import packman.repository.FolderRepository;
-import packman.repository.UserRepository;
-import packman.util.CustomException;
-import packman.util.ResponseCode;
 import packman.dto.category.CategoryPackMapping;
 import packman.dto.folder.AloneListsInFolderResponseDto;
+import packman.dto.folder.FolderIdNameMapping;
 import packman.dto.list.ListIdDtoMapping;
 import packman.dto.list.ListInFolderDto;
 import packman.dto.pack.PackCountMapping;
 import packman.entity.packingList.PackingList;
 import packman.repository.CategoryRepository;
 import packman.repository.FolderPackingListRepository;
+import packman.repository.FolderRepository;
+import packman.repository.UserRepository;
 import packman.repository.packingList.PackingListRepository;
+import packman.util.CustomException;
+import packman.util.ResponseCode;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Transactional
@@ -32,7 +31,7 @@ public class FolderService {
     private final PackingListRepository packingListRepository;
     private final CategoryRepository categoryRepository;
 
-    public ArrayList<FolderIdNameMapping> getAloneFolders(Long userId) {
+    public List<FolderIdNameMapping> getAloneFolders(Long userId) {
         userRepository.findByIdAndIsDeleted(userId, false).orElseThrow(
                 () -> new CustomException(ResponseCode.NO_USER)
         );
@@ -40,7 +39,7 @@ public class FolderService {
         return folderRepository.findByUserIdAndIsAlonedOrderByIdDesc(userId, true);
     }
 
-    public ArrayList<FolderIdNameMapping> getTogetherFolders(Long userId) {
+    public List<FolderIdNameMapping> getTogetherFolders(Long userId) {
         userRepository.findByIdAndIsDeleted(userId, false).orElseThrow(
                 () -> new CustomException(ResponseCode.NO_USER)
         );
