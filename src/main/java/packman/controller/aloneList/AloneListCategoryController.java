@@ -2,11 +2,9 @@ package packman.controller.aloneList;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import packman.dto.category.CategoryCreateDto;
+import packman.dto.category.CategoryUpdateDto;
 import packman.service.aloneList.AloneListCategoryService;
 import packman.util.ResponseCode;
 import packman.util.ResponseMessage;
@@ -26,6 +24,15 @@ public class AloneListCategoryController {
         return ResponseMessage.toResponseEntity(
                 ResponseCode.SUCCESS_CREATE_ALONE_CATEGORY,
                 aloneListCategoryService.createCategory(categoryRequestDto, userId)
+        );
+    }
+
+    @PatchMapping
+    public ResponseEntity<ResponseMessage> updateCategory(@RequestBody @Valid CategoryUpdateDto categoryUpdateDto, HttpServletRequest request) {
+        Long userId = 1L;
+        return ResponseMessage.toResponseEntity(
+                ResponseCode.SUCCESS_UPDATE_ALONE_CATEGORY,
+                aloneListCategoryService.updateCategory(categoryUpdateDto, userId)
         );
     }
 }
