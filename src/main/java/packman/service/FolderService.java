@@ -64,7 +64,7 @@ public class FolderService {
 
         List<FolderIdNameMapping> folders = folderRepository.findByUserIdAndIsAlonedOrderByIdDesc(userId, true);
         List<ListIdDtoMapping> alonePackingLists =
-                folderPackingListRepository.findByFolderIdAndAlonePackingList_IsAlonedAndAlonePackingList_PackingList_IsDeletedOrderByIdDesc(folderId, true, false);
+                folderPackingListRepository.findByFolderIdAndAlonePackingList_IsAlonedOrderByIdDesc(folderId, true);
 
         String listNum = String.valueOf(alonePackingLists.size());
 
