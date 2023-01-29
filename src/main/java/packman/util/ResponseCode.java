@@ -27,6 +27,7 @@ public enum ResponseCode {
     NO_FOLDER(HttpStatus.NOT_FOUND, false, "존재하지 않는 폴더입니다"),
     SUCCESS_CREATE_FOLDER(HttpStatus.OK, true, "폴더 생성 성공"),
     FAIL_CREATE_FOLDER(HttpStatus.BAD_REQUEST, false, "제한된 글자수를 초과하였습니다"),
+    SUCCESS_GET_FOLDERS(HttpStatus.OK, true, "폴더 조회 성공"),
 
     // category
     DUPLICATED_CATEGORY(HttpStatus.BAD_REQUEST, false, "중복된 카테고리 명입니다"),
