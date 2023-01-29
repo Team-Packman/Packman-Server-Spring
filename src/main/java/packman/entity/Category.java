@@ -27,8 +27,13 @@ public class Category {
 
     @Column(length = 12, nullable = false)
     private String name;
-
+    @OrderBy("id asc")
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
     private List<Pack> pack = new ArrayList<>();
+
+    public Category(PackingList packingList, String name) {
+        this.packingList = packingList;
+        this.name = name;
+    }
 
 }
