@@ -5,11 +5,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import packman.dto.list.ListTitleRequestDto;
 import packman.dto.list.ListTitleResponseDto;
+import packman.entity.packingList.TogetherAlonePackingList;
+import packman.repository.FolderPackingListRepository;
 import packman.repository.UserRepository;
 import packman.repository.packingList.PackingListRepository;
 import packman.repository.packingList.TogetherAlonePackingListRepository;
 import packman.util.CustomException;
 import packman.util.ResponseCode;
+
+import static packman.validator.LengthValidator.validateListLength;
+import static packman.validator.Validator.validateUserList;
+import static packman.validator.IdValidator.validateUserId;
 
 @Service
 @Transactional
@@ -18,26 +24,28 @@ public class ListService {
     private final UserRepository userRepository;
     private final PackingListRepository listRepository;
     private final TogetherAlonePackingListRepository togetherAlonePackingListRepository;
+    private final FolderPackingListRepository folderPackingListRepository;
 
     public ListTitleResponseDto updateTitle(ListTitleRequestDto listTitleRequestDto, Long userId) {
         Long listId = Long.parseLong(listTitleRequestDto.getId());
+        Long aloneListId = listId;
         String title = listTitleRequestDto.getTitle();
 
         //유저 검증
-        userRepository.findByIdAndIsDeleted(userId, false).orElseThrow(
-                () -> new CustomException(ResponseCode.NO_USER)
-        );
+        validateUserId(userRepository, userId);
 
         //제목 글자수 검증
-        if (title.length() > 12) {
-            throw new CustomException(ResponseCode.EXCEED_LENGTH);
-        }
+        validateListLength(title);
 
         if (!listTitleRequestDto.getIsAloned()) {
-            listId = togetherAlonePackingListRepository.findById(listId).orElseThrow(
-                    () -> new CustomException(ResponseCode.NO_LIST))
-                    .getTogetherPackingList().getId();
+            TogetherAlonePackingList togetherAlonePackingList = togetherAlonePackingListRepository.findById(listId).orElseThrow(
+                    () -> new CustomException(ResponseCode.NO_LIST));
+            listId = togetherAlonePackingList.getTogetherPackingList().getId();
+            aloneListId = togetherAlonePackingList.getAlonePackingList().getId();
         }
+
+        // 유저의 패킹리스트인지 검증
+        validateUserList(folderPackingListRepository, userId, aloneListId);
 
         listRepository.findByIdAndIsDeleted(listId, false).ifPresentOrElse(t -> {
             t.setTitle(title);

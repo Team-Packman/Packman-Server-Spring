@@ -23,12 +23,9 @@ public class ListController {
     private final ListService listService;
 
     @PatchMapping("/title")
-    public ResponseEntity<ResponseMessage> updateTitle(@RequestBody @Valid ListTitleRequestDto listTitleRequestDto, BindingResult bindingResult, HttpServletRequest request) {
+    public ResponseEntity<ResponseMessage> updateTitle(@RequestBody @Valid ListTitleRequestDto listTitleRequestDto, HttpServletRequest request) {
         Long userId = 1L;
 
-        if(bindingResult.hasErrors()){
-            throw new CustomException(ResponseCode.NULL_VALUE);
-        }
         return ResponseMessage.toResponseEntity(
                 ResponseCode.UPDATE_LIST_TITLE_SUCCESS,
                 listService.updateTitle(listTitleRequestDto, userId)
