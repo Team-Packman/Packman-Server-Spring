@@ -64,5 +64,10 @@ public class AloneListPackService {
 
         validateListCategory(listId, category);
         validateCategoryPack(categoryId, pack);
+
+        pack.setChecked(packUpdateDto.getIsChecked());
+        pack.setName(packName);
+
+        return packingListRepository.findByIdAndTitle(listId, alonePackingList.getPackingList().getTitle());
     }
 }
