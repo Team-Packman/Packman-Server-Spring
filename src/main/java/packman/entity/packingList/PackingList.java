@@ -49,5 +49,10 @@ public class PackingList extends TimeStamped {
         this.category.add(category);
     }
 
+    public PackingList(String title, LocalDate departureDate){
+        this.title = title;
+        this.departureDate = departureDate;
+    }
+
 
 }

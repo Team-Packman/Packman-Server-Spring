@@ -40,4 +40,9 @@ public class AlonePackingList {
 
     @OneToMany(mappedBy = "alonePackingList", cascade = CascadeType.ALL)
     private List<TogetherAlonePackingList> togetherAlonePackingLists = new ArrayList<>();
+
+    public AlonePackingList(Long id, String inviteCode){
+        this.id = id;
+        this.inviteCode = inviteCode;
+    }
 }
