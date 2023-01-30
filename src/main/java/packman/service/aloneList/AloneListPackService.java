@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import packman.dto.category.CategoryResponseDto;
 import packman.dto.pack.PackCreateDto;
 import packman.entity.Category;
+import packman.entity.Pack;
 import packman.entity.packingList.AlonePackingList;
 import packman.repository.CategoryRepository;
 import packman.repository.UserRepository;
@@ -36,5 +37,10 @@ public class AloneListPackService {
 
         validatePackLength(packName);
         validateListCategory(listId, category);
+
+        Pack pack = new Pack(category, packName);
+        category.addPack(pack);
+
+        return packingListRepository.findByIdAndTitle(listId, alonePackingList.getPackingList().getTitle());
     }
 }
