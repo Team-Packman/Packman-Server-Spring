@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import packman.dto.category.CategoryCreateDto;
 import packman.dto.category.CategoryResponseDto;
+import packman.dto.category.CategoryUpdateDto;
 import packman.entity.Category;
 import packman.entity.packingList.PackingList;
 import packman.repository.CategoryRepository;
@@ -12,7 +13,10 @@ import packman.repository.packingList.PackingListRepository;
 import packman.util.CustomException;
 import packman.util.ResponseCode;
 
-import java.util.List;
+import static packman.validator.DuplicatedValidator.validateDuplicatedCategory;
+import static packman.validator.IdValidator.validateCategoryId;
+import static packman.validator.IdValidator.validatePackingListId;
+import static packman.validator.LengthValidator.validateCategoryLength;
 
 @Service
 @Transactional
@@ -24,28 +28,46 @@ public class AloneListCategoryService {
     public CategoryResponseDto createCategory(CategoryCreateDto categoryCreateDto, Long userId) {
 
         // 카테고리 exceed_len
-        if (categoryCreateDto.getName().length() > 12) {
-            throw new CustomException(ResponseCode.EXCEED_LEN);
-        }
+        validateCategoryLength(categoryCreateDto.getName());
+
         // no_list
-        PackingList packingList = packingListRepository.findByIdAndIsDeleted(Long.parseLong(categoryCreateDto.getListId()), false).orElseThrow(
-                () -> new CustomException(ResponseCode.NO_LIST)
-        );
+        PackingList packingList = validatePackingListId(packingListRepository, Long.parseLong(categoryCreateDto.getListId()));
+
         // duplicate_category
-        List<Category> categorys = packingList.getCategory();
-        categorys.stream().forEach(category -> {
-            if (category.getName().equals(categoryCreateDto.getName())) {
-                throw new CustomException(ResponseCode.DUPLICATED_CATEGORY);
-            }
-        });
+        validateDuplicatedCategory(packingList, categoryCreateDto.getName(), null);
+
         // insert
         Category category = new Category(packingList, categoryCreateDto.getName());
         packingList.addCategory(category);
-        packingListRepository.save(packingList);
-
 
         // response
         CategoryResponseDto categoryResponseDto = packingListRepository.findByIdAndTitle(Long.parseLong(categoryCreateDto.getListId()), packingList.getTitle());
+        return categoryResponseDto;
+    }
+
+    public CategoryResponseDto updateCategory(CategoryUpdateDto categoryUpdateDto, Long userId) {
+        // 카테고리 exceed_len
+        validateCategoryLength(categoryUpdateDto.getName());
+
+        // no_list
+        PackingList packingList = validatePackingListId(packingListRepository, Long.parseLong(categoryUpdateDto.getListId()));
+
+        // no_category
+        Category category = validateCategoryId(categoryRepository, Long.parseLong(categoryUpdateDto.getId()));
+
+        // no_list_category
+        if (category.getPackingList().getId() != Long.parseLong(categoryUpdateDto.getListId())) {
+            throw new CustomException(ResponseCode.NO_LIST_CATEGORY);
+        }
+
+        // duplicate_category
+        validateDuplicatedCategory(packingList, categoryUpdateDto.getName(), Long.parseLong(categoryUpdateDto.getId()));
+
+        // update
+        category.setName(categoryUpdateDto.getName());
+
+        // response
+        CategoryResponseDto categoryResponseDto = packingListRepository.findByIdAndTitle(Long.parseLong(categoryUpdateDto.getListId()), packingList.getTitle());
         return categoryResponseDto;
     }
 }

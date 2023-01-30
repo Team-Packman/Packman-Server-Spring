@@ -18,6 +18,10 @@ public enum ResponseCode {
     NO_USER(HttpStatus.UNAUTHORIZED, false, "존재하지 않는 유저입니다"),
     SUCCESS_DELETE_USER(HttpStatus.OK, true, "유저 탈퇴 성공"),
 
+    // member
+    NO_MEMBER_USER(HttpStatus.BAD_REQUEST, false, "멤버에 존재하지 않는 유저입니다"),
+
+
     // folder
     SUCCESS_GET_ALONE_FOLDERS(HttpStatus.OK, true, "혼자 패킹리스트 폴더 조회 성공"),
     SUCCESS_GET_TOGETHER_FOLDERS(HttpStatus.OK, true, "함께 패킹리스트 폴더 조회 성공"),
@@ -29,13 +33,16 @@ public enum ResponseCode {
     FAIL_CREATE_FOLDER(HttpStatus.BAD_REQUEST, false, "제한된 글자수를 초과하였습니다"),
     SUCCESS_GET_FOLDERS(HttpStatus.OK, true, "폴더 조회 성공"),
 
-    // category
-    DUPLICATED_CATEGORY(HttpStatus.BAD_REQUEST, false, "중복된 카테고리 명입니다"),
-
     // alonePackingList
     SUCCESS_CREATE_ALONE_CATEGORY(HttpStatus.OK, true, "혼자 패킹리스트 카테고리 생성 성공"),
+    SUCCESS_UPDATE_ALONE_CATEGORY(HttpStatus.OK, true, "혼자 패킹리스트 카테고리 수정 성공"),
+    // togetherPackingList
+    SUCCESS_CREATE_TOGETHER_CATEGORY(HttpStatus.OK, true, "함께 패킹리스트 카테고리 생성 성공"),
 
-
+    // category
+    DUPLICATED_CATEGORY(HttpStatus.BAD_REQUEST, false, "중복된 카테고리 명입니다"),
+    NO_CATEGORY(HttpStatus.BAD_REQUEST, false, "존재하지 않는 카테고리입니다"),
+    NO_LIST_CATEGORY(HttpStatus.BAD_REQUEST, false, "리스트에 존재하지 않는 카테고리입니다"),
     // packingList
     NO_LIST(HttpStatus.BAD_REQUEST, false, "존재하지 않는 패킹리스트입니다"),
     EXCEED_LEN(HttpStatus.BAD_REQUEST, false, "제한된 글자수를 초과하였습니다");
