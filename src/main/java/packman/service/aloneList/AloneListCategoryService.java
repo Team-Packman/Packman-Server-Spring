@@ -10,8 +10,11 @@ import packman.entity.Category;
 import packman.entity.packingList.PackingList;
 import packman.repository.CategoryRepository;
 import packman.repository.packingList.PackingListRepository;
+import packman.util.CustomException;
+import packman.util.ResponseCode;
 
 import static packman.validator.DuplicatedValidator.validateDuplicatedCategory;
+import static packman.validator.IdValidator.validateCategoryId;
 import static packman.validator.IdValidator.validatePackingListId;
 import static packman.validator.LengthValidator.validateCategoryLength;
 
@@ -31,7 +34,7 @@ public class AloneListCategoryService {
         PackingList packingList = validatePackingListId(packingListRepository, Long.parseLong(categoryCreateDto.getListId()));
 
         // duplicate_category
-        validateDuplicatedCategory(packingList, categoryCreateDto.getName());
+        validateDuplicatedCategory(packingList, categoryCreateDto.getName(), null);
 
         // insert
         Category category = new Category(packingList, categoryCreateDto.getName());
@@ -46,29 +49,22 @@ public class AloneListCategoryService {
 
     public CategoryResponseDto updateCategory(CategoryUpdateDto categoryUpdateDto, Long userId) {
         // 카테고리 exceed_len
-        if (categoryUpdateDto.getName().length() > 12) {
-            throw new CustomException(ResponseCode.EXCEED_LEN);
-        }
+        validateCategoryLength(categoryUpdateDto.getName());
+
         // no_list
-        PackingList packingList = packingListRepository.findByIdAndIsDeleted(Long.parseLong(categoryUpdateDto.getListId()), false).orElseThrow(
-                () -> new CustomException(ResponseCode.NO_LIST)
-        );
+        PackingList packingList = validatePackingListId(packingListRepository, Long.parseLong(categoryUpdateDto.getListId()));
+
         // no_category
-        Category category = categoryRepository.findById(Long.parseLong(categoryUpdateDto.getId())).orElseThrow(
-                () -> new CustomException(ResponseCode.NO_CATEGORY)
-        );
+        Category category = validateCategoryId(categoryRepository, Long.parseLong(categoryUpdateDto.getId()));
+
         // no_list_category
         if (category.getPackingList().getId() != Long.parseLong(categoryUpdateDto.getListId())) {
             throw new CustomException(ResponseCode.NO_LIST_CATEGORY);
         }
 
         // duplicate_category
-        List<Category> categorys = packingList.getCategory();
-        categorys.stream().forEach(c -> {
-            if (c.getName().equals(categoryUpdateDto.getName()) && c.getId() != Long.parseLong(categoryUpdateDto.getId())) {
-                throw new CustomException(ResponseCode.DUPLICATED_CATEGORY);
-            }
-        });
+        validateDuplicatedCategory(packingList, categoryUpdateDto.getName(), Long.parseLong(categoryUpdateDto.getId()));
+
 
         // update
         category.setName(categoryUpdateDto.getName());
