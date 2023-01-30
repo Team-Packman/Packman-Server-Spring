@@ -8,11 +8,11 @@ import javax.validation.constraints.NotEmpty;
 @Data
 public class PackCreateDto {
     @NotEmpty
-    String name;
+    private String name;
 
     @NotBlank
-    String categoryId;
+    private String categoryId;
 
     @NotBlank
-    String listId;
+    private String listId;
 }
