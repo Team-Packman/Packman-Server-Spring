@@ -2,16 +2,17 @@ package packman.dto.pack;
 
 import lombok.Data;
 
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 
 @Data
 public class PackCreateDto {
-    @NotNull
+    @NotEmpty
     String name;
 
-    @NotNull
+    @NotBlank
     String categoryId;
 
-    @NotNull
+    @NotBlank
     String listId;
 }
