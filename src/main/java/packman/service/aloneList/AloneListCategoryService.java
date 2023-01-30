@@ -9,10 +9,10 @@ import packman.entity.Category;
 import packman.entity.packingList.PackingList;
 import packman.repository.CategoryRepository;
 import packman.repository.packingList.PackingListRepository;
-import packman.util.CustomException;
-import packman.util.ResponseCode;
 
-import java.util.List;
+import static packman.validator.DuplicatedValidator.validateDuplicatedCategory;
+import static packman.validator.IdValidator.validatePackingListId;
+import static packman.validator.LengthValidator.validateCategoryLength;
 
 @Service
 @Transactional
@@ -24,20 +24,14 @@ public class AloneListCategoryService {
     public CategoryResponseDto createCategory(CategoryCreateDto categoryCreateDto, Long userId) {
 
         // 카테고리 exceed_len
-        if (categoryCreateDto.getName().length() > 12) {
-            throw new CustomException(ResponseCode.EXCEED_LEN);
-        }
+        validateCategoryLength(categoryCreateDto.getName());
+
         // no_list
-        PackingList packingList = packingListRepository.findByIdAndIsDeleted(Long.parseLong(categoryCreateDto.getListId()), false).orElseThrow(
-                () -> new CustomException(ResponseCode.NO_LIST)
-        );
+        PackingList packingList = validatePackingListId(packingListRepository, Long.parseLong(categoryCreateDto.getListId()));
+
         // duplicate_category
-        List<Category> categorys = packingList.getCategory();
-        categorys.stream().forEach(category -> {
-            if (category.getName().equals(categoryCreateDto.getName())) {
-                throw new CustomException(ResponseCode.DUPLICATED_CATEGORY);
-            }
-        });
+        validateDuplicatedCategory(packingList, categoryCreateDto.getName());
+
         // insert
         Category category = new Category(packingList, categoryCreateDto.getName());
         packingList.addCategory(category);
