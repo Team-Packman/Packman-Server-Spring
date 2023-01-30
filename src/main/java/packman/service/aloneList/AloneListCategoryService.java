@@ -14,8 +14,7 @@ import packman.util.CustomException;
 import packman.util.ResponseCode;
 
 import static packman.validator.DuplicatedValidator.validateDuplicatedCategory;
-import static packman.validator.IdValidator.validateCategoryId;
-import static packman.validator.IdValidator.validatePackingListId;
+import static packman.validator.IdValidator.*;
 import static packman.validator.LengthValidator.validateCategoryLength;
 
 @Service
@@ -69,5 +68,24 @@ public class AloneListCategoryService {
         // response
         CategoryResponseDto categoryResponseDto = packingListRepository.findByIdAndTitle(Long.parseLong(categoryUpdateDto.getListId()), packingList.getTitle());
         return categoryResponseDto;
+    }
+
+    public void deleteCategory(Long listId, Long categoryId, Long userId) {
+        // no_list
+        PackingList packingList = validatePackingListId(packingListRepository, listId);
+
+        // no_user_list
+        validatePackingListIdInUser(packingList, userId);
+
+        // no_category
+        Category category = validateCategoryId(categoryRepository, categoryId);
+
+        // no_list_category
+        if (category.getPackingList().getId() != listId) {
+            throw new CustomException(ResponseCode.NO_LIST_CATEGORY);
+        }
+        // delete
+        categoryRepository.delete(category);
+
     }
 }
