@@ -39,8 +39,6 @@ public class AloneListCategoryService {
         // insert
         Category category = new Category(packingList, categoryCreateDto.getName());
         packingList.addCategory(category);
-        packingListRepository.save(packingList);
-
 
         // response
         CategoryResponseDto categoryResponseDto = packingListRepository.findByIdAndTitle(Long.parseLong(categoryCreateDto.getListId()), packingList.getTitle());
@@ -65,10 +63,8 @@ public class AloneListCategoryService {
         // duplicate_category
         validateDuplicatedCategory(packingList, categoryUpdateDto.getName(), Long.parseLong(categoryUpdateDto.getId()));
 
-
         // update
         category.setName(categoryUpdateDto.getName());
-        categoryRepository.save(category);
 
         // response
         CategoryResponseDto categoryResponseDto = packingListRepository.findByIdAndTitle(Long.parseLong(categoryUpdateDto.getListId()), packingList.getTitle());
