@@ -19,6 +19,7 @@ public enum ResponseCode {
     SUCCESS_GET_USER(HttpStatus.OK, true, "유저 조회 성공"),
     NO_USER(HttpStatus.UNAUTHORIZED, false, "존재하지 않는 유저입니다"),
     SUCCESS_DELETE_USER(HttpStatus.OK, true, "유저 탈퇴 성공"),
+    SUCCESS_UPDATE_USER(HttpStatus.OK, true, "유저 수정 성공"),
 
     // folder
     SUCCESS_GET_ALONE_FOLDERS(HttpStatus.OK, true, "혼자 패킹리스트 폴더 조회 성공"),
