@@ -8,6 +8,7 @@ import packman.dto.category.CategoryUpdateDto;
 import packman.service.togetherList.TogetherListCategoryService;
 import packman.util.ResponseCode;
 import packman.util.ResponseMessage;
+import packman.util.ResponseNonDataMessage;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -38,10 +39,10 @@ public class TogetherListCategoryController {
     }
 
     @DeleteMapping("/{listId}/{categoryId}")
-    public ResponseEntity<ResponseMessage> deleteCategory(@PathVariable("listId") String listId, @PathVariable("categoryId") String categoryId, HttpServletRequest request) {
+    public ResponseEntity<ResponseNonDataMessage> deleteCategory(@PathVariable("listId") String listId, @PathVariable("categoryId") String categoryId, HttpServletRequest request) {
         Long userId = 1L;
         togetherListCategoryService.deleteCategory(Long.parseLong(listId), Long.parseLong(categoryId), userId);
-        return ResponseMessage.toResponseEntity(
+        return ResponseNonDataMessage.toResponseEntity(
                 ResponseCode.SUCCESS_DELETE_TOGETHER_CATEGORY
         );
     }
