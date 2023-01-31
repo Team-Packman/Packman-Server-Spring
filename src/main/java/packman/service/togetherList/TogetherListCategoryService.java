@@ -84,4 +84,24 @@ public class TogetherListCategoryService {
         return categoryResponseDto;
     }
 
+    public void deleteCategory(Long listId, Long categoryId, Long userId) {
+        // no_list
+        PackingList packingList = validatePackingListId(packingListRepository, listId);
+
+        // no_member_user
+        List<UserGroup> userGroups = packingList.getTogetherPackingList().getGroup().getUserGroups();
+        validateUserMemberId(userGroups, userId);
+
+        // no_category
+        Category category = validateCategoryId(categoryRepository, categoryId);
+
+        // no_list_category
+        if (category.getPackingList().getId() != listId) {
+            throw new CustomException(ResponseCode.NO_LIST_CATEGORY);
+        }
+        // delete
+        categoryRepository.delete(category);
+
+    }
+
 }
