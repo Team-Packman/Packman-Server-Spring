@@ -36,4 +36,13 @@ public class TogetherListCategoryController {
                 togetherListCategoryService.updateCategory(categoryUpdateDto, userId)
         );
     }
+
+    @DeleteMapping("/{listId}/{categoryId}")
+    public ResponseEntity<ResponseMessage> deleteCategory(@PathVariable("listId") String listId, @PathVariable("categoryId") String categoryId, HttpServletRequest request) {
+        Long userId = 1L;
+        togetherListCategoryService.deleteCategory(Long.parseLong(listId), Long.parseLong(categoryId), userId);
+        return ResponseMessage.toResponseEntity(
+                ResponseCode.SUCCESS_DELETE_TOGETHER_CATEGORY
+        );
+    }
 }
