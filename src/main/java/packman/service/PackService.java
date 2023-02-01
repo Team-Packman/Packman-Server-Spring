@@ -33,15 +33,14 @@ public class PackService {
     private final FolderPackingListRepository folderPackingListRepository;
 
     public ListResponseMapping createAlonePack(PackCreateDto packCreateDto, Long userId) {
-        Long aloneId = Long.valueOf(packCreateDto.getListId());
+        Long aloneListId = Long.valueOf(packCreateDto.getListId());
 
         validateUserId(userRepository, userId);
+        String title = validateUserList(folderPackingListRepository, userId, aloneListId);
 
-        String title = validateUserList(folderPackingListRepository, userId, aloneId);
+        addPackInCategory(packCreateDto);
 
-        addPackInCategory(aloneId, Long.valueOf(packCreateDto.getCategoryId()), packCreateDto.getName());
-
-        return packingListRepository.findByIdAndTitle(aloneId, title);
+        return packingListRepository.findByIdAndTitle(aloneListId, title);
     }
 
     public ListResponseMapping createTogetherPack(PackCreateDto packCreateDto, Long userId) {
@@ -49,18 +48,16 @@ public class PackService {
 
         validateUserId(userRepository, userId);
 
-        PackingList packingList = validatePackingListId(packingListRepository, togetherListId);
-        validateTogetherPackingListId(togetherPackingListRepository, togetherListId);
-
-        List<UserGroup> userGroups = packingList.getTogetherPackingList().getGroup().getUserGroups();
-        validateUserMemberId(userGroups, userId);
-
-        addPackInCategory(togetherListId, Long.valueOf(packCreateDto.getCategoryId()), packCreateDto.getName());
+        addPackInCategory(packCreateDto);
 
         return packingListRepository.findByIdAndTitle(togetherListId, packingList.getTitle());
     }
 
-    public void addPackInCategory(Long listId, Long categoryId, String packName) {
+    public void addPackInCategory(PackCreateDto packCreateDto) {
+        Long listId = Long.valueOf(packCreateDto.getListId());
+        Long categoryId = Long.valueOf(packCreateDto.getListId());
+        String packName = packCreateDto.getName();
+
         Category category = validateCategoryId(categoryRepository, categoryId);
 
         validatePackLength(packName);
