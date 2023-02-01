@@ -2,16 +2,15 @@ package packman.validator;
 
 
 import packman.entity.Category;
-import packman.entity.FolderPackingList;
+import packman.entity.Pack;
 import packman.entity.packingList.AlonePackingList;
 import packman.repository.FolderPackingListRepository;
-import packman.entity.Pack;
 import packman.util.CustomException;
 import packman.util.ResponseCode;
 
 public class Validator {
     public static void validateUserList(FolderPackingListRepository folderPackingListRepository, Long userId, Long listId) {
-        FolderPackingList folderPackingList = folderPackingListRepository.findByFolder_UserIdAndAlonePackingListId(userId, listId).orElseThrow(
+        folderPackingListRepository.findByFolder_UserIdAndAlonePackingListId(userId, listId).orElseThrow(
                 () -> new CustomException(ResponseCode.NO_LIST)
         );
     }
