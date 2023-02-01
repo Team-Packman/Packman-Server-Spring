@@ -1,7 +1,7 @@
 package packman.validator;
 
 import packman.entity.Category;
-import packman.entity.packingList.AlonePackingList;
+import packman.entity.Pack;
 import packman.repository.CategoryRepository;
 import packman.repository.PackRepository;
 import packman.repository.UserRepository;
