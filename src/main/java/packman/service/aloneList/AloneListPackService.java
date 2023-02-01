@@ -7,17 +7,17 @@ import packman.dto.category.CategoryResponseDto;
 import packman.dto.pack.PackCreateDto;
 import packman.entity.Category;
 import packman.entity.Pack;
-import packman.entity.packingList.AlonePackingList;
+import packman.entity.packingList.PackingList;
 import packman.repository.CategoryRepository;
 import packman.repository.FolderPackingListRepository;
 import packman.repository.UserRepository;
+import packman.repository.packingList.AlonePackingListRepository;
 import packman.repository.packingList.PackingListRepository;
 
-import static packman.validator.IdValidator.validateCategoryId;
-import static packman.validator.IdValidator.validateUserId;
+import static packman.validator.IdValidator.*;
 import static packman.validator.LengthValidator.validatePackLength;
 import static packman.validator.Validator.validateListCategory;
-import static packman.validator.Validator.validateUserList;
+import static packman.validator.Validator.validateUserAloneList;
 
 @Service
 @Transactional
@@ -27,23 +27,26 @@ public class AloneListPackService {
     private final FolderPackingListRepository folderPackingListRepository;
     private final CategoryRepository categoryRepository;
     private final PackingListRepository packingListRepository;
+    private final AlonePackingListRepository alonePackingListRepository;
 
     public CategoryResponseDto createPack(PackCreateDto packCreateDto, Long userId) {
-        Long listId = Long.valueOf(packCreateDto.getListId());
+        Long aloneId = Long.valueOf(packCreateDto.getListId());
         Long categoryId = Long.valueOf(packCreateDto.getCategoryId());
         String packName = packCreateDto.getName();
 
         validateUserId(userRepository, userId);
-        AlonePackingList alonePackingList = validateUserList(folderPackingListRepository, userId, listId);
+
+        PackingList packingList = validatePackingListId(packingListRepository, aloneId);
+        validateUserAloneList(userId, validateAlonePackingListId(alonePackingListRepository, aloneId));
 
         Category category = validateCategoryId(categoryRepository, categoryId);
 
         validatePackLength(packName);
-        validateListCategory(listId, category);
+        validateListCategory(aloneId, category);
 
         Pack pack = new Pack(category, packName);
         category.addPack(pack);
 
-        return packingListRepository.findByIdAndTitle(listId, alonePackingList.getPackingList().getTitle());
+        return packingListRepository.findByIdAndTitle(aloneId, packingList.getTitle());
     }
 }
