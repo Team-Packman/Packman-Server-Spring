@@ -7,11 +7,16 @@ import packman.dto.list.ListResponseMapping;
 import packman.dto.pack.PackUpdateDto;
 import packman.entity.Category;
 import packman.entity.Pack;
+import packman.entity.UserGroup;
+import packman.entity.packingList.PackingList;
 import packman.repository.CategoryRepository;
 import packman.repository.FolderPackingListRepository;
 import packman.repository.PackRepository;
 import packman.repository.UserRepository;
 import packman.repository.packingList.PackingListRepository;
+import packman.repository.packingList.TogetherPackingListRepository;
+
+import java.util.List;
 
 import static packman.validator.IdValidator.*;
 import static packman.validator.LengthValidator.validatePackLength;
@@ -25,6 +30,7 @@ public class PackService {
     private final FolderPackingListRepository folderPackingListRepository;
     private final CategoryRepository categoryRepository;
     private final PackingListRepository packingListRepository;
+    private final TogetherPackingListRepository togetherPackingListRepository;
     private final PackRepository packRepository;
 
     public ListResponseMapping updateAlonePack(PackUpdateDto packUpdateDto, Long userId) {
@@ -36,6 +42,17 @@ public class PackService {
         updatePackInCategory(packUpdateDto);
 
         return packingListRepository.findByIdAndTitle(aloneListId, title);
+    }
+
+    public ListResponseMapping updateTogetherPack(PackUpdateDto packUpdateDto, Long userId) {
+        Long togetherListId = Long.valueOf(packUpdateDto.getListId());
+
+        validateUserId(userRepository, userId);
+        PackingList packingList = validateList(userId, togetherListId);
+
+        updatePackInCategory(packUpdateDto);
+
+        return packingListRepository.findByIdAndTitle(togetherListId, packingList.getTitle());
     }
 
     public void updatePackInCategory(PackUpdateDto packUpdateDto) {
@@ -54,5 +71,15 @@ public class PackService {
 
         pack.setChecked(packUpdateDto.getIsChecked());
         pack.setName(packName);
+    }
+
+    public PackingList validateList(Long userId, Long togetherListId) {
+        PackingList packingList = validatePackingListId(packingListRepository, togetherListId);
+        validateTogetherPackingListId(togetherPackingListRepository, togetherListId);
+
+        List<UserGroup> userGroups = packingList.getTogetherPackingList().getGroup().getUserGroups();
+        validateUserMemberId(userGroups, userId);
+
+        return packingList;
     }
 }
