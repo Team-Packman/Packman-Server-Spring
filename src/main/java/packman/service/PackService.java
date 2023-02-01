@@ -47,6 +47,7 @@ public class PackService {
         Long togetherListId = Long.valueOf(packCreateDto.getListId());
 
         validateUserId(userRepository, userId);
+        PackingList packingList = validateList(userId, togetherListId);
 
         addPackInCategory(packCreateDto);
 
@@ -65,5 +66,15 @@ public class PackService {
 
         Pack pack = new Pack(category, packName);
         category.addPack(pack);
+    }
+
+    public PackingList validateList(Long userId, Long togetherListId) {
+        PackingList packingList = validatePackingListId(packingListRepository, togetherListId);
+        validateTogetherPackingListId(togetherPackingListRepository, togetherListId);
+
+        List<UserGroup> userGroups = packingList.getTogetherPackingList().getGroup().getUserGroups();
+        validateUserMemberId(userGroups, userId);
+
+        return packingList;
     }
 }
