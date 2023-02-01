@@ -5,7 +5,6 @@ import org.springframework.stereotype.Repository;
 import packman.dto.folder.FolderIdNameMapping;
 import packman.entity.Folder;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
