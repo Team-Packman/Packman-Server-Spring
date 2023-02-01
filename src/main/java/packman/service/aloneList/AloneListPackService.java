@@ -80,7 +80,9 @@ public class AloneListPackService {
     public void deletePack(Long listId, Long categoryId, Long packId, Long userId) {
         validateUserId(userRepository, userId);
 
-        validateUserList(folderPackingListRepository, userId, listId);
+        validatePackingListId(packingListRepository, listId);
+        validateUserAloneList(userId, validateAlonePackingListId(alonePackingListRepository, listId));
+
         Category category = validateCategoryId(categoryRepository, categoryId);
         Pack pack = validatePackId(packRepository, packId);
 
