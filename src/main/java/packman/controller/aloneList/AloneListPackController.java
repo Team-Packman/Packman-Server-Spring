@@ -2,10 +2,12 @@ package packman.controller.aloneList;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import packman.dto.pack.PackCreateDto;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import packman.dto.pack.PackUpdateDto;
-import packman.service.aloneList.AloneListPackService;
+import packman.service.PackService;
 import packman.util.ResponseCode;
 import packman.util.ResponseMessage;
 
@@ -16,7 +18,7 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 @RequestMapping("/list/alone/pack")
 public class AloneListPackController {
-    private final AloneListPackService aloneListPackService;
+    private final PackService packService;
 
     @PostMapping
     public ResponseEntity<ResponseMessage> createPack(@RequestBody @Valid PackCreateDto packCreateDto, HttpServletRequest request) {
@@ -30,9 +32,10 @@ public class AloneListPackController {
     @PatchMapping
     public ResponseEntity<ResponseMessage> updatePack(@RequestBody @Valid PackUpdateDto packUpdateDto, HttpServletRequest request) {
         Long userId = 1L;
+
         return ResponseMessage.toResponseEntity(
                 ResponseCode.SUCCESS_UPDATE_ALONE_PACK,
-                aloneListPackService.updatePack(packUpdateDto, userId)
+                packService.updateAlonePack(packUpdateDto, userId)
         );
     }
 }
