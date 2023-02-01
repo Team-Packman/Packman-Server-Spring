@@ -9,10 +9,12 @@ import packman.util.CustomException;
 import packman.util.ResponseCode;
 
 public class Validator {
-    public static void validateUserList(FolderPackingListRepository folderPackingListRepository, Long userId, Long listId) {
+    public static String validateUserList(FolderPackingListRepository folderPackingListRepository, Long userId, Long listId) {
         FolderPackingList folderPackingList = folderPackingListRepository.findByFolder_UserIdAndAlonePackingListId(userId, listId).orElseThrow(
                 () -> new CustomException(ResponseCode.NO_LIST)
         );
+
+        return folderPackingList.getAlonePackingList().getPackingList().getTitle();
     }
 
     public static void validateUserAloneList(Long userId, AlonePackingList alonePackingList) {
