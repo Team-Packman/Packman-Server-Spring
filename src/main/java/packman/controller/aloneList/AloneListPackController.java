@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import packman.dto.pack.PackCreateDto;
-import packman.service.aloneList.AloneListPackService;
+import packman.service.ListPackService;
 import packman.util.ResponseCode;
 import packman.util.ResponseMessage;
 
@@ -18,14 +18,14 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 @RequestMapping("/list/alone/pack")
 public class AloneListPackController {
-    private final AloneListPackService aloneListPackService;
+    private final ListPackService listPackService;
 
     @PostMapping
     public ResponseEntity<ResponseMessage> createPack(@RequestBody @Valid PackCreateDto packCreateDto, HttpServletRequest request) {
         Long userId = 1L;
         return ResponseMessage.toResponseEntity(
                 ResponseCode.SUCCESS_CREATE_ALONE_PACK,
-                aloneListPackService.createPack(packCreateDto, userId)
+                listPackService.createAlonePack(packCreateDto, userId)
         );
     }
 }
