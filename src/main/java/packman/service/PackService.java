@@ -25,7 +25,7 @@ import static packman.validator.Validator.validateUserList;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class ListPackService {
+public class PackService {
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
     private final PackingListRepository packingListRepository;

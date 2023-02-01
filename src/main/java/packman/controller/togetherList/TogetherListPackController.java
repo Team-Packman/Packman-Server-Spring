@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import packman.dto.pack.PackCreateDto;
-import packman.service.ListPackService;
+import packman.service.PackService;
 import packman.util.ResponseCode;
 import packman.util.ResponseMessage;
 
@@ -18,7 +18,7 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 @RequestMapping("/list/together/pack")
 public class TogetherListPackController {
-    private final ListPackService listPackService;
+    private final PackService packService;
 
     @PostMapping
     public ResponseEntity<ResponseMessage> createPack(@RequestBody @Valid PackCreateDto packCreateDto, HttpServletRequest request) {
@@ -26,7 +26,7 @@ public class TogetherListPackController {
 
         return ResponseMessage.toResponseEntity(
                 ResponseCode.SUCCESS_CREATE_TOGETHER_PACK,
-                listPackService.createTogetherPack(packCreateDto, userId)
+                packService.createTogetherPack(packCreateDto, userId)
         );
     }
 }
