@@ -10,12 +10,16 @@ import packman.util.CustomException;
 import packman.util.ResponseCode;
 
 public class Validator {
-    public static AlonePackingList validateUserList(FolderPackingListRepository folderPackingListRepository, Long userId, Long listId) {
+    public static void validateUserList(FolderPackingListRepository folderPackingListRepository, Long userId, Long listId) {
         FolderPackingList folderPackingList = folderPackingListRepository.findByFolder_UserIdAndAlonePackingListId(userId, listId).orElseThrow(
                 () -> new CustomException(ResponseCode.NO_LIST)
         );
+    }
 
-        return folderPackingList.getAlonePackingList();
+    public static void validateUserAloneList(Long userId, AlonePackingList alonePackingList) {
+        if (!alonePackingList.getFolderPackingList().getFolder().getUser().getId().equals(userId)) {
+            throw new CustomException(ResponseCode.NO_LIST);
+        }
     }
 
     public static void validateListCategory(Long listId, Category category) {
