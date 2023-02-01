@@ -3,7 +3,7 @@ package packman.service.aloneList;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import packman.dto.category.CategoryResponseDto;
+import packman.dto.list.ListResponseMapping;
 import packman.dto.pack.PackCreateDto;
 import packman.entity.Category;
 import packman.entity.Pack;
@@ -29,7 +29,7 @@ public class AloneListPackService {
     private final PackingListRepository packingListRepository;
     private final AlonePackingListRepository alonePackingListRepository;
 
-    public CategoryResponseDto createPack(PackCreateDto packCreateDto, Long userId) {
+    public ListResponseMapping createPack(PackCreateDto packCreateDto, Long userId) {
         Long aloneId = Long.valueOf(packCreateDto.getListId());
         Long categoryId = Long.valueOf(packCreateDto.getCategoryId());
         String packName = packCreateDto.getName();
