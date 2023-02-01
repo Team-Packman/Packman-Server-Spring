@@ -11,21 +11,23 @@ import packman.entity.Pack;
 import packman.entity.packingList.AlonePackingList;
 import packman.repository.CategoryRepository;
 import packman.repository.PackRepository;
+import packman.repository.FolderPackingListRepository;
 import packman.repository.UserRepository;
-import packman.repository.packingList.AlonePackingListRepository;
 import packman.repository.packingList.PackingListRepository;
 
-import static packman.validator.IdValidator.*;
+import static packman.validator.IdValidator.validateCategoryId;
+import static packman.validator.IdValidator.validateUserId;
 import static packman.validator.LengthValidator.validatePackLength;
 import static packman.validator.Validator.validateCategoryPack;
 import static packman.validator.Validator.validateListCategory;
+import static packman.validator.Validator.validateUserList;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class AloneListPackService {
     private final UserRepository userRepository;
-    private final AlonePackingListRepository alonePackingListRepository;
+    private final FolderPackingListRepository folderPackingListRepository;
     private final CategoryRepository categoryRepository;
     private final PackingListRepository packingListRepository;
     private final PackRepository packRepository;
@@ -36,7 +38,8 @@ public class AloneListPackService {
         String packName = packCreateDto.getName();
 
         validateUserId(userRepository, userId);
-        AlonePackingList alonePackingList = validateAloneListId(alonePackingListRepository, listId);
+        AlonePackingList alonePackingList = validateUserList(folderPackingListRepository, userId, listId);
+
         Category category = validateCategoryId(categoryRepository, categoryId);
 
         validatePackLength(packName);

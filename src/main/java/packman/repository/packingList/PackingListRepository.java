@@ -10,6 +10,5 @@ import java.util.Optional;
 @Repository
 public interface PackingListRepository extends JpaRepository<PackingList, Long> {
     Optional<PackingList> findByIdAndIsDeleted(Long listId, boolean isDeleted);
-
     ListResponseMapping findByIdAndTitle(Long listId, String title);
 }
