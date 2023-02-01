@@ -53,25 +53,27 @@ public class AloneListPackService {
     }
 
     public ListResponseMapping updatePack(PackUpdateDto packUpdateDto, Long userId) {
-        Long listId = Long.valueOf(packUpdateDto.getListId());
+        Long aloneId = Long.valueOf(packUpdateDto.getListId());
         Long categoryId = Long.valueOf(packUpdateDto.getCategoryId());
         String packName = packUpdateDto.getName();
         Long packId = Long.valueOf(packUpdateDto.getId());
 
         validateUserId(userRepository, userId);
 
-        AlonePackingList alonePackingList = validateUserList(folderPackingListRepository, userId, listId);
+        PackingList packingList = validatePackingListId(packingListRepository, aloneId);
+        validateUserAloneList(userId, validateAlonePackingListId(alonePackingListRepository, aloneId));
+
         Category category = validateCategoryId(categoryRepository, categoryId);
         Pack pack = validatePackId(packRepository, packId);
 
         validatePackLength(packName);
 
-        validateListCategory(listId, category);
+        validateListCategory(aloneId, category);
         validateCategoryPack(categoryId, pack);
 
         pack.setChecked(packUpdateDto.getIsChecked());
         pack.setName(packName);
 
-        return packingListRepository.findByIdAndTitle(listId, alonePackingList.getPackingList().getTitle());
+        return packingListRepository.findByIdAndTitle(aloneId, packingList.getTitle());
     }
 }
