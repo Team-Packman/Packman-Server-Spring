@@ -10,17 +10,14 @@ import packman.entity.Category;
 import packman.entity.Pack;
 import packman.entity.packingList.AlonePackingList;
 import packman.repository.CategoryRepository;
-import packman.repository.PackRepository;
 import packman.repository.FolderPackingListRepository;
+import packman.repository.PackRepository;
 import packman.repository.UserRepository;
 import packman.repository.packingList.PackingListRepository;
 
-import static packman.validator.IdValidator.validateCategoryId;
-import static packman.validator.IdValidator.validateUserId;
+import static packman.validator.IdValidator.*;
 import static packman.validator.LengthValidator.validatePackLength;
-import static packman.validator.Validator.validateCategoryPack;
-import static packman.validator.Validator.validateListCategory;
-import static packman.validator.Validator.validateUserList;
+import static packman.validator.Validator.*;
 
 @Service
 @Transactional
@@ -77,7 +74,7 @@ public class AloneListPackService {
     public void deletePack(Long listId, Long categoryId, Long packId, Long userId) {
         validateUserId(userRepository, userId);
 
-        validateAloneListId(alonePackingListRepository, listId);
+        validateUserList(folderPackingListRepository, userId, listId);
         Category category = validateCategoryId(categoryRepository, categoryId);
         Pack pack = validatePackId(packRepository, packId);
 
