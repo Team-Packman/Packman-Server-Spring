@@ -7,14 +7,17 @@ import packman.dto.list.ListResponseMapping;
 import packman.dto.pack.PackCreateDto;
 import packman.entity.Category;
 import packman.entity.Pack;
+import packman.entity.UserGroup;
+import packman.entity.packingList.PackingList;
 import packman.repository.CategoryRepository;
 import packman.repository.FolderPackingListRepository;
 import packman.repository.UserRepository;
 import packman.repository.packingList.PackingListRepository;
 import packman.repository.packingList.TogetherPackingListRepository;
 
-import static packman.validator.IdValidator.validateCategoryId;
-import static packman.validator.IdValidator.validateUserId;
+import java.util.List;
+
+import static packman.validator.IdValidator.*;
 import static packman.validator.LengthValidator.validatePackLength;
 import static packman.validator.Validator.validateListCategory;
 import static packman.validator.Validator.validateUserList;
@@ -26,6 +29,7 @@ public class ListPackService {
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
     private final PackingListRepository packingListRepository;
+    private final TogetherPackingListRepository togetherPackingListRepository;
     private final FolderPackingListRepository folderPackingListRepository;
 
     public ListResponseMapping createAlonePack(PackCreateDto packCreateDto, Long userId) {
@@ -38,6 +42,22 @@ public class ListPackService {
         addPackInCategory(aloneId, Long.valueOf(packCreateDto.getCategoryId()), packCreateDto.getName());
 
         return packingListRepository.findByIdAndTitle(aloneId, title);
+    }
+
+    public ListResponseMapping createTogetherPack(PackCreateDto packCreateDto, Long userId) {
+        Long togetherListId = Long.valueOf(packCreateDto.getListId());
+
+        validateUserId(userRepository, userId);
+
+        PackingList packingList = validatePackingListId(packingListRepository, togetherListId);
+        validateTogetherPackingListId(togetherPackingListRepository, togetherListId);
+
+        List<UserGroup> userGroups = packingList.getTogetherPackingList().getGroup().getUserGroups();
+        validateUserMemberId(userGroups, userId);
+
+        addPackInCategory(togetherListId, Long.valueOf(packCreateDto.getCategoryId()), packCreateDto.getName());
+
+        return packingListRepository.findByIdAndTitle(togetherListId, packingList.getTitle());
     }
 
     public void addPackInCategory(Long listId, Long categoryId, String packName) {
