@@ -36,4 +36,8 @@ public class Category {
         this.name = name;
     }
 
+    public void addPack(Pack pack) {
+        this.pack.add(pack);
+    }
+
 }

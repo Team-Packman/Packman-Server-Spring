@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull;
 @Data
 @Getter
 @AllArgsConstructor
-public class ListRequestDto {
+public class ListDto {
     @NotBlank
     private String departureDate;
     @NotBlank

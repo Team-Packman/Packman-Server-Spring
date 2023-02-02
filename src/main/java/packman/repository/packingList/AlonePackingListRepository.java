@@ -6,5 +6,5 @@ import packman.entity.packingList.AlonePackingList;
 
 @Repository
 public interface AlonePackingListRepository extends JpaRepository<AlonePackingList, Long> {
-    boolean existByInviteCode(String inviteCode);
+    boolean existsByInviteCode(String inviteCode);
 }

@@ -4,9 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import packman.dto.alonelist.AloneListResponseDto;
-import packman.dto.folder.FolderIdNameMapping;
-import packman.dto.list.ListRequestDto;
+import packman.dto.category.CategoryResponseDto;
+import packman.dto.list.AloneListResponseDto;
+import packman.dto.list.ListDto;
 import packman.entity.Category;
 import packman.entity.Folder;
 import packman.entity.FolderPackingList;
@@ -41,25 +41,25 @@ public class AloneListService {
     private final TemplateCategoryRepository templateCategoryRepository;
     private final PackRepository packRepository;
 
-    public AloneListResponseDto createAloneList(ListRequestDto listRequestDto, Long userId) {
-        Long folderId = Long.parseLong(listRequestDto.getFolderId());
-        String title = listRequestDto.getTitle();
-        LocalDate departureDate = LocalDate.parse(listRequestDto.getDepartureDate(), DateTimeFormatter.ISO_DATE);
+    public AloneListResponseDto createAloneList(ListDto listDto, Long userId) {
+        Long folderId = Long.parseLong(listDto.getFolderId());
+        String title = listDto.getTitle();
+        LocalDate departureDate = LocalDate.parse(listDto.getDepartureDate(), DateTimeFormatter.ISO_DATE);
         String inviteCode;
 
         // inviteCode 생성
-        do{
+        do {
             inviteCode = RandomStringUtils.randomAlphanumeric(5);
-        }while(alonePackingListRepository.existByInviteCode(inviteCode));
+        } while (alonePackingListRepository.existsByInviteCode(inviteCode));
 
         // 유저 검증
         userRepository.findByIdAndIsDeleted(userId, false).orElseThrow(
                 () -> new CustomException(ResponseCode.NO_USER)
         );
 
-        // 유저 소유 폴더 X 함께 패킹리스트 폴더 or 존재하지 않는 폴더 X
+        // 유저 소유 폴더 X 함께 패킹리스트 폴더 or 존재하지 않는 폴더의 경우
         Folder folder = folderRepository.findByIdAndUserIdAndIsAloned(folderId, userId, true).orElseThrow(
-                () -> new CustomException(ResponseCode.NO_USER_FOLDER)
+                () -> new CustomException(ResponseCode.NO_FOLDER)
         );
 
         // 제목 글자수 검증
@@ -72,8 +72,9 @@ public class AloneListService {
         PackingList savedList = packingListRepository.save(packingList);
 
         // 혼자 패킹리스트 생성
-        AlonePackingList alonePackingList = new AlonePackingList(savedList.getId(), inviteCode);
+        AlonePackingList alonePackingList = new AlonePackingList(savedList, inviteCode);
         AlonePackingList savedAloneList = alonePackingListRepository.save(alonePackingList);
+
 
         // 폴더-패킹리스트 저장
         FolderPackingList folderPackingList = new FolderPackingList(folder, savedAloneList);
@@ -81,40 +82,35 @@ public class AloneListService {
 
 
         // 템플릿 적용
-        if(listRequestDto.getTemplateId() == ""){ //템플릿 X
+        if (listDto.getTemplateId() == "") { //템플릿 X
             Category category = new Category(savedList, "기본");
+            savedList.addCategory(category);
             categoryRepository.save(category);
-        }else{ // 템플릿 O
-            List<TemplateCategory> categories = templateRepository.findById(Long.parseLong(listRequestDto.getTemplateId())).get().getCategories();
+        } else { // 템플릿 O
+            List<TemplateCategory> categories = templateRepository.findById(Long.parseLong(listDto.getTemplateId())).get().getCategories();
             categories.forEach(m -> {
                 Category tempCategory = new Category(savedList, m.getName());
+                savedList.addCategory(tempCategory);
                 Category savedCategory = categoryRepository.save(tempCategory);
 
-                List<TemplatePack> packs = templateCategoryRepository.findById(tempCategory.getId()).get().getTemplatePacks();
+                List<TemplatePack> packs = templateCategoryRepository.findById(m.getId()).get().getTemplatePacks();
                 packs.forEach(n -> {
                     Pack pack = new Pack(savedCategory, n.getName());
+                    savedCategory.addPack(pack);
                     packRepository.save(pack);
-                } );
+                });
             });
         }
+        CategoryResponseDto savedcategories = packingListRepository.findByIdAndTitle(savedList.getId(), savedList.getTitle());
 
+        AloneListResponseDto aloneListResponseDto = AloneListResponseDto.builder()
+                .id(Long.toString(savedList.getId()))
+                .title(savedList.getTitle())
+                .departureDate(listDto.getDepartureDate())
+                .category(savedcategories.getCategory())
+                .inviteCode(savedAloneList.getInviteCode())
+                .isSaved(savedList.getIsSaved()).build();
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        return aloneListResponseDto;
     }
+}
