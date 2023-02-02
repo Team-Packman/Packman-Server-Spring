@@ -105,7 +105,7 @@ public class AloneListService {
         AloneListResponseDto aloneListResponseDto = AloneListResponseDto.builder()
                 .id(Long.toString(savedList.getId()))
                 .title(savedList.getTitle())
-                .departureDate(listDto.getDepartureDate())
+                .departureDate(savedList.getDepartureDate().toString())
                 .category(savedcategories.getCategory())
                 .inviteCode(savedAloneList.getInviteCode())
                 .isSaved(savedList.getIsSaved()).build();
