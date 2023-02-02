@@ -10,6 +10,6 @@ import java.util.Optional;
 @Repository
 public interface PackingListRepository extends JpaRepository<PackingList, Long> {
     Optional<PackingList> findByIdAndIsDeleted(Long listId, boolean isDeleted);
-
     CategoryResponseDto findByIdAndTitle(Long listId, String title);
+
 }

@@ -28,7 +28,6 @@ public class PackingList extends TimeStamped {
     private String title;
 
     @Column(nullable = false)
-    @DateTimeFormat(pattern = "yyyy.MM.dd")
     private LocalDate departureDate;
 
     @Getter(AccessLevel.NONE)
