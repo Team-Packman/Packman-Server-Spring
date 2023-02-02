@@ -6,4 +6,5 @@ import packman.entity.packingList.TogetherPackingList;
 
 @Repository
 public interface TogetherPackingListRepository extends JpaRepository<TogetherPackingList, Long> {
+    boolean existsByInviteCode(String inviteCode);
 }
