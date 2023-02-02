@@ -27,7 +27,7 @@ public class AlonePackingList {
     private PackingList packingList;
 
     @Column(nullable = false)
-    private boolean isAloned = false;
+    private boolean isAloned = true;
 
     @Column(length = 5, unique = true)
     private String inviteCode;
@@ -40,4 +40,9 @@ public class AlonePackingList {
 
     @OneToMany(mappedBy = "alonePackingList", cascade = CascadeType.ALL)
     private List<TogetherAlonePackingList> togetherAlonePackingLists = new ArrayList<>();
+
+    public AlonePackingList(PackingList packingList, boolean isAloned){
+        this.packingList = packingList;
+        this.isAloned = isAloned;
+    }
 }

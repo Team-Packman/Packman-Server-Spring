@@ -36,4 +36,9 @@ public class Pack {
     public boolean getIsChecked() {
         return this.isChecked;
     }
+
+    public Pack(Category category, String name){
+        this.category = category;
+        this.name = name;
+    }
 }

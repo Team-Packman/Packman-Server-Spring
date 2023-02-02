@@ -3,6 +3,7 @@ package packman.entity.packingList;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import packman.entity.Folder;
 
 import javax.persistence.*;
 
@@ -26,4 +27,9 @@ public class TogetherAlonePackingList {
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "my_packing_list_id", nullable = false, unique = true)
     private AlonePackingList alonePackingList;
+
+    public TogetherAlonePackingList(TogetherPackingList togetherList, AlonePackingList aloneList){
+        this.togetherPackingList = togetherList;
+        this.alonePackingList = aloneList;
+    }
 }

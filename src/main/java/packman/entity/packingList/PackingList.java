@@ -1,5 +1,6 @@
 package packman.entity.packingList;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -28,7 +29,7 @@ public class PackingList extends TimeStamped {
 
     @Column(nullable = false)
     private LocalDate departureDate;
-
+    @Getter(AccessLevel.NONE)
     @Column(nullable = false)
     private boolean isSaved = false;
 
@@ -47,6 +48,13 @@ public class PackingList extends TimeStamped {
     public void addCategory(Category category) {
         this.category.add(category);
     }
+
+    public PackingList(String title, LocalDate departureDate){
+        this.title = title;
+        this.departureDate = departureDate;
+    }
+
+    public boolean getIsSaved() { return this.isSaved; }
 
 
 }
