@@ -27,6 +27,11 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+import static packman.validator.IdValidator.*;
+import static packman.validator.LengthValidator.validateListLength;
+import static packman.validator.Validator.validateUserFolder;
+
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -53,19 +58,13 @@ public class AloneListService {
         } while (alonePackingListRepository.existsByInviteCode(inviteCode));
 
         // 유저 검증
-        userRepository.findByIdAndIsDeleted(userId, false).orElseThrow(
-                () -> new CustomException(ResponseCode.NO_USER)
-        );
+        validateUserId(userRepository, userId);
 
         // 유저 소유 폴더 X 함께 패킹리스트 폴더 or 존재하지 않는 폴더의 경우
-        Folder folder = folderRepository.findByIdAndUserIdAndIsAloned(folderId, userId, true).orElseThrow(
-                () -> new CustomException(ResponseCode.NO_FOLDER)
-        );
+        Folder folder = validateUserFolder(folderRepository, folderId, userId, true);
 
         // 제목 글자수 검증
-        if (title.length() > 12) {
-            throw new CustomException(ResponseCode.EXCEED_LENGTH);
-        }
+        validateListLength(title);
 
         // 패킹리스트 생성
         PackingList packingList = new PackingList(title, departureDate);
