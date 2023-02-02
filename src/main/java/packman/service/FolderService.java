@@ -38,7 +38,6 @@ public class FolderService {
         }
 
         Folder folder = new Folder(request, user);
-        folderRepository.save(folder);
 
         ArrayList<Folder> aloneFolders = folderRepository.findByUserIdAndIsAlonedOrderByIdDesc(userId, true);
         ArrayList<Folder> togetherFolders = folderRepository.findByUserIdAndIsAlonedOrderByIdDesc(userId, false);
@@ -107,7 +106,6 @@ public class FolderService {
                 );
 
         folder.setName(folderUpdateRequestDto.getName());
-        folderRepository.save(folder);
 
         ArrayList<Folder> aloneFolders = folderRepository.findByUserIdAndIsAlonedOrderByIdDesc(userId, true);
         ArrayList<Folder> togetherFolders = folderRepository.findByUserIdAndIsAlonedOrderByIdDesc(userId, false);
