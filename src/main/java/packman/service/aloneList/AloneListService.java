@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import packman.dto.category.CategoryResponseDto;
 import packman.dto.list.AloneListResponseDto;
-import packman.dto.list.ListDto;
+import packman.dto.list.ListCreateDto;
 import packman.entity.Category;
 import packman.entity.Folder;
 import packman.entity.FolderPackingList;
@@ -20,8 +20,6 @@ import packman.repository.packingList.AlonePackingListRepository;
 import packman.repository.packingList.PackingListRepository;
 import packman.repository.template.TemplateCategoryRepository;
 import packman.repository.template.TemplateRepository;
-import packman.util.CustomException;
-import packman.util.ResponseCode;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -46,10 +44,10 @@ public class AloneListService {
     private final TemplateCategoryRepository templateCategoryRepository;
     private final PackRepository packRepository;
 
-    public AloneListResponseDto createAloneList(ListDto listDto, Long userId) {
-        Long folderId = Long.parseLong(listDto.getFolderId());
-        String title = listDto.getTitle();
-        LocalDate departureDate = LocalDate.parse(listDto.getDepartureDate(), DateTimeFormatter.ISO_DATE);
+    public AloneListResponseDto createAloneList(ListCreateDto listCreateDto, Long userId) {
+        Long folderId = Long.parseLong(listCreateDto.getFolderId());
+        String title = listCreateDto.getTitle();
+        LocalDate departureDate = LocalDate.parse(listCreateDto.getDepartureDate(), DateTimeFormatter.ISO_DATE);
         String inviteCode;
 
         // inviteCode 생성
@@ -67,46 +65,38 @@ public class AloneListService {
         validateListLength(title);
 
         // 패킹리스트 생성
-        PackingList packingList = new PackingList(title, departureDate);
-        PackingList savedList = packingListRepository.save(packingList);
+        PackingList savedList = packingListRepository.save(new PackingList(title, departureDate));
 
         // 혼자 패킹리스트 생성
-        AlonePackingList alonePackingList = new AlonePackingList(savedList, inviteCode);
-        AlonePackingList savedAloneList = alonePackingListRepository.save(alonePackingList);
+        AlonePackingList savedAloneList = alonePackingListRepository.save(new AlonePackingList(savedList, inviteCode));
 
 
         // 폴더-패킹리스트 저장
-        FolderPackingList folderPackingList = new FolderPackingList(folder, savedAloneList);
-        folderPackingListRepository.save(folderPackingList);
+        folderPackingListRepository.save(new FolderPackingList(folder, savedAloneList));
 
 
         // 템플릿 적용
-        if (listDto.getTemplateId() == "") { //템플릿 X
-            Category category = new Category(savedList, "기본");
-            savedList.addCategory(category);
-            categoryRepository.save(category);
+        if (listCreateDto.getTemplateId() == "") { //템플릿 X
+            savedList.addCategory(new Category(savedList, "기본"));
         } else { // 템플릿 O
-            List<TemplateCategory> categories = templateRepository.findById(Long.parseLong(listDto.getTemplateId())).get().getCategories();
+            List<TemplateCategory> categories = templateRepository.findById(Long.parseLong(listCreateDto.getTemplateId())).get().getCategories();
             categories.forEach(m -> {
-                Category tempCategory = new Category(savedList, m.getName());
-                savedList.addCategory(tempCategory);
-                Category savedCategory = categoryRepository.save(tempCategory);
+                Category savedCategory = categoryRepository.save(new Category(savedList, m.getName()));
+                savedList.addCategory(savedCategory);
 
                 List<TemplatePack> packs = templateCategoryRepository.findById(m.getId()).get().getTemplatePacks();
                 packs.forEach(n -> {
-                    Pack pack = new Pack(savedCategory, n.getName());
-                    savedCategory.addPack(pack);
-                    packRepository.save(pack);
+                    savedCategory.addPack(new Pack(savedCategory, n.getName()));
                 });
             });
         }
-        CategoryResponseDto savedcategories = packingListRepository.findByIdAndTitle(savedList.getId(), savedList.getTitle());
+        CategoryResponseDto savedCategories = packingListRepository.findByIdAndTitle(savedList.getId(), savedList.getTitle());
 
         AloneListResponseDto aloneListResponseDto = AloneListResponseDto.builder()
                 .id(Long.toString(savedList.getId()))
                 .title(savedList.getTitle())
                 .departureDate(savedList.getDepartureDate().toString())
-                .category(savedcategories.getCategory())
+                .category(savedCategories.getCategory())
                 .inviteCode(savedAloneList.getInviteCode())
                 .isSaved(savedList.getIsSaved()).build();
 

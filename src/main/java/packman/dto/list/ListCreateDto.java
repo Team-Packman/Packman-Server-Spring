@@ -2,14 +2,13 @@ package packman.dto.list;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Getter;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 @Data
 @AllArgsConstructor
-public class ListDto {
+public class ListCreateDto {
     @NotBlank
     private String departureDate;
     @NotBlank
