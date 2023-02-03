@@ -2,8 +2,10 @@ package packman.validator;
 
 import packman.entity.Category;
 import packman.entity.UserGroup;
+import packman.entity.packingList.AlonePackingList;
 import packman.entity.packingList.PackingList;
 import packman.repository.CategoryRepository;
+import packman.repository.packingList.AlonePackingListRepository;
 import packman.repository.packingList.PackingListRepository;
 import packman.util.CustomException;
 import packman.util.ResponseCode;
@@ -32,7 +34,11 @@ public class IdValidator {
                 () -> new CustomException(ResponseCode.NO_CATEGORY)
         );
     }
-
+    public static AlonePackingList validateAlonePackingListId(AlonePackingListRepository alonePackingListRepository, Long aloneId) {
+        return alonePackingListRepository.findById(aloneId).orElseThrow(
+                () -> new CustomException(ResponseCode.NO_LIST)
+        );
+    }
     public static void validatePackingListIdInUser(PackingList packingList, Long userId) {
         if (packingList.getAlonePackingList() == null || packingList.getAlonePackingList().getFolderPackingList().getFolder().getUser().getId() != userId) {
             throw new CustomException(ResponseCode.NO_LIST);
