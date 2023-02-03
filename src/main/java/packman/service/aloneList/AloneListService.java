@@ -13,6 +13,7 @@ import packman.entity.FolderPackingList;
 import packman.entity.Pack;
 import packman.entity.packingList.AlonePackingList;
 import packman.entity.packingList.PackingList;
+import packman.entity.template.Template;
 import packman.entity.template.TemplateCategory;
 import packman.entity.template.TemplatePack;
 import packman.repository.*;
@@ -76,10 +77,13 @@ public class AloneListService {
 
 
         // 템플릿 적용
-        if (listCreateDto.getTemplateId() == "") { //템플릿 X
+        if (listCreateDto.getTemplateId().equals("")) { //템플릿 X
             savedList.addCategory(new Category(savedList, "기본"));
         } else { // 템플릿 O
-            List<TemplateCategory> categories = templateRepository.findById(Long.parseLong(listCreateDto.getTemplateId())).get().getCategories();
+            // 해당 템플릿이 존재하지 않는 경우
+            Template template = validateTemplateId(templateRepository, Long.parseLong(listCreateDto.getTemplateId()));
+
+            List<TemplateCategory> categories = template.getCategories();
             categories.forEach(m -> {
                 Category savedCategory = categoryRepository.save(new Category(savedList, m.getName()));
                 savedList.addCategory(savedCategory);
