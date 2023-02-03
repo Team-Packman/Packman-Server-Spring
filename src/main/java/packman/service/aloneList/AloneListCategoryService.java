@@ -9,14 +9,15 @@ import packman.dto.category.CategoryUpdateDto;
 import packman.entity.Category;
 import packman.entity.packingList.PackingList;
 import packman.repository.CategoryRepository;
+import packman.repository.packingList.AlonePackingListRepository;
 import packman.repository.packingList.PackingListRepository;
 import packman.util.CustomException;
 import packman.util.ResponseCode;
 
 import static packman.validator.DuplicatedValidator.validateDuplicatedCategory;
-import static packman.validator.IdValidator.validateCategoryId;
-import static packman.validator.IdValidator.validatePackingListId;
+import static packman.validator.IdValidator.*;
 import static packman.validator.LengthValidator.validateCategoryLength;
+import static packman.validator.Validator.validateUserAloneList;
 
 @Service
 @Transactional
@@ -24,6 +25,7 @@ import static packman.validator.LengthValidator.validateCategoryLength;
 public class AloneListCategoryService {
     private final PackingListRepository packingListRepository;
     private final CategoryRepository categoryRepository;
+    private final AlonePackingListRepository alonePackingListRepository;
 
     public CategoryResponseDto createCategory(CategoryCreateDto categoryCreateDto, Long userId) {
 
@@ -32,6 +34,7 @@ public class AloneListCategoryService {
 
         // no_list
         PackingList packingList = validatePackingListId(packingListRepository, Long.parseLong(categoryCreateDto.getListId()));
+        validateUserAloneList(userId, validateAlonePackingListId(alonePackingListRepository, packingList.getId()));
 
         // duplicate_category
         validateDuplicatedCategory(packingList, categoryCreateDto.getName(), null);
@@ -51,6 +54,7 @@ public class AloneListCategoryService {
 
         // no_list
         PackingList packingList = validatePackingListId(packingListRepository, Long.parseLong(categoryUpdateDto.getListId()));
+        validateUserAloneList(userId, validateAlonePackingListId(alonePackingListRepository, packingList.getId()));
 
         // no_category
         Category category = validateCategoryId(categoryRepository, Long.parseLong(categoryUpdateDto.getId()));
