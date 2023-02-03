@@ -5,7 +5,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import packman.dto.category.CategoryResponseDto;
-import packman.dto.list.ListDto;
+import packman.dto.list.ListCreateDto;
 import packman.dto.list.TogetherListDto;
 import packman.dto.list.TogetherListResponseDto;
 import packman.entity.*;
@@ -13,6 +13,7 @@ import packman.entity.packingList.AlonePackingList;
 import packman.entity.packingList.PackingList;
 import packman.entity.packingList.TogetherAlonePackingList;
 import packman.entity.packingList.TogetherPackingList;
+import packman.entity.template.Template;
 import packman.entity.template.TemplateCategory;
 import packman.entity.template.TemplatePack;
 import packman.repository.*;
@@ -50,10 +51,10 @@ public class TogetherListService {
     private final UserGroupRepository userGroupRepository;
     private final TogetherAlonePackingListRepository togetherAlonePackingListRepository;
 
-    public TogetherListResponseDto createTogetherList(ListDto listDto, Long userId) {
-        Long folderId = Long.parseLong(listDto.getFolderId());
-        String title = listDto.getTitle();
-        LocalDate departureDate = LocalDate.parse(listDto.getDepartureDate(), DateTimeFormatter.ISO_DATE);
+    public TogetherListResponseDto createTogetherList(ListCreateDto listCreateDto, Long userId) {
+        Long folderId = Long.parseLong(listCreateDto.getFolderId());
+        String title = listCreateDto.getTitle();
+        LocalDate departureDate = LocalDate.parse(listCreateDto.getDepartureDate(), DateTimeFormatter.ISO_DATE);
         String inviteCode;
 
         // inviteCode 생성
@@ -76,61 +77,52 @@ public class TogetherListService {
         packingLists.add(new PackingList(title, departureDate));
 
         List<PackingList> savedLists = packingListRepository.saveAll(packingLists);
-        PackingList savedTogetherList = savedLists.get(0); // 함께 패킹리스트
-        PackingList savedMyList = savedLists.get(1); // 나의 패킹리스트
+        PackingList savedTogetherList = savedLists.get(0); // (함께)패킹리스트
+        PackingList savedMyList = savedLists.get(1); // (나의)패킹리스트
 
         // 그룹 생성
-        Group group = new Group();
-        Group savedGroup = groupRepository.save(group);
+        Group savedGroup = groupRepository.save(new Group());
 
         // 유저-그룹 생성
-        UserGroup userGroup = new UserGroup(user, savedGroup);
-        userGroupRepository.save(userGroup);
+        userGroupRepository.save(new UserGroup(user, savedGroup));
 
         // 함께 패킹리스트 생성
-        TogetherPackingList togetherList = new TogetherPackingList(savedTogetherList, savedGroup, inviteCode);
-        TogetherPackingList savedTogetherPackingList = togetherPackingListRepository.save(togetherList);
+        TogetherPackingList savedTogetherPackingList = togetherPackingListRepository.save(new TogetherPackingList(savedTogetherList, savedGroup, inviteCode));
 
         // 나의 패킹리스트 생성
-        AlonePackingList aloneList = new AlonePackingList(savedMyList, false);
-        AlonePackingList savedMyPackingList = alonePackingListRepository.save(aloneList);
+        AlonePackingList savedMyPackingList = alonePackingListRepository.save(new AlonePackingList(savedMyList, false));
 
         // 폴더-패킹 리스트 생성
-        FolderPackingList folderList = new FolderPackingList(folder, savedMyPackingList);
-        folderPackingListRepository.save(folderList);
+        folderPackingListRepository.save(new FolderPackingList(folder, savedMyPackingList));
 
         // 함께-나의 패킹리스트 생성
-        TogetherAlonePackingList togetherAloneList = new TogetherAlonePackingList(savedTogetherPackingList, savedMyPackingList);
-        TogetherAlonePackingList savedTogetherAloneList = togetherAlonePackingListRepository.save(togetherAloneList);
+        TogetherAlonePackingList savedTogetherAloneList = togetherAlonePackingListRepository.save(new TogetherAlonePackingList(savedTogetherPackingList, savedMyPackingList));
 
         // 나의 패킹리스트에 기본 카테고리 추가
-        Category myCategory = new Category(savedMyList, "기본");
-        savedMyList.addCategory(myCategory);
-        categoryRepository.save(myCategory);
+        savedMyList.addCategory(new Category(savedMyList, "기본"));
 
         // 템플릿 적용
-        if (listDto.getTemplateId() == "") { //템플릿 X
-            Category category = new Category(savedTogetherList, "기본");
-            savedTogetherList.addCategory(category);
-            categoryRepository.save(category);
+        if (listCreateDto.getTemplateId().equals("")) { //템플릿 X
+            savedTogetherList.addCategory(new Category(savedTogetherList, "기본"));
         } else { // 템플릿 O
-            List<TemplateCategory> categories = templateRepository.findById(Long.parseLong(listDto.getTemplateId())).get().getCategories();
+            // 해당 템플릿이 존재하지 않는 경우
+            Template template = validateTemplateId(templateRepository, Long.parseLong(listCreateDto.getTemplateId()));
+
+            List<TemplateCategory> categories = template.getCategories();
             categories.forEach(m -> {
-                Category tempCategory = new Category(savedTogetherList, m.getName());
-                savedTogetherList.addCategory(tempCategory);
-                Category savedCategory = categoryRepository.save(tempCategory);
+                Category savedCategory = categoryRepository.save(new Category(savedTogetherList, m.getName()));
+                savedTogetherList.addCategory(savedCategory);
 
                 List<TemplatePack> packs = templateCategoryRepository.findById(m.getId()).get().getTemplatePacks();
                 packs.forEach(n -> {
-                    Pack pack = new Pack(savedCategory, n.getName());
-                    savedCategory.addPack(pack);
-                    packRepository.save(pack);
+                    savedCategory.addPack(new Pack(savedCategory, n.getName()));
                 });
             });
         }
 
         CategoryResponseDto savedMyIdCategories = packingListRepository.findByIdAndTitle(savedMyList.getId(), savedMyList.getTitle());
         CategoryResponseDto savedTogetherCategories = packingListRepository.findByIdAndTitle(savedTogetherList.getId(), savedTogetherList.getTitle());
+
         TogetherListDto togetherListDto = TogetherListDto.builder()
                 .id(Long.toString(savedTogetherPackingList.getId()))
                 .groupId(Long.toString(savedTogetherPackingList.getGroup().getId()))

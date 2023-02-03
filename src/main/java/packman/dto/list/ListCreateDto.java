@@ -8,7 +8,7 @@ import javax.validation.constraints.NotNull;
 
 @Data
 @AllArgsConstructor
-public class ListDto {
+public class ListCreateDto {
     @NotBlank
     private String departureDate;
     @NotBlank

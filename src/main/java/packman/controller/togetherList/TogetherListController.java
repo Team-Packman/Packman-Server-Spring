@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import packman.dto.list.ListDto;
+import packman.dto.list.ListCreateDto;
 import packman.service.togetherList.TogetherListService;
 import packman.util.ResponseCode;
 import packman.util.ResponseMessage;
@@ -21,12 +21,12 @@ public class TogetherListController {
     private final TogetherListService togetherListService;
 
     @PostMapping
-    public ResponseEntity<ResponseMessage> createTogetherList(@RequestBody @Valid ListDto listDto, HttpServletRequest request) {
+    public ResponseEntity<ResponseMessage> createTogetherList(@RequestBody @Valid ListCreateDto listCreateDto, HttpServletRequest request) {
         Long userId = 1L;
 
         return ResponseMessage.toResponseEntity(
                 ResponseCode.SUCCESS_CREATE_TOGETHER_LIST,
-                togetherListService.createTogetherList(listDto, userId)
+                togetherListService.createTogetherList(listCreateDto, userId)
         );
     }
 }
