@@ -9,8 +9,10 @@ import packman.dto.category.CategoryUpdateDto;
 import packman.entity.Category;
 import packman.entity.UserGroup;
 import packman.entity.packingList.PackingList;
+import packman.entity.packingList.TogetherPackingList;
 import packman.repository.CategoryRepository;
 import packman.repository.packingList.PackingListRepository;
+import packman.repository.packingList.TogetherPackingListRepository;
 import packman.util.CustomException;
 import packman.util.ResponseCode;
 
@@ -26,6 +28,7 @@ import static packman.validator.LengthValidator.validateCategoryLength;
 public class TogetherListCategoryService {
     private final PackingListRepository packingListRepository;
     private final CategoryRepository categoryRepository;
+    private final TogetherPackingListRepository togetherPackingListRepository;
 
     public CategoryResponseDto createCategory(CategoryCreateDto categoryCreateDto, Long userId) {
 
@@ -34,9 +37,10 @@ public class TogetherListCategoryService {
 
         // no_list
         PackingList packingList = validatePackingListId(packingListRepository, Long.parseLong(categoryCreateDto.getListId()));
+        TogetherPackingList togetherPackingList = validateTogetherPackingListId(togetherPackingListRepository, packingList.getId());
 
         // no_member_user
-        List<UserGroup> userGroups = packingList.getTogetherPackingList().getGroup().getUserGroups();
+        List<UserGroup> userGroups = togetherPackingList.getGroup().getUserGroups();
         validateUserMemberId(userGroups, userId);
 
         // duplicate_category
@@ -60,6 +64,7 @@ public class TogetherListCategoryService {
 
         // no_list
         PackingList packingList = validatePackingListId(packingListRepository, Long.parseLong(categoryUpdateDto.getListId()));
+        TogetherPackingList togetherPackingList = validateTogetherPackingListId(togetherPackingListRepository, packingList.getId());
 
         // no_category
         Category category = validateCategoryId(categoryRepository, Long.parseLong(categoryUpdateDto.getId()));
@@ -70,7 +75,7 @@ public class TogetherListCategoryService {
         }
 
         // no_member_user
-        List<UserGroup> userGroups = packingList.getTogetherPackingList().getGroup().getUserGroups();
+        List<UserGroup> userGroups = togetherPackingList.getGroup().getUserGroups();
         validateUserMemberId(userGroups, userId);
 
         // duplicate_category
@@ -87,9 +92,10 @@ public class TogetherListCategoryService {
     public void deleteCategory(Long listId, Long categoryId, Long userId) {
         // no_list
         PackingList packingList = validatePackingListId(packingListRepository, listId);
+        TogetherPackingList togetherPackingList = validateTogetherPackingListId(togetherPackingListRepository, packingList.getId());
 
         // no_member_user
-        List<UserGroup> userGroups = packingList.getTogetherPackingList().getGroup().getUserGroups();
+        List<UserGroup> userGroups = togetherPackingList.getGroup().getUserGroups();
         validateUserMemberId(userGroups, userId);
 
         // no_category
