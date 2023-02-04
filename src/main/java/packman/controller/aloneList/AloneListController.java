@@ -32,7 +32,7 @@ public class AloneListController {
     public ResponseEntity<ResponseMessage> deleteAloneList(@PathVariable("folderId") Long folderId, @PathVariable("listId") List<Long> listIds,  HttpServletRequest request) {
         Long userId = 1L;
 
-        aloneListService.deleteAloneList(folderId, listIds);
+        aloneListService.deleteAloneList(userId, folderId, listIds);
 
         return ResponseMessage.toResponseEntity(
                 ResponseCode.SUCCESS_DELETE_ALONE_LIST

@@ -3,6 +3,8 @@ package packman.validator;
 
 import lombok.RequiredArgsConstructor;
 import packman.entity.Folder;
+import packman.entity.FolderPackingList;
+import packman.entity.packingList.AlonePackingList;
 import packman.repository.FolderPackingListRepository;
 import packman.repository.FolderRepository;
 import packman.util.CustomException;
@@ -22,5 +24,13 @@ public class Validator {
         );
 
         return folder;
+    }
+
+    public static FolderPackingList validateFolderList(FolderPackingListRepository folderPackingListRepository, Long folderId, Long listId ) {
+        FolderPackingList folderPackingList = folderPackingListRepository.findByFolderIdAndAlonePackingListId(folderId, listId).orElseThrow(
+                () -> new CustomException(ResponseCode.NO_FOLDER_LIST)
+        );
+
+        return folderPackingList;
     }
 }

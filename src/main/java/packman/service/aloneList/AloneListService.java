@@ -25,9 +25,11 @@ import packman.repository.template.TemplateRepository;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static packman.validator.IdValidator.*;
 import static packman.validator.LengthValidator.validateListLength;
+import static packman.validator.Validator.validateFolderList;
 import static packman.validator.Validator.validateUserFolder;
 
 
@@ -106,4 +108,31 @@ public class AloneListService {
 
         return aloneListResponseDto;
     }
+
+    public void deleteAloneList(Long userId, Long folderId, List<Long> listIds) {
+
+        // 유저 검증(삭제 안된 유저)
+        validateUserId(userRepository, userId);
+
+        // 유저 소유 폴더, 혼자 패킹리스트 폴더인지 검증
+        validateUserFolder(folderRepository, folderId, userId, true);
+
+        List<FolderPackingList> folderPackingLists = listIds.stream()
+                .map(listId -> {
+                    // 혼자 패킹 리스트, 존재하는 리스트인지 검증
+                    PackingList packingList = validateAloneListId(alonePackingListRepository, listId).getPackingList();
+                    // 해당 리스트가 폴더 속에 있는지 검증
+                    FolderPackingList folderPackingList = validateFolderList(folderPackingListRepository, folderId, listId);
+
+                    // 패킹리스트 isDeleted 처리
+                    packingList.setIsDeleted(true);
+
+                    return folderPackingList;
+                })
+                .collect(Collectors.toList());
+
+        // 폴더-패킹리스트 튜플 삭제
+        folderPackingListRepository.deleteAllInBatch(folderPackingLists);
+    }
+
 }

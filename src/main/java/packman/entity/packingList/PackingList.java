@@ -33,7 +33,7 @@ public class PackingList extends TimeStamped {
     @Getter(AccessLevel.NONE)
     @Column(nullable = false)
     private boolean isSaved = false;
-
+    @Setter(AccessLevel.NONE)
     @Column(nullable = false)
     private boolean isDeleted = false;
     @OrderBy("id asc")
@@ -56,5 +56,7 @@ public class PackingList extends TimeStamped {
     }
 
     public boolean getIsSaved() { return this.isSaved; }
+
+    public void setIsDeleted(boolean isDeleted) { this.isDeleted = isDeleted;}
 
 }
