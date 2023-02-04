@@ -10,6 +10,8 @@ import packman.repository.template.TemplateRepository;
 import packman.util.CustomException;
 import packman.util.ResponseCode;
 
+import java.util.List;
+
 public class IdValidator {
     public static User validateUserId(UserRepository userRepository, Long userId) {
         User user = userRepository.findByIdAndIsDeleted(userId, false).orElseThrow(
@@ -27,11 +29,10 @@ public class IdValidator {
         return template;
     }
 
-    public static AlonePackingList validateAloneListId(AlonePackingListRepository alonePackingListRepository, Long aloneListId) {
-        AlonePackingList alonePackingList = alonePackingListRepository.findByIdAndIsAlonedAndPackingList_IsDeleted(aloneListId, true, false).orElseThrow(
-                () -> new CustomException(ResponseCode.NO_LIST)
-        );
+    public static List<AlonePackingList> validateListIds(AlonePackingListRepository alonePackingListRepository, List<Long> aloneListIds, int expectedListSize, boolean isAloned) {
+        List<AlonePackingList> alonePackingLists = alonePackingListRepository.findByIdInAndIsAlonedAndPackingList_IsDeleted(aloneListIds, isAloned, false);
+        if(alonePackingLists.size() != expectedListSize) { throw new CustomException(ResponseCode.NO_LIST);}
 
-        return alonePackingList;
+        return alonePackingLists;
     }
 }

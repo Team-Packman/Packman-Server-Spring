@@ -29,8 +29,7 @@ import java.util.stream.Collectors;
 
 import static packman.validator.IdValidator.*;
 import static packman.validator.LengthValidator.validateListLength;
-import static packman.validator.Validator.validateFolderList;
-import static packman.validator.Validator.validateUserFolder;
+import static packman.validator.Validator.*;
 
 
 @Service
@@ -45,7 +44,6 @@ public class AloneListService {
     private final CategoryRepository categoryRepository;
     private final TemplateRepository templateRepository;
     private final TemplateCategoryRepository templateCategoryRepository;
-    private final PackRepository packRepository;
 
     public AloneListResponseDto createAloneList(ListCreateDto listCreateDto, Long userId) {
         Long folderId = Long.parseLong(listCreateDto.getFolderId());
@@ -117,19 +115,17 @@ public class AloneListService {
         // 유저 소유 폴더, 혼자 패킹리스트 폴더인지 검증
         validateUserFolder(folderRepository, folderId, userId, true);
 
-        List<FolderPackingList> folderPackingLists = listIds.stream()
-                .map(listId -> {
-                    // 혼자 패킹 리스트, 존재하는 리스트인지 검증
-                    PackingList packingList = validateAloneListId(alonePackingListRepository, listId).getPackingList();
-                    // 해당 리스트가 폴더 속에 있는지 검증
-                    FolderPackingList folderPackingList = validateFolderList(folderPackingListRepository, folderId, listId);
+        // 혼자 패킹 리스트, 존재하는 리스트인지 검증
+        List<AlonePackingList> alonePackingLists = validateListIds(alonePackingListRepository, listIds, listIds.size(), true);
 
-                    // 패킹리스트 isDeleted 처리
-                    packingList.setIsDeleted(true);
+        // 해당 리스트가 폴더 속에 있는지 검증
+        List<FolderPackingList> folderPackingLists = validateFolderLists(folderPackingListRepository, folderId, listIds, listIds.size());
 
-                    return folderPackingList;
-                })
-                .collect(Collectors.toList());
+        //패킹리스트 isDeleted 처리
+        alonePackingLists.forEach(list -> {
+            PackingList packingList = list.getPackingList();
+            packingList.setIsDeleted(true);
+        });
 
         // 폴더-패킹리스트 튜플 삭제
         folderPackingListRepository.deleteAllInBatch(folderPackingLists);

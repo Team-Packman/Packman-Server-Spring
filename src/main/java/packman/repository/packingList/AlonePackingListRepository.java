@@ -5,10 +5,11 @@ import org.springframework.stereotype.Repository;
 import packman.entity.packingList.AlonePackingList;
 import packman.entity.packingList.PackingList;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface AlonePackingListRepository extends JpaRepository<AlonePackingList, Long> {
     boolean existsByInviteCode(String inviteCode);
-    Optional<AlonePackingList> findByIdAndIsAlonedAndPackingList_IsDeleted(Long listId, boolean isAloned, boolean isDeleted);
+    List<AlonePackingList> findByIdInAndIsAlonedAndPackingList_IsDeleted(List<Long> listIds, boolean isAloned, boolean isDeleted);
 }
