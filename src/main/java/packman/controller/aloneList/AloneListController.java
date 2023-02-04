@@ -7,6 +7,7 @@ import packman.dto.list.ListCreateDto;
 import packman.service.aloneList.AloneListService;
 import packman.util.ResponseCode;
 import packman.util.ResponseMessage;
+import packman.util.ResponseNonDataMessage;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -29,12 +30,12 @@ public class AloneListController {
     }
 
     @DeleteMapping("/{folderId}/{listId}")
-    public ResponseEntity<ResponseMessage> deleteAloneList(@PathVariable("folderId") Long folderId, @PathVariable("listId") List<Long> listIds,  HttpServletRequest request) {
+    public ResponseEntity<ResponseNonDataMessage> deleteAloneList(@PathVariable("folderId") Long folderId, @PathVariable("listId") List<Long> listIds, HttpServletRequest request) {
         Long userId = 1L;
 
         aloneListService.deleteAloneList(userId, folderId, listIds);
 
-        return ResponseMessage.toResponseEntity(
+        return ResponseNonDataMessage.toResponseEntity(
                 ResponseCode.SUCCESS_DELETE_ALONE_LIST
         );
     }
