@@ -39,11 +39,13 @@ public enum ResponseCode {
 
     //togetherPackingList
     SUCCESS_CREATE_TOGETHER_LIST(HttpStatus.OK, true, "함께 패킹리스트 생성 성공"),
+    SUCCESS_DELETE_TOGETHER_LIST(HttpStatus.OK, true, "폴더 속 함께 패킹리스트 삭제 성공"),
 
     // packingList
     UPDATE_LIST_TITLE_SUCCESS(HttpStatus.OK, true, "패킹리스트 제목 수정 성공"),
     UPDATE_LIST_DEPARTURE_DATE_SUCCESS(HttpStatus.OK, true, "패킹리스트 출발날짜 수정 성공"),
     NO_LIST(HttpStatus.NOT_FOUND, false, "존재하지 않는 패킹리스트입니다"),
+    NO_FOLDER_LIST(HttpStatus.NOT_FOUND, false, "폴더에 존재하지 않는 패킹리스트입니다"),
 
     // template
     NO_TEMPLATE(HttpStatus.NOT_FOUND, false, "존재하지 않는 템플릿입니다");
