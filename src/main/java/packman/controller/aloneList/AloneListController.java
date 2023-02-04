@@ -2,10 +2,7 @@ package packman.controller.aloneList;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import packman.dto.list.ListCreateDto;
 import packman.service.aloneList.AloneListService;
 import packman.util.ResponseCode;
@@ -13,6 +10,7 @@ import packman.util.ResponseMessage;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -27,6 +25,17 @@ public class AloneListController {
         return ResponseMessage.toResponseEntity(
                 ResponseCode.SUCCESS_CREATE_ALONE_LIST,
                 aloneListService.createAloneList(listCreateDto, userId)
+        );
+    }
+
+    @DeleteMapping("/{folderId}/{listId}")
+    public ResponseEntity<ResponseMessage> deleteAloneList(@PathVariable("folderId") Long folderId, @PathVariable("listId") List<Long> listIds,  HttpServletRequest request) {
+        Long userId = 1L;
+
+        aloneListService.deleteAloneList(folderId, listIds);
+
+        return ResponseMessage.toResponseEntity(
+                ResponseCode.SUCCESS_DELETE_ALONE_LIST
         );
     }
 
