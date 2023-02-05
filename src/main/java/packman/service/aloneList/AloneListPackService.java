@@ -67,8 +67,8 @@ public class AloneListPackService {
 
         validatePackLength(packName);
 
-        validateListCategory(aloneId, category);
-        validateCategoryPack(categoryId, pack);
+        validateListCategory(packingList, category);
+        validateCategoryPack(category, validatePackId(packRepository, packId));
 
         pack.setChecked(packUpdateDto.getIsChecked());
         pack.setName(packName);
