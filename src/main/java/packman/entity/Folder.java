@@ -34,6 +34,7 @@ public class Folder extends TimeStamped {
     private String name;
 
     @Column(nullable = false)
+    @Getter(AccessLevel.NONE)
     private boolean isAloned = true;
 
     @OneToMany(mappedBy = "folder", cascade = CascadeType.ALL)
@@ -56,5 +57,9 @@ public class Folder extends TimeStamped {
         } else {
             return String.valueOf(folderPackingList.size());
         }
+    }
+
+    public boolean getIsAloned() {
+        return this.isAloned;
     }
 }

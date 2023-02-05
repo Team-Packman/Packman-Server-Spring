@@ -8,10 +8,6 @@ import packman.dto.folder.*;
 import packman.dto.list.ListInFolderDto;
 import packman.dto.list.TogetherAloneListMapping;
 import packman.dto.pack.PackCountMapping;
-import packman.dto.folder.FolderInfo;
-import packman.dto.folder.FolderRequestDto;
-import packman.dto.folder.FolderResponseDto;
-import packman.dto.folder.FolderUpdateRequestDto;
 import packman.entity.Folder;
 import packman.entity.User;
 import packman.entity.packingList.PackingList;
@@ -25,6 +21,8 @@ import packman.util.CustomException;
 import packman.util.ResponseCode;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -150,23 +148,13 @@ public class FolderService {
         }
 
         Folder folder = new Folder(request, user);
+        folderRepository.save(folder);
 
-        List<FolderIdNameMapping> aloneFolders = folderRepository.findByUserIdAndIsAlonedOrderByIdDesc(userId, true);
-        List<FolderIdNameMapping> togetherFolders = folderRepository.findByUserIdAndIsAlonedOrderByIdDesc(userId, false);
+        List<Folder> folders = folderRepository.findByUserIdOrderByIdDesc(userId);
 
-        List<FolderInfo> aloneFoldersResponse = aloneFolders.stream().map(f -> {
-            Long folderId = f.getId();
-            String folderName = f.getName();
-            String folderListNum = f.getListNum();
-            return new FolderInfo(Long.toString(folderId), folderName, folderListNum);
-        }).collect(Collectors.toList());
+        List<FolderInfo> aloneFoldersResponse = getResponseFoldersByIsAloned(folders, true);
 
-        List<FolderInfo> togetherFoldersResponse = togetherFolders.stream().map(f -> {
-            Long folderId = f.getId();
-            String folderName = f.getName();
-            String folderListNum = f.getListNum();
-            return new FolderInfo(Long.toString(folderId), folderName, folderListNum);
-        }).collect(Collectors.toList());
+        List<FolderInfo> togetherFoldersResponse = getResponseFoldersByIsAloned(folders, false);
 
         return new FolderResponseDto(
                 aloneFoldersResponse,
@@ -178,23 +166,11 @@ public class FolderService {
         userRepository.findByIdAndIsDeleted(userId, false).orElseThrow(
                 () -> new CustomException(ResponseCode.NO_USER)
         );
+        List<Folder> folders = folderRepository.findByUserIdOrderByIdDesc(userId);
 
-        List<FolderIdNameMapping> aloneFolders = folderRepository.findByUserIdAndIsAlonedOrderByIdDesc(userId, true);
-        List<FolderIdNameMapping> togetherFolders = folderRepository.findByUserIdAndIsAlonedOrderByIdDesc(userId, false);
+        List<FolderInfo> aloneFoldersResponse = getResponseFoldersByIsAloned(folders, true);
 
-        List<FolderInfo> aloneFoldersResponse = aloneFolders.stream().map(f -> {
-            Long folderId = f.getId();
-            String folderName = f.getName();
-            String folderListNum = f.getListNum();
-            return new FolderInfo(Long.toString(folderId), folderName, folderListNum);
-        }).collect(Collectors.toList());
-
-        List<FolderInfo> togetherFoldersResponse = togetherFolders.stream().map(f -> {
-            Long folderId = f.getId();
-            String folderName = f.getName();
-            String folderListNum = f.getListNum();
-            return new FolderInfo(Long.toString(folderId), folderName, folderListNum);
-        }).collect(Collectors.toList());
+        List<FolderInfo> togetherFoldersResponse = getResponseFoldersByIsAloned(folders, false);
 
         return new FolderResponseDto(
                 aloneFoldersResponse,
@@ -219,28 +195,28 @@ public class FolderService {
 
         folder.setName(folderUpdateRequestDto.getName());
 
-        ArrayList<Folder> aloneFolders = folderRepository.findByUserIdAndIsAlonedOrderByIdDesc(userId, true);
-        ArrayList<Folder> togetherFolders = folderRepository.findByUserIdAndIsAlonedOrderByIdDesc(userId, false);
+        List<Folder> folders = folderRepository.findByUserIdOrderByIdDesc(userId);
 
-        List<FolderInfo> aloneFoldersResponse = aloneFolders.stream().map(f -> {
-            Long folderId = f.getId();
-            String folderName = f.getName();
-            String folderListNum = f.getListNum();
-            return new FolderInfo(Long.toString(folderId), folderName, folderListNum);
-        }).collect(Collectors.toList());
+        List<FolderInfo> aloneFoldersResponse = getResponseFoldersByIsAloned(folders, true);
 
-        List<FolderInfo> togetherFoldersResponse = togetherFolders.stream().map(f -> {
-            Long folderId = f.getId();
-            String folderName = f.getName();
-            String folderListNum = f.getListNum();
-            return new FolderInfo(Long.toString(folderId), folderName, folderListNum);
-        }).collect(Collectors.toList());
+        List<FolderInfo> togetherFoldersResponse = getResponseFoldersByIsAloned(folders, false);
 
         return new FolderResponseDto(
                 aloneFoldersResponse,
                 togetherFoldersResponse
         );
 
+    }
+    private List<FolderInfo> getResponseFoldersByIsAloned(List<Folder> folders, boolean isAloned) {
+        List<Folder> foldersByIsAloned = folders.stream().filter(f -> f.getIsAloned() == isAloned)
+                .collect(Collectors.toList());
+
+        return foldersByIsAloned.stream().map(f -> {
+            Long folderId = f.getId();
+            String folderName = f.getName();
+            String folderListNum = f.getListNum();
+            return new FolderInfo(Long.toString(folderId), folderName, folderListNum);
+        }).collect(Collectors.toList());
     }
 
 }
