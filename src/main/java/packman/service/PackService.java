@@ -4,19 +4,15 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import packman.dto.list.ListResponseMapping;
-import packman.dto.pack.PackUpdateDto;
+import packman.dto.pack.PackCreateDto;
 import packman.entity.Category;
 import packman.entity.Pack;
-import packman.entity.UserGroup;
 import packman.entity.packingList.PackingList;
 import packman.repository.CategoryRepository;
-import packman.repository.FolderPackingListRepository;
-import packman.repository.PackRepository;
 import packman.repository.UserRepository;
+import packman.repository.packingList.AlonePackingListRepository;
 import packman.repository.packingList.PackingListRepository;
 import packman.repository.packingList.TogetherPackingListRepository;
-
-import java.util.List;
 
 import static packman.validator.IdValidator.*;
 import static packman.validator.LengthValidator.validatePackLength;
@@ -27,11 +23,47 @@ import static packman.validator.Validator.*;
 @RequiredArgsConstructor
 public class PackService {
     private final UserRepository userRepository;
-    private final FolderPackingListRepository folderPackingListRepository;
     private final CategoryRepository categoryRepository;
     private final PackingListRepository packingListRepository;
     private final TogetherPackingListRepository togetherPackingListRepository;
-    private final PackRepository packRepository;
+    private final AlonePackingListRepository alonePackingListRepository;
+
+    public ListResponseMapping createAlonePack(PackCreateDto packCreateDto, Long userId) {
+        Long aloneListId = Long.valueOf(packCreateDto.getListId());
+
+        validateUserId(userRepository, userId);
+
+        PackingList packingList = validatePackingListId(packingListRepository, aloneListId);
+        validateUserAloneList(userId, validateAlonePackingListId(alonePackingListRepository, aloneListId));
+
+        addPackInCategory(packCreateDto, packingList);
+
+        return packingListRepository.findByIdAndTitle(aloneListId, packingList.getTitle());
+    }
+
+    public ListResponseMapping createTogetherPack(PackCreateDto packCreateDto, Long userId) {
+        Long togetherListId = Long.valueOf(packCreateDto.getListId());
+
+        validateUserId(userRepository, userId);
+        PackingList packingList = validateTogetherList(userId, togetherListId, packingListRepository, togetherPackingListRepository);
+
+        addPackInCategory(packCreateDto, packingList);
+
+        return packingListRepository.findByIdAndTitle(togetherListId, packingList.getTitle());
+    }
+
+    public void addPackInCategory(PackCreateDto packCreateDto, PackingList packingList) {
+        Long categoryId = Long.valueOf(packCreateDto.getListId());
+        String packName = packCreateDto.getName();
+
+        Category category = validateCategoryId(categoryRepository, categoryId);
+
+        validatePackLength(packName);
+        validateListCategory(packingList, category);
+
+        Pack pack = new Pack(category, packName);
+        category.addPack(pack);
+    }
 
     public ListResponseMapping updateAlonePack(PackUpdateDto packUpdateDto, Long userId) {
         Long aloneListId = Long.valueOf(packUpdateDto.getListId());
@@ -71,15 +103,5 @@ public class PackService {
 
         pack.setChecked(packUpdateDto.getIsChecked());
         pack.setName(packName);
-    }
-
-    public PackingList validateList(Long userId, Long togetherListId) {
-        PackingList packingList = validatePackingListId(packingListRepository, togetherListId);
-        validateTogetherPackingListId(togetherPackingListRepository, togetherListId);
-
-        List<UserGroup> userGroups = packingList.getTogetherPackingList().getGroup().getUserGroups();
-        validateUserMemberId(userGroups, userId);
-
-        return packingList;
     }
 }
