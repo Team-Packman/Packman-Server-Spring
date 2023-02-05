@@ -25,4 +25,15 @@ public class TemplateService {
 
         return templateListResponseDto;
     }
+
+    public TemplateListResponseDto getTogetherTemplateList(Long userId){
+        // 유저 검증
+        validateUserId(userRepository, userId);
+
+        TemplateListResponseDto templateListResponseDto = TemplateListResponseDto.builder()
+                .basicTemplate(templateRepository.findByIsAlonedAndIsDeletedAndUserIdNull(false, false))
+                .myTemplate(templateRepository.findByUserIdAndIsAlonedAndIsDeleted(userId, false,false)).build();
+
+        return templateListResponseDto;
+    }
 }
