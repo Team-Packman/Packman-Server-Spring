@@ -56,4 +56,8 @@ public class PackingList extends TimeStamped {
     public boolean getIsDeleted() {
         return this.isDeleted;
     }
+    public PackingList(String title, LocalDate departureDate) {
+        this.title = title;
+        this.departureDate = departureDate;
+    }
 }
