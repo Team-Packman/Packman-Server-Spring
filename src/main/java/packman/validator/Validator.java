@@ -28,9 +28,9 @@ public class Validator {
         return folder;
     }
 
-    public static List<FolderPackingList> validateFolderLists(FolderPackingListRepository folderPackingListRepository, Long folderId, List<Long> listIds, int expectedListSize ) {
+    public static List<FolderPackingList> validateFolderLists(FolderPackingListRepository folderPackingListRepository, Long folderId, List<Long> listIds) {
         List<FolderPackingList> folderPackingLists = folderPackingListRepository.findByFolderIdAndAlonePackingListIdIn(folderId, listIds);
-        if(folderPackingLists.size() != expectedListSize) { throw new CustomException(ResponseCode.NO_FOLDER_LIST);}
+        if(folderPackingLists.size() != listIds.size()) { throw new CustomException(ResponseCode.NO_FOLDER_LIST);}
 
         return folderPackingLists;
     }

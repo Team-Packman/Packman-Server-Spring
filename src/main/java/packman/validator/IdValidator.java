@@ -29,9 +29,9 @@ public class IdValidator {
         return template;
     }
 
-    public static List<AlonePackingList> validateListIds(AlonePackingListRepository alonePackingListRepository, List<Long> aloneListIds, int expectedListSize, boolean isAloned) {
-        List<AlonePackingList> alonePackingLists = alonePackingListRepository.findByIdInAndIsAlonedAndPackingList_IsDeleted(aloneListIds, isAloned, false);
-        if(alonePackingLists.size() != expectedListSize) { throw new CustomException(ResponseCode.NO_LIST);}
+    public static List<AlonePackingList> validateAloneListIds(AlonePackingListRepository alonePackingListRepository, List<Long> aloneListIds) {
+        List<AlonePackingList> alonePackingLists = alonePackingListRepository.findByIdInAndIsAlonedAndPackingList_IsDeleted(aloneListIds, true, false);
+        if(alonePackingLists.size() != aloneListIds.size()) { throw new CustomException(ResponseCode.NO_LIST);}
 
         return alonePackingLists;
     }
