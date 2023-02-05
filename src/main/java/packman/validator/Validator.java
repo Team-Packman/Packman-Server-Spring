@@ -4,6 +4,7 @@ package packman.validator;
 import packman.entity.Category;
 import packman.entity.FolderPackingList;
 import packman.entity.packingList.AlonePackingList;
+import packman.entity.packingList.PackingList;
 import packman.repository.FolderPackingListRepository;
 import packman.util.CustomException;
 import packman.util.ResponseCode;
@@ -21,8 +22,8 @@ public class Validator {
         }
     }
 
-    public static void validateListCategory(Long listId, Category category) {
-        if (!category.getPackingList().getId().equals(listId)) {
+    public static void validateListCategory(PackingList packingList, Category category) {
+        if (!category.getPackingList().equals(packingList)) {
             throw new CustomException(ResponseCode.NO_LIST_CATEGORY);
         }
     }
