@@ -7,20 +7,16 @@ import packman.dto.list.ListResponseMapping;
 import packman.dto.pack.PackCreateDto;
 import packman.entity.Category;
 import packman.entity.Pack;
-import packman.entity.UserGroup;
 import packman.entity.packingList.PackingList;
 import packman.repository.CategoryRepository;
-import packman.repository.FolderPackingListRepository;
 import packman.repository.UserRepository;
+import packman.repository.packingList.AlonePackingListRepository;
 import packman.repository.packingList.PackingListRepository;
 import packman.repository.packingList.TogetherPackingListRepository;
 
-import java.util.List;
-
 import static packman.validator.IdValidator.*;
 import static packman.validator.LengthValidator.validatePackLength;
-import static packman.validator.Validator.validateListCategory;
-import static packman.validator.Validator.validateUserList;
+import static packman.validator.Validator.*;
 
 @Service
 @Transactional
@@ -49,34 +45,23 @@ public class PackService {
         Long togetherListId = Long.valueOf(packCreateDto.getListId());
 
         validateUserId(userRepository, userId);
-        PackingList packingList = validateList(userId, togetherListId);
+        PackingList packingList = validateTogetherList(userId, togetherListId, packingListRepository, togetherPackingListRepository);
 
-        addPackInCategory(packCreateDto);
+        addPackInCategory(packCreateDto, packingList);
 
         return packingListRepository.findByIdAndTitle(togetherListId, packingList.getTitle());
     }
 
-    public void addPackInCategory(PackCreateDto packCreateDto) {
-        Long listId = Long.valueOf(packCreateDto.getListId());
+    public void addPackInCategory(PackCreateDto packCreateDto, PackingList packingList) {
         Long categoryId = Long.valueOf(packCreateDto.getListId());
         String packName = packCreateDto.getName();
 
         Category category = validateCategoryId(categoryRepository, categoryId);
 
         validatePackLength(packName);
-        validateListCategory(listId, category);
+        validateListCategory(packingList, category);
 
         Pack pack = new Pack(category, packName);
         category.addPack(pack);
-    }
-
-    public PackingList validateList(Long userId, Long togetherListId) {
-        PackingList packingList = validatePackingListId(packingListRepository, togetherListId);
-        validateTogetherPackingListId(togetherPackingListRepository, togetherListId);
-
-        List<UserGroup> userGroups = packingList.getTogetherPackingList().getGroup().getUserGroups();
-        validateUserMemberId(userGroups, userId);
-
-        return packingList;
     }
 }
