@@ -2,15 +2,12 @@ package packman.controller.togetherList;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import packman.dto.pack.PackCreateDto;
+import packman.dto.pack.PackUpdateDto;
 import packman.service.PackService;
 import packman.util.ResponseCode;
 import packman.util.ResponseMessage;
-import packman.dto.pack.PackUpdateDto;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;

@@ -18,9 +18,9 @@ import packman.util.ResponseCode;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+import static packman.validator.IdValidator.validateUserId;
 import static packman.validator.LengthValidator.validateListLength;
 import static packman.validator.Validator.validateUserList;
-import static packman.validator.IdValidator.validateUserId;
 
 
 @Service
