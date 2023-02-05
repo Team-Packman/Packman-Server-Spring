@@ -11,6 +11,8 @@ import java.util.Optional;
 
 @Repository
 public interface FolderRepository extends JpaRepository<Folder, Long> {
+    ArrayList<Folder> findByUserIdOrderByIdDesc(Long userId);
+
     Optional<Folder> findByIdAndUserId(Long folderId, Long userId);
 
     Optional<FolderIdNameMapping> findByIdAndIsAloned(Long folderId, boolean isAloned);
