@@ -12,7 +12,7 @@ import packman.util.ResponseCode;
 
 public class Validator {
     public static void validateUserList(FolderPackingListRepository folderPackingListRepository, Long userId, Long listId) {
-        FolderPackingList folderPackingList = folderPackingListRepository.findByFolder_UserIdAndAlonePackingListId(userId, listId).orElseThrow(
+        folderPackingListRepository.findByFolder_UserIdAndAlonePackingListId(userId, listId).orElseThrow(
                 () -> new CustomException(ResponseCode.NO_LIST)
         );
     }

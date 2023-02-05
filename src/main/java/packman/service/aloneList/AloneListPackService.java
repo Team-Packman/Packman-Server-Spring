@@ -75,4 +75,18 @@ public class AloneListPackService {
 
         return packingListRepository.findByIdAndTitle(aloneId, packingList.getTitle());
     }
+
+    public void deletePack(Long listId, Long categoryId, Long packId, Long userId) {
+        validateUserId(userRepository, userId);
+
+        validateUserAloneList(userId, validateAlonePackingListId(alonePackingListRepository, listId));
+
+        Category category = validateCategoryId(categoryRepository, categoryId);
+        Pack pack = validatePackId(packRepository, packId);
+
+        validateListCategory(validatePackingListId(packingListRepository, listId), category);
+        validateCategoryPack(category, pack);
+
+        packRepository.delete(pack);
+    }
 }
