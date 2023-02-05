@@ -5,6 +5,7 @@ import packman.entity.UserGroup;
 import packman.entity.packingList.AlonePackingList;
 import packman.entity.packingList.PackingList;
 import packman.entity.Pack;
+import packman.entity.packingList.TogetherPackingList;
 import packman.repository.CategoryRepository;
 import packman.repository.PackRepository;
 import packman.repository.UserRepository;
@@ -67,5 +68,11 @@ public class IdValidator {
         if (packingList.getAlonePackingList() == null || packingList.getAlonePackingList().getFolderPackingList().getFolder().getUser().getId() != userId) {
             throw new CustomException(ResponseCode.NO_LIST);
         }
+    }
+
+    public static TogetherPackingList validateTogetherPackingListId(TogetherPackingListRepository togetherPackingListRepository, Long togetherId) {
+        return togetherPackingListRepository.findById(togetherId).orElseThrow(
+                () -> new CustomException(ResponseCode.NO_LIST)
+        );
     }
 }

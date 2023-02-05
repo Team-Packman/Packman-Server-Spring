@@ -58,6 +58,10 @@ public enum ResponseCode {
     SUCCESS_UPDATE_TOGETHER_PACK(HttpStatus.OK, true, "함께 패킹리스트 짐 수정 성공"),
     SUCCESS_INVITE_TOGETHER_PACKING(HttpStatus.OK, true, "함께 패킹리스트 초대 성공"),
     SUCCESS_UPDATE_TOGETHER_CATEGORY(HttpStatus.OK, true, "함께 패킹리스트 카테고리 수정 성공"),
+    // category
+    DUPLICATED_CATEGORY(HttpStatus.BAD_REQUEST, false, "중복된 카테고리 명입니다"),
+    NO_CATEGORY(HttpStatus.BAD_REQUEST, false, "존재하지 않는 카테고리입니다"),
+    NO_LIST_CATEGORY(HttpStatus.BAD_REQUEST, false, "리스트에 존재하지 않는 카테고리입니다"),
     // packingList
     UPDATE_LIST_TITLE_SUCCESS(HttpStatus.OK, true, "패킹리스트 제목 수정 성공"),
     UPDATE_LIST_DEPARTURE_DATE_SUCCESS(HttpStatus.OK, true, "패킹리스트 출발날짜 수정 성공"),
