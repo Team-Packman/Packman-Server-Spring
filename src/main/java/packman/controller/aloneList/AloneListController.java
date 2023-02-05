@@ -28,7 +28,7 @@ public class AloneListController {
     }
 
     @GetMapping("/{listId}")
-    public ResponseEntity<ResponseMessage> createAloneList(@PathVariable("listId") Long listId, HttpServletRequest request) {
+    public ResponseEntity<ResponseMessage> getAloneList(@PathVariable("listId") Long listId, HttpServletRequest request) {
         Long userId = 1L;
 
         return ResponseMessage.toResponseEntity(
