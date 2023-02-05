@@ -3,6 +3,7 @@ package packman.validator;
 
 import packman.entity.Category;
 import packman.entity.FolderPackingList;
+import packman.entity.Pack;
 import packman.entity.packingList.AlonePackingList;
 import packman.entity.packingList.PackingList;
 import packman.repository.FolderPackingListRepository;
@@ -25,6 +26,12 @@ public class Validator {
     public static void validateListCategory(PackingList packingList, Category category) {
         if (!category.getPackingList().equals(packingList)) {
             throw new CustomException(ResponseCode.NO_LIST_CATEGORY);
+        }
+    }
+
+    public static void validateCategoryPack(Category category, Pack pack) {
+        if (!pack.getCategory().equals(category)) {
+            throw new CustomException(ResponseCode.NO_CATEGORY_PACK);
         }
     }
 }
