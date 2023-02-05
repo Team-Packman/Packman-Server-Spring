@@ -1,16 +1,30 @@
 package packman.validator;
 
 
-import lombok.RequiredArgsConstructor;
+import packman.entity.Category;
+import packman.entity.FolderPackingList;
+import packman.entity.packingList.AlonePackingList;
+import packman.entity.packingList.PackingList;
 import packman.repository.FolderPackingListRepository;
 import packman.util.CustomException;
 import packman.util.ResponseCode;
 
-@RequiredArgsConstructor
 public class Validator {
     public static void validateUserList(FolderPackingListRepository folderPackingListRepository, Long userId, Long listId) {
-        folderPackingListRepository.findByFolder_UserIdAndAlonePackingListId(userId, listId).orElseThrow(
+        FolderPackingList folderPackingList = folderPackingListRepository.findByFolder_UserIdAndAlonePackingListId(userId, listId).orElseThrow(
                 () -> new CustomException(ResponseCode.NO_LIST)
         );
+    }
+
+    public static void validateUserAloneList(Long userId, AlonePackingList alonePackingList) {
+        if (!alonePackingList.getFolderPackingList().getFolder().getUser().getId().equals(userId)) {
+            throw new CustomException(ResponseCode.NO_LIST);
+        }
+    }
+
+    public static void validateListCategory(PackingList packingList, Category category) {
+        if (!category.getPackingList().equals(packingList)) {
+            throw new CustomException(ResponseCode.NO_LIST_CATEGORY);
+        }
     }
 }
