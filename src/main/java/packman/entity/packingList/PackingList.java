@@ -28,7 +28,6 @@ public class PackingList extends TimeStamped {
     private String title;
 
     @Column(nullable = false)
-    @DateTimeFormat(pattern = "yyyy.MM.dd")
     private LocalDate departureDate;
 
     @Column(nullable = false)
@@ -36,15 +35,21 @@ public class PackingList extends TimeStamped {
     @Getter(AccessLevel.NONE)
     @Column(nullable = false)
     private boolean isDeleted = false;
-
+    @OrderBy("id asc")
     @OneToMany(mappedBy = "packingList", cascade = CascadeType.ALL)
-    private List<Category> categories = new ArrayList<>();
+    private List<Category> category = new ArrayList<>();
 
     @OneToOne(mappedBy = "packingList", cascade = CascadeType.ALL)
     private AlonePackingList alonePackingList;
 
     @OneToOne(mappedBy = "packingList", cascade = CascadeType.ALL)
     private TogetherPackingList togetherPackingList;
+
+    public void addCategory(Category category) {
+        this.category.add(category);
+    }
+
+
 
     public boolean getIsDeleted() {
         return this.isDeleted;
