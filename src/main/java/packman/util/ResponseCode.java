@@ -58,7 +58,9 @@ public enum ResponseCode {
     // packingList
     UPDATE_LIST_TITLE_SUCCESS(HttpStatus.OK, true, "패킹리스트 제목 수정 성공"),
     UPDATE_LIST_DEPARTURE_DATE_SUCCESS(HttpStatus.OK, true, "패킹리스트 출발날짜 수정 성공"),
-    NO_LIST(HttpStatus.NOT_FOUND, false, "존재하지 않는 패킹리스트입니다");
+    NO_LIST(HttpStatus.NOT_FOUND, false, "존재하지 않는 패킹리스트입니다"),
+    GET_RECENT_CREATED_LIST_SUCCESS(HttpStatus.OK, true, "최근 생성된 리스트 조회 성공"),
+    NO_EXIST_USER_LIST(HttpStatus.OK, true, "유저가 생성한 리스트가 없습니다");
 
     private final HttpStatus httpStatus;
     private final Boolean success;
