@@ -1,9 +1,9 @@
 package packman.entity;
 
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 
@@ -13,6 +13,7 @@ import static javax.persistence.FetchType.LAZY;
 @Getter
 @Setter
 @NoArgsConstructor
+@DynamicUpdate
 public class Pack {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,11 +30,12 @@ public class Pack {
 
     @Column(length = 12, nullable = false)
     private String name;
-    @Getter(AccessLevel.NONE)
+
     @Column(nullable = false)
     private boolean isChecked = false;
 
-    public boolean getIsChecked() {
-        return this.isChecked;
+    public Pack(Category category, String name) {
+        this.category = category;
+        this.name = name;
     }
 }
