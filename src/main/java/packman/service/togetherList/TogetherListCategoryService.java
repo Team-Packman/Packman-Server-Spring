@@ -11,6 +11,8 @@ import packman.entity.UserGroup;
 import packman.entity.packingList.PackingList;
 import packman.repository.CategoryRepository;
 import packman.repository.packingList.PackingListRepository;
+import packman.util.CustomException;
+import packman.util.ResponseCode;
 
 import java.util.List;
 
@@ -51,7 +53,7 @@ public class TogetherListCategoryService {
         return categoryResponseDto;
     }
 
-    public CategoryResponseDto updateCategory(CategoryUpdateDto categoryUpdateDto, Long userId) {
+    public ListResponseMapping updateCategory(CategoryUpdateDto categoryUpdateDto, Long userId) {
 
         // 카테고리 exceed_len
         validateCategoryLength(categoryUpdateDto.getName());
@@ -78,7 +80,7 @@ public class TogetherListCategoryService {
         category.setName(categoryUpdateDto.getName());
 
         // response
-        CategoryResponseDto categoryResponseDto = packingListRepository.findByIdAndTitle(Long.parseLong(categoryUpdateDto.getListId()), packingList.getTitle());
+        ListResponseMapping categoryResponseDto = packingListRepository.findByIdAndTitle(Long.parseLong(categoryUpdateDto.getListId()), packingList.getTitle());
         return categoryResponseDto;
     }
 
