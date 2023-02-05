@@ -4,7 +4,9 @@ import packman.entity.Category;
 import packman.entity.UserGroup;
 import packman.entity.packingList.AlonePackingList;
 import packman.entity.packingList.PackingList;
+import packman.entity.Pack;
 import packman.repository.CategoryRepository;
+import packman.repository.PackRepository;
 import packman.repository.UserRepository;
 import packman.repository.packingList.AlonePackingListRepository;
 import packman.repository.packingList.PackingListRepository;
@@ -47,6 +49,12 @@ public class IdValidator {
     public static PackingList validatePackingListId(PackingListRepository packingListRepository, Long listId) {
         return packingListRepository.findByIdAndIsDeleted(listId, false).orElseThrow(
                 () -> new CustomException(ResponseCode.NO_LIST)
+        );
+    }
+
+    public static Pack validatePackId(PackRepository packRepository, Long packId) {
+        return packRepository.findById(packId).orElseThrow(
+                () -> new CustomException(ResponseCode.NO_PACK)
         );
     }
 }
