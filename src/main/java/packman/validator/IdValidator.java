@@ -1,6 +1,14 @@
 package packman.validator;
 
+import packman.entity.Category;
+import packman.entity.Pack;
 import packman.entity.User;
+import packman.entity.UserGroup;
+import packman.entity.packingList.AlonePackingList;
+import packman.entity.packingList.PackingList;
+import packman.entity.packingList.TogetherPackingList;
+import packman.repository.CategoryRepository;
+import packman.repository.PackRepository;
 import packman.repository.UserRepository;
 import packman.repository.packingList.AlonePackingListRepository;
 import packman.repository.packingList.PackingListRepository;
@@ -32,12 +40,6 @@ public class IdValidator {
         if (!userIdInGroup.contains(userId)) {
             throw new CustomException(ResponseCode.NO_MEMBER_USER);
         }
-    }
-
-    public static void validateTogetherPackingListId(TogetherPackingListRepository togetherPackingListRepository, Long togetherId) {
-        togetherPackingListRepository.findById(togetherId).orElseThrow(
-                () -> new CustomException(ResponseCode.NO_LIST)
-        );
     }
 
     public static AlonePackingList validateAlonePackingListId(AlonePackingListRepository alonePackingListRepository, Long aloneId) {
