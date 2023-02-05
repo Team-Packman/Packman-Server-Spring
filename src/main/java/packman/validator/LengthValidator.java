@@ -15,4 +15,10 @@ public class LengthValidator {
             throw new CustomException(ResponseCode.EXCEED_LEN);
         }
     }
+
+    public static void validateCategoryLength(String name) {
+        if (name.length() > 12) {
+            throw new CustomException(ResponseCode.EXCEED_LEN);
+        }
+    }
 }
