@@ -79,14 +79,13 @@ public class AloneListPackService {
     public void deletePack(Long listId, Long categoryId, Long packId, Long userId) {
         validateUserId(userRepository, userId);
 
-        validatePackingListId(packingListRepository, listId);
         validateUserAloneList(userId, validateAlonePackingListId(alonePackingListRepository, listId));
 
         Category category = validateCategoryId(categoryRepository, categoryId);
         Pack pack = validatePackId(packRepository, packId);
 
-        validateListCategory(listId, category);
-        validateCategoryPack(categoryId, pack);
+        validateListCategory(validatePackingListId(packingListRepository, listId), category);
+        validateCategoryPack(category, pack);
 
         packRepository.delete(pack);
     }
