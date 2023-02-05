@@ -4,15 +4,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import packman.dto.category.CategoryCreateDto;
-import packman.dto.category.CategoryResponseDto;
+import packman.dto.list.ListResponseMapping;
 import packman.dto.category.CategoryUpdateDto;
 import packman.entity.Category;
 import packman.entity.UserGroup;
 import packman.entity.packingList.PackingList;
 import packman.repository.CategoryRepository;
 import packman.repository.packingList.PackingListRepository;
-import packman.util.CustomException;
-import packman.util.ResponseCode;
 
 import java.util.List;
 
@@ -27,7 +25,7 @@ public class TogetherListCategoryService {
     private final PackingListRepository packingListRepository;
     private final CategoryRepository categoryRepository;
 
-    public CategoryResponseDto createCategory(CategoryCreateDto categoryCreateDto, Long userId) {
+    public ListResponseMapping createCategory(CategoryCreateDto categoryCreateDto, Long userId) {
 
         // 카테고리 exceed_len
         validateCategoryLength(categoryCreateDto.getName());
@@ -49,7 +47,7 @@ public class TogetherListCategoryService {
 
 
         // response
-        CategoryResponseDto categoryResponseDto = packingListRepository.findByIdAndTitle(Long.parseLong(categoryCreateDto.getListId()), packingList.getTitle());
+        ListResponseMapping categoryResponseDto = packingListRepository.findByIdAndTitle(Long.parseLong(categoryCreateDto.getListId()), packingList.getTitle());
         return categoryResponseDto;
     }
 

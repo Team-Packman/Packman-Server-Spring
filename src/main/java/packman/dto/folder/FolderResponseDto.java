@@ -8,6 +8,6 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 public class FolderResponseDto {
-    private List<FolderIdNameMapping> aloneFolder;
-    private List<FolderIdNameMapping> togetherFolder;
+    private List<FolderInfo> aloneFolder;
+    private List<FolderInfo> togetherFolder;
 }
