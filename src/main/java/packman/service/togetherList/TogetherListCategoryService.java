@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import packman.dto.category.CategoryCreateDto;
-import packman.dto.category.CategoryResponseDto;
+import packman.dto.list.ListResponseMapping;
 import packman.dto.category.CategoryUpdateDto;
 import packman.entity.Category;
 import packman.entity.UserGroup;
@@ -30,7 +30,7 @@ public class TogetherListCategoryService {
     private final CategoryRepository categoryRepository;
     private final TogetherPackingListRepository togetherPackingListRepository;
 
-    public CategoryResponseDto createCategory(CategoryCreateDto categoryCreateDto, Long userId) {
+    public ListResponseMapping createCategory(CategoryCreateDto categoryCreateDto, Long userId) {
 
         // 카테고리 exceed_len
         validateCategoryLength(categoryCreateDto.getName());
@@ -53,11 +53,11 @@ public class TogetherListCategoryService {
 
 
         // response
-        CategoryResponseDto categoryResponseDto = packingListRepository.findByIdAndTitle(Long.parseLong(categoryCreateDto.getListId()), packingList.getTitle());
+        ListResponseMapping categoryResponseDto = packingListRepository.findByIdAndTitle(Long.parseLong(categoryCreateDto.getListId()), packingList.getTitle());
         return categoryResponseDto;
     }
 
-    public CategoryResponseDto updateCategory(CategoryUpdateDto categoryUpdateDto, Long userId) {
+    public ListResponseMapping updateCategory(CategoryUpdateDto categoryUpdateDto, Long userId) {
 
         // 카테고리 exceed_len
         validateCategoryLength(categoryUpdateDto.getName());
@@ -85,7 +85,7 @@ public class TogetherListCategoryService {
         category.setName(categoryUpdateDto.getName());
 
         // response
-        CategoryResponseDto categoryResponseDto = packingListRepository.findByIdAndTitle(Long.parseLong(categoryUpdateDto.getListId()), packingList.getTitle());
+        ListResponseMapping categoryResponseDto = packingListRepository.findByIdAndTitle(Long.parseLong(categoryUpdateDto.getListId()), packingList.getTitle());
         return categoryResponseDto;
     }
 
