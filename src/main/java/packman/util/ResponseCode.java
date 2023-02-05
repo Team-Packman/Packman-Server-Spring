@@ -73,7 +73,8 @@ public enum ResponseCode {
 
     // template
     NO_TEMPLATE(HttpStatus.NOT_FOUND, false, "존재하지 않는 템플릿입니다"),
-    SUCCESS_GET_ALONE_TEMPLATE_LIST(HttpStatus.OK, true, "혼자 패킹 템플릿 리스트 조회 성공");
+    SUCCESS_GET_ALONE_TEMPLATE_LIST(HttpStatus.OK, true, "혼자 패킹 템플릿 리스트 조회 성공"),
+    SUCCESS_GET_TORETHER_TEMPLATE_LIST(HttpStatus.OK, true, "함께 패킹 템플릿 리스트 조회 성공");
 
     private final HttpStatus httpStatus;
     private final Boolean success;
