@@ -85,5 +85,20 @@ public class FolderController {
         );
     }
 
+    @GetMapping("/recentCreatedList")
+    public ResponseEntity<ResponseMessage> getRecentCreatedList(HttpServletRequest request) {
+        Long userId = 1L;
 
+        if (folderService.getRecentCreatedList(userId) == null) {
+            return ResponseMessage.toResponseEntity(
+                    ResponseCode.NO_EXIST_USER_LIST,
+                    folderService.getRecentCreatedList(userId)
+            );
+        } else {
+            return ResponseMessage.toResponseEntity(
+                    ResponseCode.GET_RECENT_CREATED_LIST_SUCCESS,
+                    folderService.getRecentCreatedList(userId)
+            );
+        }
+    }
 }
