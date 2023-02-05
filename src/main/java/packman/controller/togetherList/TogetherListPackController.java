@@ -10,6 +10,7 @@ import packman.dto.pack.PackCreateDto;
 import packman.service.PackService;
 import packman.util.ResponseCode;
 import packman.util.ResponseMessage;
+import packman.dto.pack.PackUpdateDto;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -27,6 +28,16 @@ public class TogetherListPackController {
         return ResponseMessage.toResponseEntity(
                 ResponseCode.SUCCESS_CREATE_TOGETHER_PACK,
                 packService.createTogetherPack(packCreateDto, userId)
+        );
+    }
+    
+    @PatchMapping
+    public ResponseEntity<ResponseMessage> updatePack(@RequestBody @Valid PackUpdateDto packUpdateDto, HttpServletRequest request) {
+        Long userId = 1L;
+
+        return ResponseMessage.toResponseEntity(
+                ResponseCode.SUCCESS_UPDATE_TOGETHER_PACK,
+                packService.updateTogetherPack(packUpdateDto, userId)
         );
     }
 }

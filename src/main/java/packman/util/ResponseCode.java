@@ -50,6 +50,11 @@ public enum ResponseCode {
 
     // alonePackingList
     SUCCESS_CREATE_ALONE_CATEGORY(HttpStatus.OK, true, "혼자 패킹리스트 카테고리 생성 성공"),
+    SUCCESS_CREATE_ALONE_PACK(HttpStatus.OK, true, "혼자 패킹리스트 짐 생성 성공"),
+    SUCCESS_UPDATE_ALONE_PACK(HttpStatus.OK, true, "혼자 패킹리스트 짐 수정 성공"),
+
+    // togetherPackingList
+    SUCCESS_UPDATE_TOGETHER_PACK(HttpStatus.OK, true, "함께 패킹리스트 짐 수정 성공"),
 
     // packingList
     UPDATE_LIST_TITLE_SUCCESS(HttpStatus.OK, true, "패킹리스트 제목 수정 성공"),
