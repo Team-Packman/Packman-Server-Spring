@@ -30,17 +30,19 @@ public class PackService {
     private final CategoryRepository categoryRepository;
     private final PackingListRepository packingListRepository;
     private final TogetherPackingListRepository togetherPackingListRepository;
-    private final FolderPackingListRepository folderPackingListRepository;
+    private final AlonePackingListRepository alonePackingListRepository;
 
     public ListResponseMapping createAlonePack(PackCreateDto packCreateDto, Long userId) {
         Long aloneListId = Long.valueOf(packCreateDto.getListId());
 
         validateUserId(userRepository, userId);
-        String title = validateUserList(folderPackingListRepository, userId, aloneListId);
 
-        addPackInCategory(packCreateDto);
+        PackingList packingList = validatePackingListId(packingListRepository, aloneListId);
+        validateUserAloneList(userId, validateAlonePackingListId(alonePackingListRepository, aloneListId));
 
-        return packingListRepository.findByIdAndTitle(aloneListId, title);
+        addPackInCategory(packCreateDto, packingList);
+
+        return packingListRepository.findByIdAndTitle(aloneListId, packingList.getTitle());
     }
 
     public ListResponseMapping createTogetherPack(PackCreateDto packCreateDto, Long userId) {

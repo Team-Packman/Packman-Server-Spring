@@ -46,6 +46,12 @@ public class IdValidator {
         );
     }
 
+    public static AlonePackingList validateAlonePackingListId(AlonePackingListRepository alonePackingListRepository, Long aloneId) {
+        return alonePackingListRepository.findById(aloneId).orElseThrow(
+                () -> new CustomException(ResponseCode.NO_LIST)
+        );
+    }
+
     public static PackingList validatePackingListId(PackingListRepository packingListRepository, Long listId) {
         return packingListRepository.findByIdAndIsDeleted(listId, false).orElseThrow(
                 () -> new CustomException(ResponseCode.NO_LIST)
