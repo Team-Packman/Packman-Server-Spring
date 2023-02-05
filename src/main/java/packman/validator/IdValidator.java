@@ -1,10 +1,11 @@
 package packman.validator;
 
 import packman.entity.Category;
+import packman.entity.Pack;
+import packman.entity.User;
 import packman.entity.UserGroup;
 import packman.entity.packingList.AlonePackingList;
 import packman.entity.packingList.PackingList;
-import packman.entity.Pack;
 import packman.entity.packingList.TogetherPackingList;
 import packman.repository.CategoryRepository;
 import packman.repository.PackRepository;
@@ -19,8 +20,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class IdValidator {
-    public static void validateUserId(UserRepository userRepository, Long userId) {
-        userRepository.findByIdAndIsDeleted(userId, false).orElseThrow(
+    public static User validateUserId(UserRepository userRepository, Long userId) {
+        return userRepository.findByIdAndIsDeleted(userId, false).orElseThrow(
                 () -> new CustomException(ResponseCode.NO_USER)
         );
     }
@@ -39,12 +40,6 @@ public class IdValidator {
         if (!userIdInGroup.contains(userId)) {
             throw new CustomException(ResponseCode.NO_MEMBER_USER);
         }
-    }
-
-    public static void validateTogetherPackingListId(TogetherPackingListRepository togetherPackingListRepository, Long togetherId) {
-        togetherPackingListRepository.findById(togetherId).orElseThrow(
-                () -> new CustomException(ResponseCode.NO_LIST)
-        );
     }
 
     public static AlonePackingList validateAlonePackingListId(AlonePackingListRepository alonePackingListRepository, Long aloneId) {

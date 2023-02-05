@@ -21,4 +21,10 @@ public class LengthValidator {
             throw new CustomException(ResponseCode.EXCEED_LEN);
         }
     }
+
+    public static void validateUserNicknameLength(String nickname) {
+        if (nickname.length() > 4) {
+            throw new CustomException(ResponseCode.EXCEED_LENGTH);
+        }
+    }
 }

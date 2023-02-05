@@ -2,16 +2,15 @@ package packman.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import packman.dto.user.UserUpdateDto;
 import packman.service.UserService;
 import packman.util.ResponseCode;
 import packman.util.ResponseMessage;
 import packman.util.ResponseNonDataMessage;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 @RestController
 @RequiredArgsConstructor
@@ -37,6 +36,16 @@ public class UserController {
 
         return ResponseNonDataMessage.toResponseEntity(
                 ResponseCode.SUCCESS_DELETE_USER
+        );
+    }
+
+    @PatchMapping("/profile")
+    public ResponseEntity<ResponseMessage> updateUser(@RequestBody @Valid UserUpdateDto userUpdateDto, HttpServletRequest request) {
+        Long userId = 1L;
+
+        return ResponseMessage.toResponseEntity(
+                ResponseCode.SUCCESS_UPDATE_USER,
+                userService.updateUser(userUpdateDto, userId)
         );
     }
 }
