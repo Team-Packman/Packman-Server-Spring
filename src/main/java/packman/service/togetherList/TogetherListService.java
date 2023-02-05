@@ -28,9 +28,11 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static packman.validator.IdValidator.*;
 import static packman.validator.LengthValidator.validateListLength;
+import static packman.validator.Validator.validateFolderLists;
 import static packman.validator.Validator.validateUserFolder;
 
 @Service
@@ -138,5 +140,69 @@ public class TogetherListService {
                 .myPackingList(savedMyIdCategories).build();
 
         return togetherListResponseDto;
+    }
+
+    public void deleteTogetherList(Long userId, Long folderId, List<Long> listIds) {
+        List<Pack> packs = new ArrayList<>();
+        List<UserGroup> userGroups = new ArrayList<>();
+        List<Group> groups = new ArrayList<>();
+        List<PackingList> lists = new ArrayList<>(); //최종적으로 삭제할 packingList들을 담는 리스트
+
+        // 존재하는 유저인지 검증
+        validateUserId(userRepository, userId);
+
+        // 유저 소유 폴더, 함께 패킹리스트 폴더인지 검증
+        validateUserFolder(folderRepository, folderId, userId, false);
+
+        // 함께 패킹 리스트, 존재하는 리스트인지 검증
+        List<TogetherAlonePackingList> togetherAlonePackingLists = validateTogetherListIds(togetherAlonePackingListRepository, listIds);
+
+        // 다음 검증을 위해 혼자 패킹리스트 id 담기
+        List<Long> aloneListIds = togetherAlonePackingLists.stream().map(linkList -> linkList.getAlonePackingList().getId()).collect(Collectors.toList());
+
+        // 해당 리스트가 폴더 속에 있는지 검증
+        List<FolderPackingList> folderPackingLists = validateFolderLists(folderPackingListRepository, folderId, aloneListIds);
+
+        togetherAlonePackingLists.forEach(linkList -> {
+            TogetherPackingList togetherList = linkList.getTogetherPackingList();
+
+            // packer == user인 경우 취합
+            packs.addAll(packRepository.findByCategory_PackingListAndPackerId(togetherList.getPackingList(), userId));
+
+            // 삭제할 유저-그룹(본인과 리스트 간 유저-그룹) 취합
+            userGroups.add(userGroupRepository.findByUserIdAndGroup(userId, togetherList.getGroup()));
+
+            //삭제할 혼자 패킹리스트 취합
+            lists.add(linkList.getAlonePackingList().getPackingList());
+
+            //함께 패킹리스트 그룹의 유저-그룹 수가 1인(그룹에 본인만 존재) 패킹리스트 선별 == 함께 패킹리스트까지 삭제해야함
+            if(userGroupRepository.findByGroup(togetherList.getGroup()).size() == 1){
+                // 그룹을 삭제해야 하기에 삭제할 그룹 취합
+                groups.add(togetherList.getGroup());
+                // 삭제할 함께 패킹리스트 추가
+                lists.add(togetherList.getPackingList());
+            }
+        });
+
+        // 유저-그룹 삭제
+        userGroupRepository.deleteAllInBatch(userGroups);
+
+        // 폴더-패킹리스트 삭제
+        folderPackingListRepository.deleteAllInBatch(folderPackingLists);
+
+        // 함께-혼자 패킹리스트 삭제
+        togetherAlonePackingListRepository.deleteAllInBatch(togetherAlonePackingLists);
+
+        // 패킹리스트 isDeleted 처리
+        packingListRepository.UpdatelistIsDeletedTrue(lists);
+
+        // packer null 설정
+        if(!packs.isEmpty()){packRepository.updatePackerNull(packs);}
+
+        if(!groups.isEmpty()){
+            // 함께 패킹리스트의 groupId null로 set
+            togetherPackingListRepository.updateGroupNull(groups);
+            // 그룹 삭제
+            groupRepository.deleteAllInBatch(groups);}
     }
 }

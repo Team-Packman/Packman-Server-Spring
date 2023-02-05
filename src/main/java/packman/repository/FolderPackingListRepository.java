@@ -12,4 +12,5 @@ import java.util.Optional;
 public interface FolderPackingListRepository extends JpaRepository<FolderPackingList, Long> {
     List<FolderAloneListMapping> findByFolderIdAndAlonePackingList_IsAlonedOrderByIdDesc(Long folderId, boolean isAloned);
     Optional<FolderPackingList> findByFolder_UserIdAndAlonePackingListId(Long userId, Long listId);
+    List<FolderPackingList> findByFolderIdAndAlonePackingListIdIn(Long userId, List<Long> listIds);
 }

@@ -41,8 +41,13 @@ public class AlonePackingList {
     @OneToMany(mappedBy = "alonePackingList", cascade = CascadeType.ALL)
     private List<TogetherAlonePackingList> togetherAlonePackingLists = new ArrayList<>();
 
-    public AlonePackingList(PackingList packingList, boolean isAloned){
+    public AlonePackingList(PackingList packingList, boolean isAloned) {
         this.packingList = packingList;
         this.isAloned = isAloned;
+    }
+
+    public AlonePackingList(PackingList packingList, String inviteCode){
+        this.packingList = packingList;
+        this.inviteCode = inviteCode;
     }
 }

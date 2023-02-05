@@ -36,6 +36,8 @@ public enum ResponseCode {
 
     // alonePackingList
     SUCCESS_CREATE_ALONE_CATEGORY(HttpStatus.OK, true, "혼자 패킹리스트 카테고리 생성 성공"),
+    SUCCESS_CREATE_ALONE_LIST(HttpStatus.OK, true, "혼자 패킹리스트 생성 성공"),
+    SUCCESS_DELETE_ALONE_LIST(HttpStatus.OK, true, "폴더 속 혼자 패킹리스트 삭제 성공"),
 
     //togetherPackingList
     SUCCESS_CREATE_TOGETHER_LIST(HttpStatus.OK, true, "함께 패킹리스트 생성 성공"),
