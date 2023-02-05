@@ -9,11 +9,9 @@ import packman.dto.pack.PackUpdateDto;
 import packman.service.PackService;
 import packman.util.ResponseCode;
 import packman.util.ResponseMessage;
-import packman.util.ResponseNonDataMessage;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
 
 @RestController
 @RequiredArgsConstructor
@@ -42,15 +40,15 @@ public class AloneListPackController {
         );
     }
 
-    @DeleteMapping("/{listId}/{categoryId}/{packId}")
-    public ResponseEntity<ResponseNonDataMessage> deletePack(
-            @PathVariable @NotBlank String listId, @PathVariable @NotBlank String categoryId, @PathVariable @NotBlank String packId, HttpServletRequest request) {
-        Long userId = 1L;
-
-        packService.deleteAlonePack(Long.valueOf(listId), Long.valueOf(categoryId), Long.valueOf(packId), userId);
-
-        return ResponseNonDataMessage.toResponseEntity(
-                ResponseCode.SUCCESS_DELETE_ALONE_PACK
-        );
-    }
+//    @DeleteMapping("/{listId}/{categoryId}/{packId}")
+//    public ResponseEntity<ResponseNonDataMessage> deletePack(
+//            @PathVariable @NotBlank String listId, @PathVariable @NotBlank String categoryId, @PathVariable @NotBlank String packId, HttpServletRequest request) {
+//        Long userId = 1L;
+//
+//        packService.deleteAlonePack(Long.valueOf(listId), Long.valueOf(categoryId), Long.valueOf(packId), userId);
+//
+//        return ResponseNonDataMessage.toResponseEntity(
+//                ResponseCode.SUCCESS_DELETE_ALONE_PACK
+//        );
+//    }
 }
