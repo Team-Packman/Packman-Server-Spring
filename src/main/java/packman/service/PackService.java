@@ -5,14 +5,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import packman.dto.list.ListResponseMapping;
 import packman.dto.pack.PackCreateDto;
+import packman.dto.pack.PackUpdateDto;
 import packman.entity.Category;
 import packman.entity.Pack;
 import packman.entity.packingList.PackingList;
 import packman.repository.CategoryRepository;
+import packman.repository.PackRepository;
 import packman.repository.UserRepository;
 import packman.repository.packingList.AlonePackingListRepository;
 import packman.repository.packingList.PackingListRepository;
 import packman.repository.packingList.TogetherPackingListRepository;
+import packman.validator.Validator;
 
 import static packman.validator.IdValidator.*;
 import static packman.validator.LengthValidator.validatePackLength;
@@ -27,6 +30,7 @@ public class PackService {
     private final PackingListRepository packingListRepository;
     private final TogetherPackingListRepository togetherPackingListRepository;
     private final AlonePackingListRepository alonePackingListRepository;
+    private final PackRepository packRepository;
 
     public ListResponseMapping createAlonePack(PackCreateDto packCreateDto, Long userId) {
         Long aloneListId = Long.valueOf(packCreateDto.getListId());
@@ -69,26 +73,26 @@ public class PackService {
         Long aloneListId = Long.valueOf(packUpdateDto.getListId());
 
         validateUserId(userRepository, userId);
-        String title = validateUserList(folderPackingListRepository, userId, aloneListId);
+        PackingList packingList = validatePackingListId(packingListRepository, aloneListId);
+        validateUserAloneList(userId, validateAlonePackingListId(alonePackingListRepository, aloneListId));
 
-        updatePackInCategory(packUpdateDto);
+        updatePackInCategory(packUpdateDto, packingList);
 
-        return packingListRepository.findByIdAndTitle(aloneListId, title);
+        return packingListRepository.findByIdAndTitle(aloneListId, packingList.getTitle());
     }
 
     public ListResponseMapping updateTogetherPack(PackUpdateDto packUpdateDto, Long userId) {
         Long togetherListId = Long.valueOf(packUpdateDto.getListId());
 
         validateUserId(userRepository, userId);
-        PackingList packingList = validateList(userId, togetherListId);
+        PackingList packingList = Validator.validateTogetherList(userId, togetherListId, packingListRepository, togetherPackingListRepository);
 
-        updatePackInCategory(packUpdateDto);
+        updatePackInCategory(packUpdateDto, packingList);
 
         return packingListRepository.findByIdAndTitle(togetherListId, packingList.getTitle());
     }
 
-    public void updatePackInCategory(PackUpdateDto packUpdateDto) {
-        Long aloneId = Long.valueOf(packUpdateDto.getListId());
+    public void updatePackInCategory(PackUpdateDto packUpdateDto, PackingList packingList) {
         Long categoryId = Long.valueOf(packUpdateDto.getCategoryId());
         String packName = packUpdateDto.getName();
         Long packId = Long.valueOf(packUpdateDto.getId());
@@ -98,8 +102,8 @@ public class PackService {
 
         validatePackLength(packName);
 
-        validateListCategory(aloneId, category);
-        validateCategoryPack(categoryId, pack);
+        validateListCategory(packingList, category);
+        validateCategoryPack(category, pack);
 
         pack.setChecked(packUpdateDto.getIsChecked());
         pack.setName(packName);
