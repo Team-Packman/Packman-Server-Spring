@@ -26,4 +26,14 @@ public class TemplateController {
                 templateService.getAloneTemplateList(userId)
         );
     }
+
+    @GetMapping("/together")
+    public ResponseEntity<ResponseMessage> getTogetherTemplateList(HttpServletRequest request) {
+        Long userId = 1L;
+
+        return ResponseMessage.toResponseEntity(
+                ResponseCode.SUCCESS_GET_TOGETHER_TEMPLATE_LIST,
+                templateService.getTogetherTemplateList(userId)
+        );
+    }
 }
