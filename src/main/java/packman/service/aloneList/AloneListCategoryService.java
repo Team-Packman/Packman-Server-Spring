@@ -74,4 +74,24 @@ public class AloneListCategoryService {
         ListResponseMapping categoryResponseDto = packingListRepository.findByIdAndTitle(Long.parseLong(categoryUpdateDto.getListId()), packingList.getTitle());
         return categoryResponseDto;
     }
+
+    public void deleteCategory(Long listId, Long categoryId, Long userId) {
+        // no_list
+        PackingList packingList = validatePackingListId(packingListRepository, listId);
+        validateUserAloneList(userId, validateAlonePackingListId(alonePackingListRepository, packingList.getId()));
+
+        // no_user_list
+        validatePackingListIdInUser(packingList, userId);
+
+        // no_category
+        Category category = validateCategoryId(categoryRepository, categoryId);
+
+        // no_list_category
+        if (category.getPackingList().getId() != listId) {
+            throw new CustomException(ResponseCode.NO_LIST_CATEGORY);
+        }
+        // delete
+        categoryRepository.delete(category);
+
+    }
 }

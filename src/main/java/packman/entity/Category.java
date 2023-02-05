@@ -3,6 +3,7 @@ package packman.entity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.DynamicUpdate;
 import packman.entity.packingList.PackingList;
 
 import javax.persistence.*;
@@ -15,6 +16,7 @@ import static javax.persistence.FetchType.LAZY;
 @Getter
 @Setter
 @NoArgsConstructor
+@DynamicUpdate
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
