@@ -5,6 +5,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import packman.dto.list.AloneListResponseDto;
+import packman.dto.list.DetailedAloneListResponseDto;
 import packman.dto.list.ListCreateDto;
 import packman.dto.list.ListResponseMapping;
 import packman.entity.Category;
@@ -105,5 +106,21 @@ public class AloneListService {
                 .isSaved(savedList.getIsSaved()).build();
 
         return aloneListResponseDto;
+    }
+
+    public DetailedAloneListResponseDto getAloneList(Long listId, Long userId) {
+        // 유저의 혼자 패킹리스트인지 검증
+        FolderPackingList folderPackingList = validateUserAloneListId(folderPackingListRepository, userId, listId);
+
+        ListResponseMapping categories = packingListRepository.findProjectionById(listId);
+
+        DetailedAloneListResponseDto detailedAloneListResponseDto = DetailedAloneListResponseDto.builder()
+                .id(folderPackingList.getAlonePackingList().getId().toString())
+                .folderId(folderPackingList.getFolder().getId().toString())
+                .category(categories.getCategory())
+                .inviteCode(folderPackingList.getAlonePackingList().getInviteCode())
+                .isSaved(folderPackingList.getAlonePackingList().getPackingList().getIsSaved()).build();
+
+        return detailedAloneListResponseDto;
     }
 }
