@@ -48,7 +48,7 @@ public class AloneListCategoryService {
         return listResponseMapping;
     }
 
-    public CategoryResponseDto updateCategory(CategoryUpdateDto categoryUpdateDto, Long userId) {
+    public ListResponseMapping updateCategory(CategoryUpdateDto categoryUpdateDto, Long userId) {
         // 카테고리 exceed_len
         validateCategoryLength(categoryUpdateDto.getName());
 
@@ -71,7 +71,7 @@ public class AloneListCategoryService {
         category.setName(categoryUpdateDto.getName());
 
         // response
-        CategoryResponseDto categoryResponseDto = packingListRepository.findByIdAndTitle(Long.parseLong(categoryUpdateDto.getListId()), packingList.getTitle());
+        ListResponseMapping categoryResponseDto = packingListRepository.findByIdAndTitle(Long.parseLong(categoryUpdateDto.getListId()), packingList.getTitle());
         return categoryResponseDto;
     }
 }
