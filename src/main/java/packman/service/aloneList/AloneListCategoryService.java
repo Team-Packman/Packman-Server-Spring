@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import packman.dto.category.CategoryCreateDto;
-import packman.dto.category.CategoryResponseDto;
+import packman.dto.list.ListResponseMapping;
 import packman.entity.Category;
 import packman.entity.packingList.PackingList;
 import packman.repository.CategoryRepository;
@@ -21,7 +21,7 @@ public class AloneListCategoryService {
     private final PackingListRepository packingListRepository;
     private final CategoryRepository categoryRepository;
 
-    public CategoryResponseDto createCategory(CategoryCreateDto categoryCreateDto, Long userId) {
+    public ListResponseMapping createCategory(CategoryCreateDto categoryCreateDto, Long userId) {
 
         // 카테고리 exceed_len
         validateCategoryLength(categoryCreateDto.getName());
@@ -39,7 +39,7 @@ public class AloneListCategoryService {
 
 
         // response
-        CategoryResponseDto categoryResponseDto = packingListRepository.findByIdAndTitle(Long.parseLong(categoryCreateDto.getListId()), packingList.getTitle());
-        return categoryResponseDto;
+        ListResponseMapping listResponseMapping = packingListRepository.findByIdAndTitle(Long.parseLong(categoryCreateDto.getListId()), packingList.getTitle());
+        return listResponseMapping;
     }
 }
