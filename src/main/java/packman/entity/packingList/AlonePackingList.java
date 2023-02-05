@@ -22,7 +22,7 @@ public class AlonePackingList {
     @Column(name = "alone_packing_list_id")
     private Long id;
 
-    @OneToOne(fetch = LAZY, cascade = CascadeType.MERGE)
+    @OneToOne(fetch = LAZY)
     @MapsId
     @JoinColumn(name = "packing_list_id")
     private PackingList packingList;

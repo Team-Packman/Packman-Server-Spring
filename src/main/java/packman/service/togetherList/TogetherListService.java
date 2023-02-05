@@ -76,15 +76,18 @@ public class TogetherListService {
                     return folder;
                 });
 
-        // 함께 속 혼자 패킹 생성
         PackingList packingList = togetherPackingList.getPackingList();
+
+        // 함께 속 혼자 패킹 생성
         PackingList newPackingList = new PackingList(packingList.getTitle(), packingList.getDepartureDate());
-        AlonePackingList myPackingList = new AlonePackingList();
-        newPackingList.setAlonePackingList(myPackingList);
+        packingListRepository.save(newPackingList);
+
+        AlonePackingList myPackingList = new AlonePackingList(newPackingList, false);
         myPackingList.setPackingList(newPackingList);
         myPackingList.setIsAloned(false);
-        packingListRepository.save(newPackingList);
         alonePackingListRepository.save(myPackingList);
+
+        newPackingList.setAlonePackingList(myPackingList);
 
         // 기본 카테고리
         Category category = new Category(newPackingList, "기본");
