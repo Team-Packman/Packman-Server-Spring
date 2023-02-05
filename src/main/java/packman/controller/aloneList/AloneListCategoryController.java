@@ -38,9 +38,9 @@ public class AloneListCategoryController {
     }
 
     @DeleteMapping("/{listId}/{categoryId}")
-    public ResponseEntity<ResponseNonDataMessage> deleteCategory(@PathVariable("listId") String listId, @PathVariable("categoryId") String categoryId, HttpServletRequest request) {
+    public ResponseEntity<ResponseNonDataMessage> deleteCategory(@PathVariable("listId") Long listId, @PathVariable("categoryId") Long categoryId, HttpServletRequest request) {
         Long userId = 1L;
-        aloneListCategoryService.deleteCategory(Long.parseLong(listId), Long.parseLong(categoryId), userId);
+        aloneListCategoryService.deleteCategory(listId, categoryId, userId);
         return ResponseNonDataMessage.toResponseEntity(
                 ResponseCode.SUCCESS_DELETE_ALONE_CATEGORY
         );
