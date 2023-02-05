@@ -2,7 +2,6 @@ package packman.dto.list;
 
 import lombok.Builder;
 import lombok.Data;
-import packman.dto.category.CategoryResponseDto;
 
 @Builder
 @Data
@@ -11,5 +10,5 @@ public class TogetherListResponseDto {
         String title;
         String departureDate;
         TogetherListDto togetherPackingList;
-        CategoryResponseDto myPackingList;
+        ListResponseMapping myPackingList;
 }

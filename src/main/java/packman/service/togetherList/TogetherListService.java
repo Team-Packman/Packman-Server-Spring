@@ -4,8 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import packman.dto.category.CategoryResponseDto;
 import packman.dto.list.ListCreateDto;
+import packman.dto.list.ListResponseMapping;
 import packman.dto.list.TogetherListDto;
 import packman.dto.list.TogetherListResponseDto;
 import packman.entity.*;
@@ -32,6 +32,14 @@ import java.util.List;
 import static packman.validator.IdValidator.*;
 import static packman.validator.LengthValidator.validateListLength;
 import static packman.validator.Validator.validateUserFolder;
+import packman.dto.togetherList.TogetherListInviteResponseDto;
+import packman.entity.UserGroup;
+import packman.repository.UserGroupRepository;
+import packman.util.CustomException;
+import packman.util.ResponseCode;
+
+import java.util.Optional;
+
 
 @Service
 @Transactional
@@ -120,8 +128,8 @@ public class TogetherListService {
             });
         }
 
-        CategoryResponseDto savedMyIdCategories = packingListRepository.findByIdAndTitle(savedMyList.getId(), savedMyList.getTitle());
-        CategoryResponseDto savedTogetherCategories = packingListRepository.findByIdAndTitle(savedTogetherList.getId(), savedTogetherList.getTitle());
+        ListResponseMapping savedMyIdCategories = packingListRepository.findByIdAndTitle(savedMyList.getId(), savedMyList.getTitle());
+        ListResponseMapping savedTogetherCategories = packingListRepository.findByIdAndTitle(savedTogetherList.getId(), savedTogetherList.getTitle());
 
         TogetherListDto togetherListDto = TogetherListDto.builder()
                 .id(Long.toString(savedTogetherPackingList.getId()))
@@ -138,5 +146,25 @@ public class TogetherListService {
                 .myPackingList(savedMyIdCategories).build();
 
         return togetherListResponseDto;
+    }
+
+    public TogetherListInviteResponseDto getInviteTogetherList(Long userId, String inviteCode) {
+        // invitecode로 존재하는 패킹리스트인지 확인, 삭제되지 않은 패킹리스트인지 확인
+        TogetherPackingList togetherPackingList = togetherPackingListRepository
+                .findByInviteCode(inviteCode)
+                .orElseThrow(() -> new CustomException(ResponseCode.NO_LIST));
+        if (togetherPackingList.getPackingList().getIsDeleted() == true) {
+            throw new CustomException(ResponseCode.NO_LIST);
+        }
+
+        // 이미 추가된 멤버인지 확인
+        Optional<UserGroup> userGroup = userGroupRepository.findByGroupAndUserId(togetherPackingList.getGroup(), userId);
+        if (userGroup.isPresent()) {
+//            ArrayList<AlonePackingList> Alone
+            TogetherAlonePackingList togetherAlonePackingList = togetherAlonePackingListRepository.findByTogetherPackingListAndAlonePackingListFolderPackingListFolderUserId(togetherPackingList, userId);
+            return new TogetherListInviteResponseDto(String.valueOf(togetherAlonePackingList.getId()), true);
+        } else {
+            return new TogetherListInviteResponseDto(String.valueOf(togetherPackingList.getId()), false);
+        }
     }
 }
