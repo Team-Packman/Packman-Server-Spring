@@ -54,6 +54,7 @@ public enum ResponseCode {
 
     // togetherPackingList
     SUCCESS_UPDATE_TOGETHER_PACK(HttpStatus.OK, true, "함께 패킹리스트 짐 수정 성공"),
+    SUCCESS_INVITE_TOGETHER_PACKING(HttpStatus.OK, true, "함께 패킹리스트 초대 성공"),
 
     // packingList
     UPDATE_LIST_TITLE_SUCCESS(HttpStatus.OK, true, "패킹리스트 제목 수정 성공"),
