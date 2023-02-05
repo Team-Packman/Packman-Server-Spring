@@ -26,4 +26,9 @@ public class FolderPackingList {
     @OneToOne(fetch = LAZY)
     @JoinColumn(name = "alone_packing_list_id")
     private AlonePackingList alonePackingList;
+
+    public FolderPackingList(Folder folder, AlonePackingList aloneList){
+        this.folder = folder;
+        this.alonePackingList = aloneList;
+    }
 }

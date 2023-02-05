@@ -52,6 +52,7 @@ public enum ResponseCode {
 
     // alonePackingList
     SUCCESS_CREATE_ALONE_CATEGORY(HttpStatus.OK, true, "혼자 패킹리스트 카테고리 생성 성공"),
+    SUCCESS_CREATE_ALONE_LIST(HttpStatus.OK, true, "혼자 패킹리스트 생성 성공"),
     SUCCESS_UPDATE_ALONE_CATEGORY(HttpStatus.OK, true, "혼자 패킹리스트 카테고리 수정 성공"),
     SUCCESS_DELETE_ALONE_CATEGORY(HttpStatus.OK, true, "혼자 패킹리스트 카테고리 삭제 성공"),
 
@@ -65,7 +66,10 @@ public enum ResponseCode {
     // packingList
     UPDATE_LIST_TITLE_SUCCESS(HttpStatus.OK, true, "패킹리스트 제목 수정 성공"),
     UPDATE_LIST_DEPARTURE_DATE_SUCCESS(HttpStatus.OK, true, "패킹리스트 출발날짜 수정 성공"),
-    NO_LIST(HttpStatus.NOT_FOUND, false, "존재하지 않는 패킹리스트입니다");
+    NO_LIST(HttpStatus.NOT_FOUND, false, "존재하지 않는 패킹리스트입니다"),
+
+    // template
+    NO_TEMPLATE(HttpStatus.NOT_FOUND, false, "존재하지 않는 템플릿입니다");
 
     private final HttpStatus httpStatus;
     private final Boolean success;

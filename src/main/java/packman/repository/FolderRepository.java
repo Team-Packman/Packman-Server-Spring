@@ -17,6 +17,8 @@ public interface FolderRepository extends JpaRepository<Folder, Long> {
 
     Optional<FolderIdNameMapping> findByIdAndIsAloned(Long folderId, boolean isAloned);
 
+    Optional<Folder> findByIdAndUserIdAndIsAloned(Long folderId, Long userId, boolean isAloned);
+
     List<FolderIdNameMapping> findByUserIdAndIsAlonedOrderByIdDesc(Long userId, boolean isAloned);
 
 }
