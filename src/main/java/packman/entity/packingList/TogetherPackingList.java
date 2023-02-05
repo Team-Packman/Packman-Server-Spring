@@ -30,7 +30,7 @@ public class TogetherPackingList {
     @Column(length = 5, nullable = false, unique = true)
     private String inviteCode;
 
-    @ManyToOne(fetch = LAZY)
+    @OneToOne(fetch = LAZY)
     @JoinColumn(name = "group_id")
     private Group group;
 
