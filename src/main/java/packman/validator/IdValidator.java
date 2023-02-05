@@ -1,6 +1,5 @@
 package packman.validator;
 
-
 import packman.entity.User;
 import packman.entity.template.Template;
 import packman.repository.UserRepository;
@@ -30,11 +29,9 @@ public class IdValidator {
     }
 
     public static Template validateTemplateId(TemplateRepository templateRepository, Long templateId){
-        Template template = templateRepository.findByIdAndIsDeleted(templateId, false).orElseThrow(
+        return templateRepository.findByIdAndIsDeleted(templateId, false).orElseThrow(
                 () -> new CustomException(ResponseCode.NO_TEMPLATE)
         );
-
-        return template;
     }
 
     public static Category validateCategoryId(CategoryRepository categoryRepository, Long categoryId) {

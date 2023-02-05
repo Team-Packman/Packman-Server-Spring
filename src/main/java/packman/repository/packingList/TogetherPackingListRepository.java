@@ -8,5 +8,6 @@ import java.util.Optional;
 
 @Repository
 public interface TogetherPackingListRepository extends JpaRepository<TogetherPackingList, Long> {
+    boolean existsByInviteCode(String inviteCode);
     Optional<TogetherPackingList> findByInviteCode(String inviteCode);
 }

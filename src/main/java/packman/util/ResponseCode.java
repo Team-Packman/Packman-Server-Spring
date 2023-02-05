@@ -63,6 +63,9 @@ public enum ResponseCode {
     SUCCESS_UPDATE_TOGETHER_CATEGORY(HttpStatus.OK, true, "함께 패킹리스트 카테고리 수정 성공"),
     SUCCESS_DELETE_TOGETHER_CATEGORY(HttpStatus.OK, true, "함께 패킹리스트 카테고리 삭제 성공"),
 
+    //togetherPackingList
+    SUCCESS_CREATE_TOGETHER_LIST(HttpStatus.OK, true, "함께 패킹리스트 생성 성공"),
+
     // packingList
     UPDATE_LIST_TITLE_SUCCESS(HttpStatus.OK, true, "패킹리스트 제목 수정 성공"),
     UPDATE_LIST_DEPARTURE_DATE_SUCCESS(HttpStatus.OK, true, "패킹리스트 출발날짜 수정 성공"),

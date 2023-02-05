@@ -59,7 +59,6 @@ public class PackingList extends TimeStamped {
 
     public boolean getIsSaved() { return this.isSaved; }
 
-
     public boolean getIsDeleted() {
         return this.isDeleted;
     }

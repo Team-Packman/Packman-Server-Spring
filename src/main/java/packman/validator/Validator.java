@@ -25,12 +25,11 @@ public class Validator {
     }
 
     public static Folder validateUserFolder(FolderRepository folderRepository, Long folderId, Long userId, boolean isAloned) {
-        Folder folder = folderRepository.findByIdAndUserIdAndIsAloned(folderId, userId, isAloned).orElseThrow(
+        return folderRepository.findByIdAndUserIdAndIsAloned(folderId, userId, isAloned).orElseThrow(
                 () -> new CustomException(ResponseCode.NO_FOLDER)
         );
-
-        return folder;
     }
+
     public static void validateUserAloneList(Long userId, AlonePackingList alonePackingList) {
         if (!alonePackingList.getFolderPackingList().getFolder().getUser().getId().equals(userId)) {
             throw new CustomException(ResponseCode.NO_LIST);
