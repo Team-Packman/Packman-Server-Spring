@@ -36,7 +36,7 @@ public class TogetherListCategoryService {
         validateUserMemberId(userGroups, userId);
 
         // duplicate_category
-        validateDuplicatedCategory(packingList, categoryCreateDto.getName());
+        validateDuplicatedCategory(packingList, categoryCreateDto.getName(), null);
 
         // insert
         Category category = new Category(packingList, categoryCreateDto.getName());
