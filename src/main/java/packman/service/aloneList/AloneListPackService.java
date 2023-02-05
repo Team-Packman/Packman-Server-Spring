@@ -10,7 +10,6 @@ import packman.entity.Category;
 import packman.entity.Pack;
 import packman.entity.packingList.PackingList;
 import packman.repository.CategoryRepository;
-import packman.repository.FolderPackingListRepository;
 import packman.repository.PackRepository;
 import packman.repository.UserRepository;
 import packman.repository.packingList.AlonePackingListRepository;
@@ -25,13 +24,13 @@ import static packman.validator.Validator.*;
 @RequiredArgsConstructor
 public class AloneListPackService {
     private final UserRepository userRepository;
-    private final FolderPackingListRepository folderPackingListRepository;
     private final CategoryRepository categoryRepository;
     private final PackingListRepository packingListRepository;
     private final AlonePackingListRepository alonePackingListRepository;
     private final PackRepository packRepository;
 
     public ListResponseMapping createPack(PackCreateDto packCreateDto, Long userId) {
+
         Long aloneId = Long.valueOf(packCreateDto.getListId());
         Long categoryId = Long.valueOf(packCreateDto.getCategoryId());
         String packName = packCreateDto.getName();
@@ -44,7 +43,7 @@ public class AloneListPackService {
         Category category = validateCategoryId(categoryRepository, categoryId);
 
         validatePackLength(packName);
-        validateListCategory(aloneId, category);
+        validateListCategory(packingList, category);
 
         Pack pack = new Pack(category, packName);
         category.addPack(pack);
