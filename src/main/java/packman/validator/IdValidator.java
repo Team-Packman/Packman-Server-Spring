@@ -63,9 +63,4 @@ public class IdValidator {
                 () -> new CustomException(ResponseCode.NO_PACK)
         );
     }
-    public static void validatePackingListIdInUser(PackingList packingList, Long userId) {
-        if (packingList.getAlonePackingList() == null || packingList.getAlonePackingList().getFolderPackingList().getFolder().getUser().getId() != userId) {
-            throw new CustomException(ResponseCode.NO_LIST);
-        }
-    }
 }

@@ -80,9 +80,6 @@ public class AloneListCategoryService {
         PackingList packingList = validatePackingListId(packingListRepository, listId);
         validateUserAloneList(userId, validateAlonePackingListId(alonePackingListRepository, packingList.getId()));
 
-        // no_user_list
-        validatePackingListIdInUser(packingList, userId);
-
         // no_category
         Category category = validateCategoryId(categoryRepository, categoryId);
 
