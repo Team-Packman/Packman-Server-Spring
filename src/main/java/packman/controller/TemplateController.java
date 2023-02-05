@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import packman.service.ListService;
 import packman.service.TemplateService;
 import packman.util.ResponseCode;
 import packman.util.ResponseMessage;
@@ -15,13 +16,14 @@ import javax.servlet.http.HttpServletRequest;
 @RequiredArgsConstructor
 @RequestMapping("/template")
 public class TemplateController {
+    private final TemplateService templateService;
     @GetMapping("/alone")
     public ResponseEntity<ResponseMessage> getAloneTemplateList(HttpServletRequest request) {
         Long userId = 1L;
 
         return ResponseMessage.toResponseEntity(
                 ResponseCode.SUCCESS_GET_ALONE_TEMPLATE_LIST,
-                TemplateService.getAloneTemplateList(userId)
+                templateService.getAloneTemplateList(userId)
         );
     }
 }
