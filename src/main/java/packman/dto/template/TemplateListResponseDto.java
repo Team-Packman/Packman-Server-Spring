@@ -7,7 +7,7 @@ import java.util.List;
 
 @Builder
 @Data
-public class AloneTemplateListResponseDto {
+public class TemplateListResponseDto {
     List<TemplateIdTitleMapping> basicTemplate;
     List<TemplateIdTitleMapping> myTemplate;
 }
