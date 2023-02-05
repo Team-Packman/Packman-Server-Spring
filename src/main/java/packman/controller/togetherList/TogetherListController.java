@@ -41,4 +41,14 @@ public class TogetherListController {
                 togetherListService.getInviteTogetherList(userId, inviteCode)
         );
     }
+
+    @GetMapping("/{listId}")
+    public ResponseEntity<ResponseMessage> getTogetherList(@PathVariable("listId") Long listId, HttpServletRequest request) {
+        Long userId = 1L;
+
+        return ResponseMessage.toResponseEntity(
+                ResponseCode.SUCCESS_GET_TOGETHER_LIST,
+                togetherListService.getTogetherList(listId, userId)
+        );
+    }
 }
