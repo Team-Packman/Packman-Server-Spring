@@ -97,34 +97,15 @@ public class PackService {
         String packName = packUpdateDto.getName();
         Long packId = Long.valueOf(packUpdateDto.getId());
 
-        validatePackLength(packName);
-        Pack pack = validateCategoryAndPack(packingList, categoryId, packId);
-
-        pack.setChecked(packUpdateDto.getIsChecked());
-        pack.setName(packName);
-    }
-
-    public void deleteAlonePack(Long listId, Long categoryId, Long packId, Long userId) {
-        validateUserId(userRepository, userId);
-        PackingList packingList = validateUserAloneList(userId, listId, alonePackingListRepository, packingListRepository);
-
-        packRepository.delete(validateCategoryAndPack(packingList, categoryId, packId));
-    }
-
-    public void deleteTogetherPack(Long listId, Long categoryId, Long packId, Long userId) {
-        validateUserId(userRepository, userId);
-        PackingList packingList = validateTogetherList(userId, listId, packingListRepository, togetherPackingListRepository);
-
-        packRepository.delete(validateCategoryAndPack(packingList, categoryId, packId));
-    }
-
-    public Pack validateCategoryAndPack(PackingList packingList, Long categoryId, Long packId) {
         Category category = validateCategoryId(categoryRepository, categoryId);
         Pack pack = validatePackId(packRepository, packId);
+
+        validatePackLength(packName);
 
         validateListCategory(packingList, category);
         validateCategoryPack(category, pack);
 
-        return pack;
+        pack.setChecked(packUpdateDto.getIsChecked());
+        pack.setName(packName);
     }
 }
