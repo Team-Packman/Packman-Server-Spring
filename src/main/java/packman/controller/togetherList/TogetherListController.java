@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import packman.dto.list.ListCreateDto;
 import org.springframework.web.bind.annotation.*;
+import packman.dto.togetherList.PackerUpdateDto;
 import packman.service.togetherList.TogetherListService;
 import packman.util.ResponseCode;
 import packman.util.ResponseMessage;
@@ -39,6 +40,16 @@ public class TogetherListController {
         return ResponseMessage.toResponseEntity(
                 ResponseCode.SUCCESS_INVITE_TOGETHER_PACKING,
                 togetherListService.getInviteTogetherList(userId, inviteCode)
+        );
+    }
+
+    @PatchMapping("/packer")
+    public ResponseEntity<ResponseMessage> updatePacker(@RequestBody @Valid PackerUpdateDto packerUpdateDto, HttpServletRequest request) {
+        Long userId = 1L;
+
+        return ResponseMessage.toResponseEntity(
+                ResponseCode.SUCCESS_UPDATE_PACKER,
+                togetherListService.updatePacker(packerUpdateDto, userId)
         );
     }
 }
