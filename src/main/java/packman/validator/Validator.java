@@ -1,13 +1,14 @@
 package packman.validator;
 
-import packman.entity.Folder;
-import packman.repository.FolderPackingListRepository;
-import packman.repository.FolderRepository;
 import packman.entity.Category;
+import packman.entity.Folder;
 import packman.entity.Pack;
 import packman.entity.UserGroup;
 import packman.entity.packingList.AlonePackingList;
 import packman.entity.packingList.PackingList;
+import packman.repository.FolderPackingListRepository;
+import packman.repository.FolderRepository;
+import packman.repository.packingList.AlonePackingListRepository;
 import packman.repository.packingList.PackingListRepository;
 import packman.repository.packingList.TogetherPackingListRepository;
 import packman.util.CustomException;
@@ -59,5 +60,11 @@ public class Validator {
         validateUserMemberId(userGroups, userId);
 
         return packingList;
+    }
+
+    public static AlonePackingList validateAlonePackingListByInviteCode(AlonePackingListRepository alonePackingListRepository, String inviteCode) {
+        return alonePackingListRepository.findByInviteCodeAndIsAloned(inviteCode, true).orElseThrow(
+                () -> new CustomException(ResponseCode.NO_LIST)
+        );
     }
 }
