@@ -6,8 +6,10 @@ import packman.entity.Pack;
 import packman.entity.UserGroup;
 import packman.entity.packingList.AlonePackingList;
 import packman.entity.packingList.PackingList;
+import packman.repository.CategoryRepository;
 import packman.repository.FolderPackingListRepository;
 import packman.repository.FolderRepository;
+import packman.repository.PackRepository;
 import packman.repository.packingList.AlonePackingListRepository;
 import packman.repository.packingList.PackingListRepository;
 import packman.repository.packingList.TogetherPackingListRepository;
@@ -65,5 +67,15 @@ public class Validator {
         validateUserMemberId(userGroups, userId);
 
         return packingList;
+    }
+
+    public static Pack validateListCategoryPack(PackingList packingList, Long categoryId, Long packId, CategoryRepository categoryRepository, PackRepository packRepository) {
+        Category category = validateCategoryId(categoryRepository, categoryId);
+        Pack pack = validatePackId(packRepository, packId);
+
+        validateListCategory(packingList, category);
+        validateCategoryPack(category, pack);
+
+        return pack;
     }
 }

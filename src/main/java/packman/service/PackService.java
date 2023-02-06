@@ -17,7 +17,8 @@ import packman.repository.packingList.PackingListRepository;
 import packman.repository.packingList.TogetherPackingListRepository;
 import packman.validator.Validator;
 
-import static packman.validator.IdValidator.*;
+import static packman.validator.IdValidator.validateCategoryId;
+import static packman.validator.IdValidator.validateUserId;
 import static packman.validator.LengthValidator.validatePackLength;
 import static packman.validator.Validator.*;
 
@@ -95,7 +96,7 @@ public class PackService {
         Long packId = Long.valueOf(packUpdateDto.getId());
 
         validatePackLength(packName);
-        Pack pack = validateCategoryAndPack(packingList, categoryId, packId);
+        Pack pack = validateListCategoryPack(packingList, categoryId, packId, categoryRepository, packRepository);
 
         pack.setChecked(packUpdateDto.getIsChecked());
         pack.setName(packName);
@@ -105,23 +106,13 @@ public class PackService {
         validateUserId(userRepository, userId);
         PackingList packingList = validateUserAloneList(userId, listId, alonePackingListRepository, packingListRepository);
 
-        packRepository.delete(validateCategoryAndPack(packingList, categoryId, packId));
+        packRepository.delete(validateListCategoryPack(packingList, categoryId, packId, categoryRepository, packRepository));
     }
 
     public void deleteTogetherPack(Long listId, Long categoryId, Long packId, Long userId) {
         validateUserId(userRepository, userId);
         PackingList packingList = validateTogetherList(userId, listId, packingListRepository, togetherPackingListRepository);
 
-        packRepository.delete(validateCategoryAndPack(packingList, categoryId, packId));
-    }
-
-    public Pack validateCategoryAndPack(PackingList packingList, Long categoryId, Long packId) {
-        Category category = validateCategoryId(categoryRepository, categoryId);
-        Pack pack = validatePackId(packRepository, packId);
-
-        validateListCategory(packingList, category);
-        validateCategoryPack(category, pack);
-
-        return pack;
+        packRepository.delete(validateListCategoryPack(packingList, categoryId, packId, categoryRepository, packRepository));
     }
 }
