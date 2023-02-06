@@ -23,6 +23,8 @@ public enum ResponseCode {
 
     // member
     NO_MEMBER_USER(HttpStatus.BAD_REQUEST, false, "멤버에 존재하지 않는 유저입니다"),
+    SUCCESS_GET_MEMBER(HttpStatus.OK, true, "멤버 조회 성공"),
+    EMPTY_MEMBER(HttpStatus.BAD_REQUEST, false, "멤버가 비어있습니다"),
 
     // folder
     SUCCESS_GET_ALONE_FOLDERS(HttpStatus.OK, true, "혼자 패킹리스트 폴더 조회 성공"),
