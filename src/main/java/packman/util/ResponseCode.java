@@ -48,6 +48,7 @@ public enum ResponseCode {
     NO_PACK(HttpStatus.NOT_FOUND, false, "존재하지 않는 짐입니다"),
     NO_CATEGORY_PACK(HttpStatus.BAD_REQUEST, false, "리스트에 존재하지 않는 짐입니다"),
     SUCCESS_CREATE_TOGETHER_PACK(HttpStatus.OK, true, "함께 패킹리스트 짐 생성 성공"),
+    NO_PACKER(HttpStatus.BAD_REQUEST, false, "그룹에 존재하지 않는 패커입니다"),
 
 
     // alonePackingList
