@@ -1,14 +1,13 @@
 package packman.validator;
 
-import packman.entity.Category;
 import packman.entity.Folder;
+import packman.repository.FolderPackingListRepository;
+import packman.repository.FolderRepository;
+import packman.entity.Category;
 import packman.entity.Pack;
 import packman.entity.UserGroup;
 import packman.entity.packingList.AlonePackingList;
 import packman.entity.packingList.PackingList;
-import packman.repository.FolderPackingListRepository;
-import packman.repository.FolderRepository;
-import packman.repository.packingList.AlonePackingListRepository;
 import packman.repository.packingList.PackingListRepository;
 import packman.repository.packingList.TogetherPackingListRepository;
 import packman.util.CustomException;
@@ -31,15 +30,10 @@ public class Validator {
         );
     }
 
-    public static PackingList validateUserAloneList(Long userId, Long aloneListId, AlonePackingListRepository alonePackingListRepository, PackingListRepository packingListRepository) {
-        PackingList packingList = validatePackingListId(packingListRepository, aloneListId);
-        AlonePackingList alonePackingList = validateAlonePackingListId(alonePackingListRepository, aloneListId);
-
+    public static void validateUserAloneList(Long userId, AlonePackingList alonePackingList) {
         if (!alonePackingList.getFolderPackingList().getFolder().getUser().getId().equals(userId)) {
             throw new CustomException(ResponseCode.NO_LIST);
         }
-
-        return packingList;
     }
 
     public static void validateListCategory(PackingList packingList, Category category) {
