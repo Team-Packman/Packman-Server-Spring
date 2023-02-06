@@ -71,6 +71,8 @@ public enum ResponseCode {
     UPDATE_LIST_TITLE_SUCCESS(HttpStatus.OK, true, "패킹리스트 제목 수정 성공"),
     UPDATE_LIST_DEPARTURE_DATE_SUCCESS(HttpStatus.OK, true, "패킹리스트 출발날짜 수정 성공"),
     NO_LIST(HttpStatus.NOT_FOUND, false, "존재하지 않는 패킹리스트입니다"),
+    SUCCESS_GET_INVITE_LIST(HttpStatus.OK, true, "공유된 패킹리스트 조회 성공"),
+    INVALID_LIST_TYPE(HttpStatus.BAD_REQUEST, false, "유효하지 않은 리스트 타입입니다"),
 
     // template
     NO_TEMPLATE(HttpStatus.NOT_FOUND, false, "존재하지 않는 템플릿입니다");
