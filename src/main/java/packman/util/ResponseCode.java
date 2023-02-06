@@ -62,6 +62,8 @@ public enum ResponseCode {
     SUCCESS_INVITE_TOGETHER_PACKING(HttpStatus.OK, true, "함께 패킹리스트 초대 성공"),
     SUCCESS_UPDATE_TOGETHER_CATEGORY(HttpStatus.OK, true, "함께 패킹리스트 카테고리 수정 성공"),
     SUCCESS_DELETE_TOGETHER_CATEGORY(HttpStatus.OK, true, "함께 패킹리스트 카테고리 삭제 성공"),
+    SUCCESS_UPDATE_PACKER(HttpStatus.OK, true, "함께 패킹리스트 담당자 배정 성공"),
+
 
     //togetherPackingList
     SUCCESS_CREATE_TOGETHER_LIST(HttpStatus.OK, true, "함께 패킹리스트 생성 성공"),
