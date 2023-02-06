@@ -2,15 +2,10 @@ package packman.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import packman.dto.list.DepartureDateRequestDto;
 import packman.dto.list.ListTitleRequestDto;
 import packman.service.ListService;
-import packman.util.CustomException;
 import packman.util.ResponseCode;
 import packman.util.ResponseMessage;
 
@@ -49,5 +44,12 @@ public class ListController {
         );
     }
 
-
+    @GetMapping("/{listType}/share/{inviteCode}")
+    public ResponseEntity<ResponseMessage> getInviteTogetherList(@PathVariable("listType") String listType, @PathVariable("inviteCode") String inviteCode, HttpServletRequest request) {
+        Long userId = 1L;
+        return ResponseMessage.toResponseEntity(
+                ResponseCode.SUCCESS_GET_INVITE_LIST,
+                listService.getInviteList(userId, listType, inviteCode)
+        );
+    }
 }
