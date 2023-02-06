@@ -3,15 +3,16 @@ package packman.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import packman.dto.list.DepartureDateRequestDto;
-import packman.dto.list.DepartureDateResponseDto;
-import packman.dto.list.ListTitleRequestDto;
-import packman.dto.list.ListTitleResponseDto;
+import packman.dto.list.*;
+import packman.entity.packingList.AlonePackingList;
 import packman.entity.packingList.TogetherAlonePackingList;
+import packman.entity.packingList.TogetherPackingList;
 import packman.repository.FolderPackingListRepository;
 import packman.repository.UserRepository;
+import packman.repository.packingList.AlonePackingListRepository;
 import packman.repository.packingList.PackingListRepository;
 import packman.repository.packingList.TogetherAlonePackingListRepository;
+import packman.repository.packingList.TogetherPackingListRepository;
 import packman.util.CustomException;
 import packman.util.ResponseCode;
 
@@ -20,7 +21,7 @@ import java.time.format.DateTimeFormatter;
 
 import static packman.validator.IdValidator.validateUserId;
 import static packman.validator.LengthValidator.validateListLength;
-import static packman.validator.Validator.validateUserList;
+import static packman.validator.Validator.*;
 
 
 @Service
@@ -31,6 +32,9 @@ public class ListService {
     private final PackingListRepository listRepository;
     private final TogetherAlonePackingListRepository togetherAlonePackingListRepository;
     private final FolderPackingListRepository folderPackingListRepository;
+    private final AlonePackingListRepository alonePackingListRepository;
+    private final TogetherPackingListRepository togetherPackingListRepository;
+    private final PackingListRepository packingListRepository;
 
     public ListTitleResponseDto updateTitle(ListTitleRequestDto listTitleRequestDto, Long userId) {
         Long listId = Long.parseLong(listTitleRequestDto.getId());
@@ -80,8 +84,39 @@ public class ListService {
 
         listRepository.findByIdAndIsDeleted(listId, false).ifPresentOrElse(t -> {
             t.setDepartureDate(departureDate);
-        }, () -> {throw new CustomException(ResponseCode.NO_LIST);});
+        }, () -> {
+            throw new CustomException(ResponseCode.NO_LIST);
+        });
 
         return new DepartureDateResponseDto(departureDateRequestDto.getId(), departureDateRequestDto.getDepartureDate());
+    }
+
+    public InviteListResponseDto getInviteList(Long userId, String listType, String inviteCode) {
+        validateUserId(userRepository, userId);
+
+        Long listId;
+        String title, departureDate;
+        if (listType.equals("alone")) {
+            AlonePackingList alonePackingList = validateAlonePackingListByInviteCode(alonePackingListRepository, inviteCode);
+            listId = alonePackingList.getId();
+            title = alonePackingList.getPackingList().getTitle();
+            departureDate = alonePackingList.getPackingList().getDepartureDate().toString();
+        } else if (listType.equals("together")) {
+            TogetherPackingList togetherPackingList = validateTogetherPackingListByInviteCode(togetherPackingListRepository, inviteCode);
+            listId = togetherPackingList.getId();
+            title = togetherPackingList.getPackingList().getTitle();
+            departureDate = togetherPackingList.getPackingList().getDepartureDate().toString();
+        } else {
+            throw new CustomException(ResponseCode.INVALID_LIST_TYPE);
+        }
+
+        ListResponseMapping listResponseMapping = packingListRepository.findByIdAndTitle(listId, title);
+
+        return InviteListResponseDto.builder()
+                .id(listResponseMapping.getId())
+                .title(title)
+                .departureDate(departureDate)
+                .category(listResponseMapping.getCategory())
+                .build();
     }
 }
