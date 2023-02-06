@@ -5,6 +5,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import packman.dto.list.AloneListResponseDto;
+import packman.dto.list.InviteAloneListResponseDto;
 import packman.dto.list.ListCreateDto;
 import packman.dto.list.ListResponseMapping;
 import packman.entity.Category;
@@ -26,8 +27,10 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-import static packman.validator.IdValidator.*;
+import static packman.validator.IdValidator.validateTemplateId;
+import static packman.validator.IdValidator.validateUserId;
 import static packman.validator.LengthValidator.validateListLength;
+import static packman.validator.Validator.validateAlonePackingListByInviteCode;
 import static packman.validator.Validator.validateUserFolder;
 
 
@@ -105,5 +108,18 @@ public class AloneListService {
                 .isSaved(savedList.getIsSaved()).build();
 
         return aloneListResponseDto;
+    }
+
+    public InviteAloneListResponseDto getInviteAloneList(Long userId, String inviteCode) {
+        validateUserId(userRepository, userId);
+        AlonePackingList alonePackingList = validateAlonePackingListByInviteCode(alonePackingListRepository, inviteCode);
+        Long ownerId = alonePackingList.getFolderPackingList().getFolder().getUser().getId();
+
+        boolean isOwner = ownerId.equals(userId);
+
+        return InviteAloneListResponseDto.builder()
+                .id(alonePackingList.getId().toString())
+                .IsOwner(isOwner)
+                .build();
     }
 }

@@ -2,10 +2,7 @@ package packman.controller.aloneList;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import packman.dto.list.ListCreateDto;
 import packman.service.aloneList.AloneListService;
 import packman.util.ResponseCode;
@@ -30,4 +27,13 @@ public class AloneListController {
         );
     }
 
+    @GetMapping("/invite/{inviteCode}")
+    public ResponseEntity<ResponseMessage> getInviteAloneList(@PathVariable String inviteCode, HttpServletRequest request) {
+        Long userId = 1L;  //  임시 userId 1
+
+        return ResponseMessage.toResponseEntity(
+                ResponseCode.SUCCESS_GET_INVITE_ALONE_LIST,
+                aloneListService.getInviteAloneList(userId, inviteCode)
+        );
+    }
 }
