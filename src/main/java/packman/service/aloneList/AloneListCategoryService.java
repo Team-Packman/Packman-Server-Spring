@@ -4,8 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import packman.dto.category.CategoryCreateDto;
-import packman.dto.category.CategoryUpdateDto;
 import packman.dto.list.ListResponseMapping;
+import packman.dto.category.CategoryUpdateDto;
 import packman.entity.Category;
 import packman.entity.packingList.PackingList;
 import packman.repository.CategoryRepository;
@@ -15,8 +15,7 @@ import packman.util.CustomException;
 import packman.util.ResponseCode;
 
 import static packman.validator.DuplicatedValidator.validateDuplicatedCategory;
-import static packman.validator.IdValidator.validateCategoryId;
-import static packman.validator.IdValidator.validatePackingListIdInUser;
+import static packman.validator.IdValidator.*;
 import static packman.validator.LengthValidator.validateCategoryLength;
 import static packman.validator.Validator.validateUserAloneList;
 
@@ -34,7 +33,8 @@ public class AloneListCategoryService {
         validateCategoryLength(categoryCreateDto.getName());
 
         // no_list
-        PackingList packingList = validateUserAloneList(userId, Long.parseLong(categoryCreateDto.getListId()), alonePackingListRepository, packingListRepository);
+        PackingList packingList = validatePackingListId(packingListRepository, Long.parseLong(categoryCreateDto.getListId()));
+        validateUserAloneList(userId, validateAlonePackingListId(alonePackingListRepository, packingList.getId()));
 
         // duplicate_category
         validateDuplicatedCategory(packingList, categoryCreateDto.getName(), null);
@@ -53,7 +53,8 @@ public class AloneListCategoryService {
         validateCategoryLength(categoryUpdateDto.getName());
 
         // no_list
-        PackingList packingList = validateUserAloneList(userId, Long.parseLong(categoryUpdateDto.getListId()), alonePackingListRepository, packingListRepository);
+        PackingList packingList = validatePackingListId(packingListRepository, Long.parseLong(categoryUpdateDto.getListId()));
+        validateUserAloneList(userId, validateAlonePackingListId(alonePackingListRepository, packingList.getId()));
 
         // no_category
         Category category = validateCategoryId(categoryRepository, Long.parseLong(categoryUpdateDto.getId()));
@@ -76,8 +77,8 @@ public class AloneListCategoryService {
 
     public void deleteCategory(Long listId, Long categoryId, Long userId) {
         // no_list
-        PackingList packingList = validateUserAloneList(userId, listId, alonePackingListRepository, packingListRepository);
-
+        PackingList packingList = validatePackingListId(packingListRepository, listId);
+        validateUserAloneList(userId, validateAlonePackingListId(alonePackingListRepository, packingList.getId()));
 
         // no_user_list
         validatePackingListIdInUser(packingList, userId);
