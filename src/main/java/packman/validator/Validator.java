@@ -1,13 +1,13 @@
 package packman.validator;
 
-import packman.entity.Folder;
-import packman.repository.FolderPackingListRepository;
-import packman.repository.FolderRepository;
 import packman.entity.Category;
+import packman.entity.Folder;
 import packman.entity.Pack;
 import packman.entity.UserGroup;
 import packman.entity.packingList.AlonePackingList;
 import packman.entity.packingList.PackingList;
+import packman.repository.FolderPackingListRepository;
+import packman.repository.FolderRepository;
 import packman.repository.packingList.PackingListRepository;
 import packman.repository.packingList.TogetherPackingListRepository;
 import packman.util.CustomException;
@@ -59,5 +59,11 @@ public class Validator {
         validateUserMemberId(userGroups, userId);
 
         return packingList;
+    }
+
+    public static void validateEmptyUserInMember(int memberLength) {
+        if (memberLength == 0) {
+            throw new CustomException(ResponseCode.EMPTY_MEMBER);
+        }
     }
 }

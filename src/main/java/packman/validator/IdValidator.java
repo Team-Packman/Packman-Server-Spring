@@ -1,20 +1,22 @@
 package packman.validator;
 
-import packman.entity.User;
-import packman.entity.template.Template;
-import packman.repository.UserRepository;
-import packman.repository.template.TemplateRepository;
 import packman.entity.Category;
 import packman.entity.Pack;
+import packman.entity.User;
 import packman.entity.UserGroup;
 import packman.entity.packingList.AlonePackingList;
 import packman.entity.packingList.PackingList;
+import packman.entity.packingList.TogetherAlonePackingList;
 import packman.entity.packingList.TogetherPackingList;
+import packman.entity.template.Template;
 import packman.repository.CategoryRepository;
 import packman.repository.PackRepository;
+import packman.repository.UserRepository;
 import packman.repository.packingList.AlonePackingListRepository;
 import packman.repository.packingList.PackingListRepository;
+import packman.repository.packingList.TogetherAlonePackingListRepository;
 import packman.repository.packingList.TogetherPackingListRepository;
+import packman.repository.template.TemplateRepository;
 import packman.util.CustomException;
 import packman.util.ResponseCode;
 
@@ -75,6 +77,12 @@ public class IdValidator {
 
     public static TogetherPackingList validateTogetherPackingListId(TogetherPackingListRepository togetherPackingListRepository, Long togetherId) {
         return togetherPackingListRepository.findById(togetherId).orElseThrow(
+                () -> new CustomException(ResponseCode.NO_LIST)
+        );
+    }
+
+    public static TogetherAlonePackingList validateTogetherAlonePackingListId(TogetherAlonePackingListRepository togetherAlonePackingListRepository, Long integratedId) {
+        return togetherAlonePackingListRepository.findById(integratedId).orElseThrow(
                 () -> new CustomException(ResponseCode.NO_LIST)
         );
     }
