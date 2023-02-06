@@ -1,15 +1,13 @@
 package packman.validator;
 
-import packman.entity.Category;
-import packman.entity.Pack;
-import packman.entity.User;
-import packman.entity.UserGroup;
+import packman.entity.*;
 import packman.entity.packingList.AlonePackingList;
 import packman.entity.packingList.PackingList;
 import packman.entity.packingList.TogetherAlonePackingList;
 import packman.entity.packingList.TogetherPackingList;
 import packman.entity.template.Template;
 import packman.repository.CategoryRepository;
+import packman.repository.GroupRepository;
 import packman.repository.PackRepository;
 import packman.repository.UserRepository;
 import packman.repository.packingList.AlonePackingListRepository;
@@ -30,7 +28,21 @@ public class IdValidator {
         );
     }
 
-    public static Template validateTemplateId(TemplateRepository templateRepository, Long templateId){
+    public static void validateMemberId(UserRepository userRepository, List<Long> ids) {
+        for (Long id : ids) {
+            userRepository.findByIdAndIsDeleted(id, false).orElseThrow(
+                    () -> new CustomException(ResponseCode.NO_MEMBER)
+            );
+        }
+    }
+
+    public static Group validateGroupId(GroupRepository groupRepository, Long groupId) {
+        return groupRepository.findById(groupId).orElseThrow(
+                () -> new CustomException(ResponseCode.NO_GROUP)
+        );
+    }
+
+    public static Template validateTemplateId(TemplateRepository templateRepository, Long templateId) {
         return templateRepository.findByIdAndIsDeleted(templateId, false).orElseThrow(
                 () -> new CustomException(ResponseCode.NO_TEMPLATE)
         );
@@ -85,5 +97,11 @@ public class IdValidator {
         return togetherAlonePackingListRepository.findById(integratedId).orElseThrow(
                 () -> new CustomException(ResponseCode.NO_LIST)
         );
+    }
+
+    public static void validateNoMakerId(Long makerId, Long userId) {
+        if (!makerId.equals(userId)) {
+            throw new CustomException(ResponseCode.NO_MAKER);
+        }
     }
 }

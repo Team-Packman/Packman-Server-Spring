@@ -66,4 +66,10 @@ public class Validator {
             throw new CustomException(ResponseCode.EMPTY_MEMBER);
         }
     }
+
+    public static void validateNoDeleteMaker(List<Long> members, Long userId) {
+        if (members.contains(userId)) {
+            throw new CustomException(ResponseCode.NO_DELETE_MAKER);
+        }
+    }
 }
