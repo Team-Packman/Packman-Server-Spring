@@ -36,7 +36,9 @@ public class PackService {
         Long aloneListId = Long.valueOf(packCreateDto.getListId());
 
         validateUserId(userRepository, userId);
-        PackingList packingList = validateUserAloneList(userId, aloneListId, alonePackingListRepository, packingListRepository);
+
+        PackingList packingList = validatePackingListId(packingListRepository, aloneListId);
+        validateUserAloneList(userId, validateAlonePackingListId(alonePackingListRepository, aloneListId));
 
         addPackInCategory(packCreateDto, packingList);
 
@@ -71,7 +73,8 @@ public class PackService {
         Long aloneListId = Long.valueOf(packUpdateDto.getListId());
 
         validateUserId(userRepository, userId);
-        PackingList packingList = validateUserAloneList(userId, aloneListId, alonePackingListRepository, packingListRepository);
+        PackingList packingList = validatePackingListId(packingListRepository, aloneListId);
+        validateUserAloneList(userId, validateAlonePackingListId(alonePackingListRepository, aloneListId));
 
         updatePackInCategory(packUpdateDto, packingList);
 
