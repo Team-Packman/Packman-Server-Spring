@@ -70,6 +70,7 @@ public enum ResponseCode {
     UPDATE_LIST_TITLE_SUCCESS(HttpStatus.OK, true, "패킹리스트 제목 수정 성공"),
     UPDATE_LIST_DEPARTURE_DATE_SUCCESS(HttpStatus.OK, true, "패킹리스트 출발날짜 수정 성공"),
     NO_LIST(HttpStatus.NOT_FOUND, false, "존재하지 않는 패킹리스트입니다"),
+    UPDATE_LIST_MY_TEMPLATE_SUCCESS(HttpStatus.OK, true, "패킹리스트 나만의 템플릿 추가/업데이트 성공"),
 
     // template
     NO_TEMPLATE(HttpStatus.NOT_FOUND, false, "존재하지 않는 템플릿입니다");
