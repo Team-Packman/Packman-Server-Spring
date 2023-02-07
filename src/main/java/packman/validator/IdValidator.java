@@ -81,8 +81,8 @@ public class IdValidator {
         );
     }
 
-    public static TogetherAlonePackingList validateUserTogetherAlonePackingListId(TogetherAlonePackingListRepository togetherAlonePackingListRepository, Long linkId, User user) {
-        return togetherAlonePackingListRepository.findByIdAndTogetherPackingList_PackingList_IsDeletedAndTogetherPackingList_Group_UserGroups_UserAndAlonePackingList_IsAlonedAndAlonePackingList_PackingList_IsDeleted(linkId, false, user, false, false).orElseThrow(
+    public static TogetherPackingList validateUserTogetherPackingListId(TogetherPackingListRepository togetherPackingListRepository, Long togetherListId, User user) {
+        return togetherPackingListRepository.findByIdAndPackingList_IsDeletedAndGroup_UserGroups_User(togetherListId, false, user).orElseThrow(
                 () -> new CustomException(ResponseCode.NO_LIST)
         );
     }

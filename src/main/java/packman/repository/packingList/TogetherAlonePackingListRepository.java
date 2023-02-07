@@ -13,5 +13,4 @@ import java.util.Optional;
 public interface TogetherAlonePackingListRepository extends JpaRepository<TogetherAlonePackingList, Long> {
     TogetherAloneListMapping findByAlonePackingListId(Long myListId);
     TogetherAlonePackingList findByTogetherPackingListAndAlonePackingListFolderPackingListFolderUserId(TogetherPackingList together, Long userId);
-    Optional<TogetherAlonePackingList> findByIdAndTogetherPackingList_PackingList_IsDeletedAndTogetherPackingList_Group_UserGroups_UserAndAlonePackingList_IsAlonedAndAlonePackingList_PackingList_IsDeleted(Long linkId, boolean togetherIsDeleted, User user, boolean isAloned, boolean aloneIsDeleted );
 }

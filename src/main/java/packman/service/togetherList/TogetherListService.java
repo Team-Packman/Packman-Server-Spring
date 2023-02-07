@@ -176,7 +176,7 @@ public class TogetherListService {
         User user = validateUserId(userRepository, userId);
 
         // 유저의 함께 패킹리스트인지 검증
-        TogetherPackingList togetherPackingList = validateUserTogetherAlonePackingListId(togetherAlonePackingListRepository, Long.parseLong(packerUpdateDto.getListId()), user).getTogetherPackingList();
+        TogetherPackingList togetherPackingList = validateUserTogetherPackingListId(togetherPackingListRepository, Long.parseLong(packerUpdateDto.getListId()), user);
 
         // 리스트에 존재하는 짐인지 검증
         Pack pack = validateListPack(packRepository, togetherPackingList.getPackingList(), Long.parseLong(packerUpdateDto.getPackId()));
