@@ -72,6 +72,7 @@ public enum ResponseCode {
     NO_LIST(HttpStatus.NOT_FOUND, false, "존재하지 않는 패킹리스트입니다"),
 
     // template
+    SUCCESS_GET_DETAILED_TEMPLATE(HttpStatus.OK, true, "템플릿 상세조회 성공"),
     NO_TEMPLATE(HttpStatus.NOT_FOUND, false, "존재하지 않는 템플릿입니다");
 
     private final HttpStatus httpStatus;
