@@ -84,10 +84,4 @@ public class IdValidator {
                 () -> new CustomException(ResponseCode.NO_LIST)
         );
     }
-
-    public static TogetherAlonePackingList validateUserTogetherAlonePackingListId(TogetherAlonePackingListRepository togetherAlonePackingListRepository, Long linkId, User user) {
-        return togetherAlonePackingListRepository.findByIdAndTogetherPackingList_PackingList_IsDeletedAndTogetherPackingList_Group_UserGroups_UserAndAlonePackingList_IsAlonedAndAlonePackingList_PackingList_IsDeleted(linkId, false, user, false, false).orElseThrow(
-                () -> new CustomException(ResponseCode.NO_LIST)
-        );
-    }
 }

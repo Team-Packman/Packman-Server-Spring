@@ -78,10 +78,13 @@ public class Validator {
     }
 
     public static TogetherAlonePackingList validateUserTogetherListIsSaved(TogetherAlonePackingListRepository togetherAlonePackingListRepository, Long linkId, User user, boolean isSaved){
-        TogetherAlonePackingList togetherAlonePackingList = validateUserTogetherAlonePackingListId(togetherAlonePackingListRepository, linkId, user);
+        TogetherAlonePackingList togetherAlonePackingList = togetherAlonePackingListRepository.findByIdAndTogetherPackingList_PackingList_IsDeletedAndTogetherPackingList_Group_UserGroups_UserAndAlonePackingList_IsAlonedAndAlonePackingList_PackingList_IsDeleted(linkId, false, user, false, false).orElseThrow(
+                () -> new CustomException(ResponseCode.NO_LIST)
+        );
         if(togetherAlonePackingList.getAlonePackingList().getPackingList().getIsSaved() != isSaved){
             throw new CustomException(ResponseCode.NO_LIST);
         }
+
         return togetherAlonePackingList;
     }
 }
