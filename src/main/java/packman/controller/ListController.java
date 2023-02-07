@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import packman.dto.list.DepartureDateRequestDto;
 import packman.dto.list.ListTitleRequestDto;
+import packman.dto.list.TemplateUpdateDto;
 import packman.service.ListService;
 import packman.util.CustomException;
 import packman.util.ResponseCode;
@@ -46,6 +47,16 @@ public class ListController {
         return ResponseMessage.toResponseEntity(
                 ResponseCode.UPDATE_LIST_DEPARTURE_DATE_SUCCESS,
                 listService.updateDepartureDate(departureDateRequestDto, userId)
+        );
+    }
+
+    @PatchMapping("/myTemplate")
+    public ResponseEntity<ResponseMessage> updateMyTempalte(@RequestBody @Valid TemplateUpdateDto templateUpdateDto, HttpServletRequest request) {
+        Long userId = 1L;
+
+        return ResponseMessage.toResponseEntity(
+                ResponseCode.UPDATE_LIST_MY_TEMPLATE_SUCCESS,
+                listService.updateMyTemplate(templateUpdateDto, userId)
         );
     }
 
