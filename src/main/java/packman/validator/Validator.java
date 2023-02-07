@@ -1,17 +1,19 @@
 package packman.validator;
 
-import packman.entity.Folder;
+import packman.entity.*;
+import packman.entity.packingList.TogetherAlonePackingList;
+import packman.entity.template.Template;
 import packman.repository.FolderPackingListRepository;
 import packman.repository.FolderRepository;
-import packman.entity.Category;
-import packman.entity.Pack;
-import packman.entity.UserGroup;
 import packman.entity.packingList.AlonePackingList;
 import packman.entity.packingList.PackingList;
 import packman.repository.packingList.PackingListRepository;
+import packman.repository.packingList.TogetherAlonePackingListRepository;
 import packman.repository.packingList.TogetherPackingListRepository;
+import packman.repository.template.TemplateRepository;
 import packman.util.CustomException;
 import packman.util.ResponseCode;
+import packman.validator.IdValidator.*;
 
 import java.util.List;
 
@@ -59,5 +61,27 @@ public class Validator {
         validateUserMemberId(userGroups, userId);
 
         return packingList;
+    }
+
+    public static Template validateListTemplate(TemplateRepository templateRepository, AlonePackingList aloneList){
+        return templateRepository.findByAlonePackingListAndIsDeleted(aloneList, false).orElseThrow(
+                () -> new CustomException(ResponseCode.NO_TEMPLATE)
+        );
+    }
+
+    public static AlonePackingList validateUserAloneListIsSaved(FolderPackingListRepository folderPackingListRepository,Long userId, Long listId, boolean isSaved){
+        FolderPackingList folderPackingList = validateUserAloneListId(folderPackingListRepository, userId, listId);
+        if(folderPackingList.getAlonePackingList().getPackingList().getIsSaved() != isSaved){
+            throw new CustomException(ResponseCode.NO_LIST);
+        }
+        return folderPackingList.getAlonePackingList();
+    }
+
+    public static TogetherAlonePackingList validateUserTogetherListIsSaved(TogetherAlonePackingListRepository togetherAlonePackingListRepository, Long linkId, User user, boolean isSaved){
+        TogetherAlonePackingList togetherAlonePackingList = validateUserTogetherAlonePackingListId(togetherAlonePackingListRepository, linkId, user);
+        if(togetherAlonePackingList.getAlonePackingList().getPackingList().getIsSaved() != isSaved){
+            throw new CustomException(ResponseCode.NO_LIST);
+        }
+        return togetherAlonePackingList;
     }
 }

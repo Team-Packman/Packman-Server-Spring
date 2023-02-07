@@ -30,4 +30,10 @@ public class TemplateCategory {
     @OrderBy("id asc")
     @OneToMany(mappedBy = "templateCategory", cascade = CascadeType.ALL)
     private List<TemplatePack> templatePacks = new ArrayList<>();
+
+    public TemplateCategory(Template template, String name){
+        this.template = template;
+        this.name = name;
+    }
+    public void addTemplatePack(TemplatePack templatePack) { this.templatePacks.add(templatePack); }
 }

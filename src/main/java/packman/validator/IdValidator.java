@@ -1,12 +1,12 @@
 package packman.validator;
 
-import packman.entity.User;
+import packman.entity.*;
+import packman.entity.packingList.TogetherAlonePackingList;
 import packman.entity.template.Template;
+import packman.repository.FolderPackingListRepository;
 import packman.repository.UserRepository;
+import packman.repository.packingList.TogetherAlonePackingListRepository;
 import packman.repository.template.TemplateRepository;
-import packman.entity.Category;
-import packman.entity.Pack;
-import packman.entity.UserGroup;
 import packman.entity.packingList.AlonePackingList;
 import packman.entity.packingList.PackingList;
 import packman.entity.packingList.TogetherPackingList;
@@ -75,6 +75,18 @@ public class IdValidator {
 
     public static TogetherPackingList validateTogetherPackingListId(TogetherPackingListRepository togetherPackingListRepository, Long togetherId) {
         return togetherPackingListRepository.findById(togetherId).orElseThrow(
+                () -> new CustomException(ResponseCode.NO_LIST)
+        );
+    }
+
+    public static FolderPackingList validateUserAloneListId(FolderPackingListRepository folderPackingListRepository, Long userId, Long listId) {
+        return folderPackingListRepository.findByFolder_UserIdAndAlonePackingListIdAndAlonePackingList_IsAlonedAndAlonePackingList_PackingList_IsDeleted(userId, listId, true, false).orElseThrow(
+                () -> new CustomException(ResponseCode.NO_LIST)
+        );
+    }
+
+    public static TogetherAlonePackingList validateUserTogetherAlonePackingListId(TogetherAlonePackingListRepository togetherAlonePackingListRepository, Long linkId, User user) {
+        return togetherAlonePackingListRepository.findByIdAndTogetherPackingList_PackingList_IsDeletedAndTogetherPackingList_Group_UserGroups_UserAndAlonePackingList_IsAlonedAndAlonePackingList_PackingList_IsDeleted(linkId, false, user, false, false).orElseThrow(
                 () -> new CustomException(ResponseCode.NO_LIST)
         );
     }
