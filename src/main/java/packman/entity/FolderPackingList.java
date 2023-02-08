@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import packman.entity.packingList.AlonePackingList;
+import packman.entity.packingList.PackingList;
 
 import javax.persistence.*;
 
@@ -27,8 +28,8 @@ public class FolderPackingList {
     @JoinColumn(name = "alone_packing_list_id")
     private AlonePackingList alonePackingList;
 
-    public FolderPackingList(Folder folder, AlonePackingList alonePackingList) {
+    public FolderPackingList(Folder folder, AlonePackingList aloneList){
         this.folder = folder;
-        this.alonePackingList = alonePackingList;
+        this.alonePackingList = aloneList;
     }
 }

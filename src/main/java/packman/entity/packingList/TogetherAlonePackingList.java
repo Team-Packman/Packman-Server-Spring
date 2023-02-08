@@ -3,6 +3,7 @@ package packman.entity.packingList;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import packman.entity.Folder;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
@@ -29,8 +30,8 @@ public class TogetherAlonePackingList {
     @JoinColumn(name = "my_packing_list_id", nullable = false, unique = true)
     private AlonePackingList alonePackingList;
 
-    public TogetherAlonePackingList(TogetherPackingList togetherPackingList, AlonePackingList alonePackingList) {
-        this.togetherPackingList = togetherPackingList;
-        this.alonePackingList = alonePackingList;
+    public TogetherAlonePackingList(TogetherPackingList togetherList, AlonePackingList aloneList){
+        this.togetherPackingList = togetherList;
+        this.alonePackingList = aloneList;
     }
 }

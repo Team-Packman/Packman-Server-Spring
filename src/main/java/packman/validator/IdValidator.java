@@ -1,9 +1,11 @@
 package packman.validator;
 
-
+import packman.entity.User;
+import packman.entity.template.Template;
+import packman.repository.UserRepository;
+import packman.repository.template.TemplateRepository;
 import packman.entity.Category;
 import packman.entity.Pack;
-import packman.entity.User;
 import packman.entity.UserGroup;
 import packman.entity.packingList.AlonePackingList;
 import packman.entity.packingList.PackingList;
@@ -11,7 +13,6 @@ import packman.entity.packingList.TogetherAlonePackingList;
 import packman.entity.packingList.TogetherPackingList;
 import packman.repository.CategoryRepository;
 import packman.repository.PackRepository;
-import packman.repository.UserRepository;
 import packman.repository.packingList.AlonePackingListRepository;
 import packman.repository.packingList.PackingListRepository;
 import packman.repository.packingList.TogetherAlonePackingListRepository;
@@ -27,6 +28,12 @@ public class IdValidator {
     public static User validateUserId(UserRepository userRepository, Long userId) {
         return userRepository.findByIdAndIsDeleted(userId, false).orElseThrow(
                 () -> new CustomException(ResponseCode.NO_USER)
+        );
+    }
+
+    public static Template validateTemplateId(TemplateRepository templateRepository, Long templateId){
+        return templateRepository.findByIdAndIsDeleted(templateId, false).orElseThrow(
+                () -> new CustomException(ResponseCode.NO_TEMPLATE)
         );
     }
 

@@ -40,6 +40,7 @@ public class Template {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @OrderBy("id asc")
     @OneToMany(mappedBy = "template", cascade = CascadeType.ALL)
     private List<TemplateCategory> categories = new ArrayList<>();
 }

@@ -1,6 +1,8 @@
 package packman.validator;
 
-
+import packman.entity.Folder;
+import packman.repository.FolderPackingListRepository;
+import packman.repository.FolderRepository;
 import packman.entity.Category;
 import packman.entity.Pack;
 import packman.entity.UserGroup;
@@ -21,6 +23,12 @@ public class Validator {
     public static void validateUserList(FolderPackingListRepository folderPackingListRepository, Long userId, Long listId) {
         folderPackingListRepository.findByFolder_UserIdAndAlonePackingListId(userId, listId).orElseThrow(
                 () -> new CustomException(ResponseCode.NO_LIST)
+        );
+    }
+
+    public static Folder validateUserFolder(FolderRepository folderRepository, Long folderId, Long userId, boolean isAloned) {
+        return folderRepository.findByIdAndUserIdAndIsAloned(folderId, userId, isAloned).orElseThrow(
+                () -> new CustomException(ResponseCode.NO_FOLDER)
         );
     }
 
