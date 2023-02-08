@@ -26,7 +26,8 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-import static packman.validator.IdValidator.*;
+import static packman.validator.IdValidator.validateTemplateId;
+import static packman.validator.IdValidator.validateUserId;
 import static packman.validator.LengthValidator.validateListLength;
 import static packman.validator.Validator.validateUserFolder;
 

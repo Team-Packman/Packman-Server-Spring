@@ -147,7 +147,7 @@ public class FolderService {
             throw new CustomException(ResponseCode.FAIL_CREATE_FOLDER);
         }
 
-        Folder folder = new Folder(request, user);
+        Folder folder = new Folder(user, name, request.getIsAloned());
         folderRepository.save(folder);
 
         List<Folder> folders = folderRepository.findByUserIdOrderByIdDesc(userId);
