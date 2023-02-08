@@ -57,7 +57,7 @@ public class Validator {
 
     public static void validateTogetherListDeleted(TogetherPackingList togetherPackingList) {
         PackingList packingList = togetherPackingList.getPackingList();
-        if (togetherPackingList == null || packingList.getIsDeleted()) {
+        if (packingList.getIsDeleted()) {
             throw new CustomException(ResponseCode.NO_LIST);
         }
     }
