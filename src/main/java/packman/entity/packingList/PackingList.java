@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.DynamicUpdate;
-import org.springframework.format.annotation.DateTimeFormat;
 import packman.entity.Category;
 import packman.entity.TimeStamped;
 
@@ -52,14 +51,16 @@ public class PackingList extends TimeStamped {
         this.category.add(category);
     }
 
-    public PackingList(String title, LocalDate departureDate){
-        this.title = title;
-        this.departureDate = departureDate;
+    public boolean getIsSaved() {
+        return this.isSaved;
     }
-
-    public boolean getIsSaved() { return this.isSaved; }
 
     public boolean getIsDeleted() {
         return this.isDeleted;
+    }
+
+    public PackingList(String title, LocalDate departureDate) {
+        this.title = title;
+        this.departureDate = departureDate;
     }
 }

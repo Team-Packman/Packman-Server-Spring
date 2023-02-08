@@ -19,11 +19,13 @@ public enum ResponseCode {
     SUCCESS_GET_USER(HttpStatus.OK, true, "유저 조회 성공"),
     NO_USER(HttpStatus.UNAUTHORIZED, false, "존재하지 않는 유저입니다"),
     SUCCESS_DELETE_USER(HttpStatus.OK, true, "유저 탈퇴 성공"),
+
     SUCCESS_UPDATE_USER(HttpStatus.OK, true, "유저 수정 성공"),
 
     // member
     NO_MEMBER_USER(HttpStatus.BAD_REQUEST, false, "멤버에 존재하지 않는 유저입니다"),
-
+    DUPLICATED_MEMBER(HttpStatus.BAD_REQUEST, false, "이미 추가된 멤버입니다"),
+    SUCCESS_ADD_MEMBER(HttpStatus.OK, true, "그룹원 추가 성공"),
     // folder
     SUCCESS_GET_ALONE_FOLDERS(HttpStatus.OK, true, "혼자 패킹리스트 폴더 조회 성공"),
     SUCCESS_GET_TOGETHER_FOLDERS(HttpStatus.OK, true, "함께 패킹리스트 폴더 조회 성공"),

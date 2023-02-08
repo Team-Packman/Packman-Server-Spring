@@ -11,12 +11,15 @@ import packman.entity.Pack;
 import packman.entity.UserGroup;
 import packman.entity.packingList.AlonePackingList;
 import packman.entity.packingList.PackingList;
+import packman.entity.packingList.TogetherAlonePackingList;
 import packman.entity.packingList.TogetherPackingList;
 import packman.repository.CategoryRepository;
 import packman.repository.PackRepository;
 import packman.repository.packingList.AlonePackingListRepository;
 import packman.repository.packingList.PackingListRepository;
+import packman.repository.packingList.TogetherAlonePackingListRepository;
 import packman.repository.packingList.TogetherPackingListRepository;
+
 import packman.util.CustomException;
 import packman.util.ResponseCode;
 
@@ -52,6 +55,7 @@ public class IdValidator {
         }
     }
 
+
     public static AlonePackingList validateAlonePackingListId(AlonePackingListRepository alonePackingListRepository, Long aloneId) {
         return alonePackingListRepository.findByIdAndPackingList_IsDeleted(aloneId, false).orElseThrow(
                 () -> new CustomException(ResponseCode.NO_LIST)
@@ -81,9 +85,20 @@ public class IdValidator {
         );
     }
 
+    public static TogetherPackingList validateTogetherPackingInviteCode(TogetherPackingListRepository togetherPackingListRepository, String inviteCode) {
+        TogetherPackingList togetherPackingList = togetherPackingListRepository
+                .findByInviteCode(inviteCode)
+                .orElseThrow(() -> new CustomException(ResponseCode.NO_LIST));
+        if (togetherPackingList.getPackingList().getIsDeleted() == true) {
+            throw new CustomException(ResponseCode.NO_LIST);
+        }
+        return togetherPackingList;
+    }
+
     public static TogetherAlonePackingList validateTogetherAlonePackingListId(TogetherAlonePackingListRepository togetherAlonePackingListRepository, Long listId) {
         return togetherAlonePackingListRepository.findById(listId).orElseThrow(
                 () -> new CustomException(ResponseCode.NO_LIST)
         );
     }
+
 }
