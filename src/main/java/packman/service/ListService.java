@@ -92,7 +92,7 @@ public class ListService {
 
     public ListResponseDto getPackingListTitleAndDate(Long listId, boolean isAloned, Long userId) {
 
-        if(isAloned == false) {
+        if(!isAloned) {
             TogetherAlonePackingList togetherAlonePackingList = validateTogetherAlonePackingListId(togetherAlonePackingListRepository, listId);
             listId = togetherAlonePackingList.getAlonePackingList().getId();
         }
