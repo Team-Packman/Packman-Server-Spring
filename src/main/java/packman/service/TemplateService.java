@@ -27,7 +27,7 @@ public class TemplateService {
 
         validateUserTemplate(template, user);
 
-        TemplateResponseMapping templateResponseMapping = templateRepository.findByIdAndTitle(template.getId(), template.getTitle());
+        TemplateResponseMapping templateResponseMapping = templateRepository.findProjectionById(template.getId());
 
         return TemplateResponseDto.builder()
                 .id(templateResponseMapping.getId())

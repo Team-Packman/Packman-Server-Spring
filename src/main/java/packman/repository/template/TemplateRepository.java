@@ -10,5 +10,5 @@ import java.util.Optional;
 @Repository
 public interface TemplateRepository extends JpaRepository<Template, Long> {
     Optional<Template> findByIdAndIsDeleted(Long templateId, boolean isDeleted);
-    TemplateResponseMapping findByIdAndTitle(Long templateId, String title);
+    TemplateResponseMapping findProjectionById(Long templateId);
 }
