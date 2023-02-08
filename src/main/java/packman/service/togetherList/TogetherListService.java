@@ -8,9 +8,6 @@ import packman.dto.list.ListCreateDto;
 import packman.dto.list.ListResponseMapping;
 import packman.dto.list.TogetherListDto;
 import packman.dto.list.TogetherListResponseDto;
-import packman.entity.*;
-import packman.entity.packingList.AlonePackingList;
-import packman.entity.packingList.PackingList;
 import packman.dto.member.MemberAddDto;
 import packman.dto.member.MemberResponseDto;
 import packman.dto.togetherList.TogetherListInviteResponseDto;
@@ -25,9 +22,6 @@ import packman.entity.template.TemplatePack;
 import packman.repository.*;
 import packman.repository.packingList.AlonePackingListRepository;
 import packman.repository.packingList.PackingListRepository;
-import packman.repository.*;
-import packman.repository.packingList.AlonePackingListRepository;
-import packman.repository.packingList.PackingListRepository;
 import packman.repository.packingList.TogetherAlonePackingListRepository;
 import packman.repository.packingList.TogetherPackingListRepository;
 import packman.repository.template.TemplateCategoryRepository;
@@ -37,22 +31,13 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-
-import static packman.validator.IdValidator.*;
-import static packman.validator.LengthValidator.validateListLength;
-import static packman.validator.Validator.validateUserFolder;
-import packman.dto.togetherList.TogetherListInviteResponseDto;
-import packman.entity.UserGroup;
-import packman.repository.UserGroupRepository;
-import packman.util.CustomException;
-import packman.util.ResponseCode;
-
 import java.util.Optional;
-
 
 import static packman.validator.DuplicatedValidator.validateDuplicatedMember;
 import static packman.validator.IdValidator.*;
+import static packman.validator.LengthValidator.validateListLength;
 import static packman.validator.Validator.validateTogetherListDeleted;
+import static packman.validator.Validator.validateUserFolder;
 
 @Service
 @Transactional
@@ -71,13 +56,6 @@ public class TogetherListService {
     private final GroupRepository groupRepository;
     private final UserGroupRepository userGroupRepository;
     private final TogetherAlonePackingListRepository togetherAlonePackingListRepository;
-    private final UserGroupRepository userGroupRepository;
-    private final UserRepository userRepository;
-    private final FolderRepository folderRepository;
-    private final PackingListRepository packingListRepository;
-    private final AlonePackingListRepository alonePackingListRepository;
-    private final CategoryRepository categoryRepository;
-    private final FolderPackingListRepository folderPackingListRepository;
 
     public TogetherListResponseDto createTogetherList(ListCreateDto listCreateDto, Long userId) {
         Long folderId = Long.parseLong(listCreateDto.getFolderId());

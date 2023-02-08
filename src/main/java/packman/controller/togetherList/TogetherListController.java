@@ -3,15 +3,13 @@ package packman.controller.togetherList;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import packman.dto.member.MemberAddDto;
 import packman.dto.list.ListCreateDto;
+import packman.dto.member.MemberAddDto;
 import packman.service.togetherList.TogetherListService;
 import packman.util.ResponseCode;
 import packman.util.ResponseMessage;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
-
 import javax.validation.Valid;
 
 
