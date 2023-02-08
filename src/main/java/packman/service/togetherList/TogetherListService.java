@@ -83,8 +83,6 @@ public class TogetherListService {
         packingListRepository.save(newPackingList);
 
         AlonePackingList myPackingList = new AlonePackingList(newPackingList, false);
-        myPackingList.setPackingList(newPackingList);
-        myPackingList.setIsAloned(false);
         alonePackingListRepository.save(myPackingList);
 
         newPackingList.setAlonePackingList(myPackingList);
