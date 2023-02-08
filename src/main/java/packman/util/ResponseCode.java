@@ -75,6 +75,7 @@ public enum ResponseCode {
     GET_LIST_TITLE_DEPARTURE_DATE_SUCCESS(HttpStatus.OK, true, "패킹리스트 제목, 날짜 조회 성공"),
 
     // template
+    SUCCESS_GET_DETAILED_TEMPLATE(HttpStatus.OK, true, "템플릿 상세조회 성공"),
     NO_TEMPLATE(HttpStatus.NOT_FOUND, false, "존재하지 않는 템플릿입니다");
 
     private final HttpStatus httpStatus;

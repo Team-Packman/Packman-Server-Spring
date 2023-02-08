@@ -1,11 +1,9 @@
 package packman.validator;
 
-import packman.entity.Folder;
+import packman.entity.*;
+import packman.entity.template.Template;
 import packman.repository.FolderPackingListRepository;
 import packman.repository.FolderRepository;
-import packman.entity.Category;
-import packman.entity.Pack;
-import packman.entity.UserGroup;
 import packman.entity.packingList.AlonePackingList;
 import packman.entity.packingList.PackingList;
 import packman.entity.packingList.TogetherPackingList;
@@ -67,6 +65,12 @@ public class Validator {
         PackingList packingList = togetherPackingList.getPackingList();
         if (packingList.getIsDeleted()) {
             throw new CustomException(ResponseCode.NO_LIST);
+        }
+    }
+
+    public static void validateUserTemplate(Template template, User user) {
+        if (template.getUser() != null && template.getUser() != user) {
+            throw new CustomException(ResponseCode.NO_TEMPLATE);
         }
     }
 }
