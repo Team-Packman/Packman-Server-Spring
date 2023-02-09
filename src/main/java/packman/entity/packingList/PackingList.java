@@ -32,6 +32,7 @@ public class PackingList extends TimeStamped {
     private LocalDate departureDate;
 
     @Getter(AccessLevel.NONE)
+    @Setter(AccessLevel.NONE)
     @Column(nullable = false)
     private boolean isSaved = false;
     @Setter(AccessLevel.NONE)
@@ -59,11 +60,11 @@ public class PackingList extends TimeStamped {
     public boolean getIsDeleted() {
         return this.isDeleted;
     }
+    public void setIsSaved(boolean isSaved) { this.isSaved = isSaved; }
     public void setIsDeleted(boolean isDeleted) { this.isDeleted = isDeleted;}
 
     public PackingList(String title, LocalDate departureDate) {
         this.title = title;
         this.departureDate = departureDate;
     }
-
 }
