@@ -41,7 +41,7 @@ public class TogetherListCategoryService {
 
         // no_member_user
         List<UserGroup> userGroups = togetherPackingList.getGroup().getUserGroups();
-        validateUserMemberId(userGroups, userId);
+        validateUserGroupUserId(userGroups, userId);
 
         // duplicate_category
         validateDuplicatedCategory(packingList, categoryCreateDto.getName(), null);
@@ -76,7 +76,7 @@ public class TogetherListCategoryService {
 
         // no_member_user
         List<UserGroup> userGroups = togetherPackingList.getGroup().getUserGroups();
-        validateUserMemberId(userGroups, userId);
+        validateUserGroupUserId(userGroups, userId);
 
         // duplicate_category
         validateDuplicatedCategory(packingList, categoryUpdateDto.getName(), Long.parseLong(categoryUpdateDto.getId()));
@@ -96,7 +96,7 @@ public class TogetherListCategoryService {
 
         // no_member_user
         List<UserGroup> userGroups = togetherPackingList.getGroup().getUserGroups();
-        validateUserMemberId(userGroups, userId);
+        validateUserGroupUserId(userGroups, userId);
 
         // no_category
         Category category = validateCategoryId(categoryRepository, categoryId);

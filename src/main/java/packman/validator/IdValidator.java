@@ -6,10 +6,7 @@ import packman.entity.packingList.PackingList;
 import packman.entity.packingList.TogetherAlonePackingList;
 import packman.entity.packingList.TogetherPackingList;
 import packman.entity.template.Template;
-import packman.repository.CategoryRepository;
-import packman.repository.FolderPackingListRepository;
-import packman.repository.PackRepository;
-import packman.repository.UserRepository;
+import packman.repository.*;
 import packman.repository.packingList.AlonePackingListRepository;
 import packman.repository.packingList.PackingListRepository;
 import packman.repository.packingList.TogetherAlonePackingListRepository;
@@ -28,7 +25,21 @@ public class IdValidator {
         );
     }
 
-    public static Template validateTemplateId(TemplateRepository templateRepository, Long templateId){
+    public static void validateMemberId(UserRepository userRepository, List<Long> ids) {
+        for (Long id : ids) {
+            userRepository.findByIdAndIsDeleted(id, false).orElseThrow(
+                    () -> new CustomException(ResponseCode.NO_MEMBER)
+            );
+        }
+    }
+
+    public static Group validateGroupId(GroupRepository groupRepository, Long groupId) {
+        return groupRepository.findById(groupId).orElseThrow(
+                () -> new CustomException(ResponseCode.NO_GROUP)
+        );
+    }
+
+    public static Template validateTemplateId(TemplateRepository templateRepository, Long templateId) {
         return templateRepository.findByIdAndIsDeleted(templateId, false).orElseThrow(
                 () -> new CustomException(ResponseCode.NO_TEMPLATE)
         );
@@ -56,13 +67,25 @@ public class IdValidator {
         );
     }
 
-    public static void validateUserMemberId(List<UserGroup> userGroups, Long userId) {
+    public static List<Long> validateUserGroupUserId(List<UserGroup> userGroups, Long userId) {
         List<Long> userIdInGroup = userGroups.stream()
                 .map(userGroup -> userGroup.getUser().getId())
                 .collect(Collectors.toList());
 
         if (!userIdInGroup.contains(userId)) {
             throw new CustomException(ResponseCode.NO_MEMBER_USER);
+        }
+
+        return userIdInGroup;
+    }
+
+    public static void validateMemberUserId(List<UserGroup> userGroups, Long userId, List<Long> memberIds) {
+        List<Long> userIdInGroup = validateUserGroupUserId(userGroups, userId);
+
+        for (Long memberId : memberIds) {
+            if (!userIdInGroup.contains(memberId)) {
+                throw new CustomException(ResponseCode.NO_MEMBER_USER);
+            }
         }
     }
 
@@ -128,5 +151,11 @@ public class IdValidator {
         return togetherAlonePackingListRepository.findById(integratedId).orElseThrow(
                 () -> new CustomException(ResponseCode.NO_LIST)
         );
+    }
+
+    public static void validateNoMakerId(Long makerId, Long userId) {
+        if (!makerId.equals(userId)) {
+            throw new CustomException(ResponseCode.NO_MAKER);
+        }
     }
 }

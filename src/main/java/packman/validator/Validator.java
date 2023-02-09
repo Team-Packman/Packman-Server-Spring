@@ -63,7 +63,8 @@ public class Validator {
         validateTogetherPackingListId(togetherPackingListRepository, togetherListId);
 
         List<UserGroup> userGroups = packingList.getTogetherPackingList().getGroup().getUserGroups();
-        validateUserMemberId(userGroups, userId);
+
+        validateUserGroupUserId(userGroups, userId);
 
         return packingList;
     }
@@ -134,5 +135,11 @@ public class Validator {
         if(folderPackingLists.size() != listIds.size()) { throw new CustomException(ResponseCode.NO_FOLDER_LIST);}
 
         return folderPackingLists;
+    }
+
+    public static void validateNoDeleteMaker(List<Long> members, Long userId) {
+        if (members.contains(userId)) {
+            throw new CustomException(ResponseCode.NO_DELETE_MAKER);
+        }
     }
 }
