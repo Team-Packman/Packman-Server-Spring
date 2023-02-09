@@ -6,6 +6,7 @@ import packman.dto.list.TogetherAloneListMapping;
 import packman.entity.packingList.TogetherAlonePackingList;
 import packman.entity.packingList.TogetherPackingList;
 
+import java.util.Optional;
 import java.util.List;
 
 @Repository
@@ -13,4 +14,5 @@ public interface TogetherAlonePackingListRepository extends JpaRepository<Togeth
     TogetherAloneListMapping findByAlonePackingListId(Long myListId);
     List<TogetherAlonePackingList> findByIdInAndTogetherPackingList_PackingList_IsDeletedAndAlonePackingList_PackingList_IsDeletedAndAlonePackingList_IsAloned(List<Long> linkIds, boolean togetherIsDeleted, boolean aloneIsDeleted, boolean isAloned);
     TogetherAlonePackingList findByTogetherPackingListAndAlonePackingListFolderPackingListFolderUserId(TogetherPackingList together, Long userId);
+    Optional<TogetherAlonePackingList> findByIdAndTogetherPackingList_PackingList_IsDeletedAndAlonePackingList_IsAlonedAndAlonePackingList_PackingList_IsDeleted(Long linkId, boolean togetherIsDeleted, boolean isAloned, boolean aloneIsDeleted );
 }

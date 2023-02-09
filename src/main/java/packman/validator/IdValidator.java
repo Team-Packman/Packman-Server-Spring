@@ -6,11 +6,11 @@ import packman.entity.packingList.TogetherAlonePackingList;
 import packman.entity.template.Template;
 import packman.repository.FolderPackingListRepository;
 import packman.repository.UserRepository;
+import packman.repository.packingList.TogetherAlonePackingListRepository;
+import packman.repository.template.TemplateRepository;
 import packman.entity.packingList.AlonePackingList;
 import packman.repository.packingList.AlonePackingListRepository;
 import packman.repository.packingList.PackingListRepository;
-import packman.repository.packingList.TogetherAlonePackingListRepository;
-import packman.repository.template.TemplateRepository;
 import packman.entity.Category;
 import packman.entity.Pack;
 import packman.entity.UserGroup;
@@ -125,6 +125,12 @@ public class IdValidator {
 
     public static TogetherAlonePackingList validateTogetherAlonePackingListId(TogetherAlonePackingListRepository togetherAlonePackingListRepository, Long listId) {
         return togetherAlonePackingListRepository.findById(listId).orElseThrow(
+                () -> new CustomException(ResponseCode.NO_LIST)
+        );
+    }
+
+    public static TogetherAlonePackingList validateTogetherAlonePackingListIdInDetail(TogetherAlonePackingListRepository togetherAlonePackingListRepository, Long linkId) {
+        return togetherAlonePackingListRepository.findByIdAndTogetherPackingList_PackingList_IsDeletedAndAlonePackingList_IsAlonedAndAlonePackingList_PackingList_IsDeleted(linkId, false, false, false).orElseThrow(
                 () -> new CustomException(ResponseCode.NO_LIST)
         );
     }

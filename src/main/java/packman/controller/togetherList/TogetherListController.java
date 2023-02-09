@@ -52,6 +52,16 @@ public class TogetherListController {
         );
     }
 
+    @GetMapping("/{listId}")
+    public ResponseEntity<ResponseMessage> getTogetherList(@PathVariable("listId") Long listId, HttpServletRequest request) {
+        Long userId = 1L;
+
+        return ResponseMessage.toResponseEntity(
+                ResponseCode.SUCCESS_GET_TOGETHER_LIST,
+                togetherListService.getTogetherList(listId, userId)
+        );
+    }
+
     @PatchMapping("/packer")
     public ResponseEntity<ResponseMessage> updatePacker(@RequestBody @Valid PackerUpdateDto packerUpdateDto, HttpServletRequest request) {
         Long userId = 1L;

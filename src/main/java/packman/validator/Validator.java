@@ -22,8 +22,8 @@ import static packman.validator.IdValidator.*;
 
 @RequiredArgsConstructor
 public class Validator {
-    public static void validateUserList(FolderPackingListRepository folderPackingListRepository, Long userId, Long listId) {
-        folderPackingListRepository.findByFolder_UserIdAndAlonePackingListId(userId, listId).orElseThrow(
+    public static FolderPackingList validateUserList(FolderPackingListRepository folderPackingListRepository, Long userId, Long listId) {
+        return folderPackingListRepository.findByFolder_UserIdAndAlonePackingListId(userId, listId).orElseThrow(
                 () -> new CustomException(ResponseCode.NO_LIST)
         );
     }

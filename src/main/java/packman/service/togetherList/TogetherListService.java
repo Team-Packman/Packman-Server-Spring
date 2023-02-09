@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import packman.dto.list.*;
 import packman.dto.list.ListCreateDto;
 import packman.dto.list.ListResponseMapping;
 import packman.dto.list.TogetherListDto;
@@ -35,6 +36,8 @@ import java.util.List;
 
 import static packman.validator.IdValidator.*;
 import static packman.validator.LengthValidator.validateListLength;
+import static packman.validator.Validator.validateUserFolder;
+import static packman.validator.Validator.validateUserList;
 import static packman.validator.Validator.*;
 
 import packman.dto.togetherList.TogetherListInviteResponseDto;
@@ -240,6 +243,34 @@ public class TogetherListService {
         } else {
             return new TogetherListInviteResponseDto(String.valueOf(togetherPackingList.getId()), false);
         }
+    }
+
+    public DetaildTogetherListResponseDto getTogetherList(Long listId, Long userId) {
+        // 유저 검증
+        validateUserId(userRepository, userId);
+        // 존재하는 함께 패킹리스트인지 검증
+        TogetherAlonePackingList togetherAloneList = validateTogetherAlonePackingListIdInDetail(togetherAlonePackingListRepository, listId);
+        // 유저의 함께 패킹리스트인지 검증 및 folderId 찾기
+        FolderPackingList folderPackingList = validateUserList(folderPackingListRepository, userId, togetherAloneList.getAlonePackingList().getId());
+
+        ListResponseMapping myIdCategories = packingListRepository.findProjectionById(togetherAloneList.getAlonePackingList().getId());
+        ListResponseMapping togetherIdCategories = packingListRepository.findProjectionById(togetherAloneList.getTogetherPackingList().getId());
+
+        TogetherListDto togetherListDto = TogetherListDto.builder()
+                .id(Long.toString(togetherAloneList.getTogetherPackingList().getId()))
+                .groupId(Long.toString(togetherAloneList.getTogetherPackingList().getGroup().getId()))
+                .category(togetherIdCategories.getCategory())
+                .inviteCode(togetherAloneList.getTogetherPackingList().getInviteCode())
+                .isSaved(togetherAloneList.getTogetherPackingList().getPackingList().getIsSaved()).build();
+
+        DetaildTogetherListResponseDto detaildTogetherListResponseDto= DetaildTogetherListResponseDto.builder()
+                .id(togetherAloneList.getId().toString())
+                .folderId(folderPackingList.getFolder().getId().toString())
+                .togetherPackingList(togetherListDto)
+                .myPackingList(myIdCategories)
+                .isMember(userGroupRepository.existsByGroupAndUserId(togetherAloneList.getTogetherPackingList().getGroup(), userId)).build();
+
+        return detaildTogetherListResponseDto;
     }
 
     public ListResponseMapping updatePacker(PackerUpdateDto packerUpdateDto, Long userId) {
