@@ -1,22 +1,24 @@
 package packman.validator;
 
+import lombok.RequiredArgsConstructor;
+import packman.entity.Folder;
+import packman.entity.FolderPackingList;
+import packman.entity.packingList.AlonePackingList;
 import packman.entity.*;
 import packman.entity.template.Template;
 import packman.repository.FolderPackingListRepository;
 import packman.repository.FolderRepository;
-import packman.entity.packingList.AlonePackingList;
 import packman.entity.packingList.PackingList;
 import packman.entity.packingList.TogetherPackingList;
-import packman.repository.FolderPackingListRepository;
 import packman.repository.packingList.PackingListRepository;
 import packman.repository.packingList.TogetherPackingListRepository;
 import packman.util.CustomException;
 import packman.util.ResponseCode;
 
 import java.util.List;
-
 import static packman.validator.IdValidator.*;
 
+@RequiredArgsConstructor
 public class Validator {
     public static void validateUserList(FolderPackingListRepository folderPackingListRepository, Long userId, Long listId) {
         folderPackingListRepository.findByFolder_UserIdAndAlonePackingListId(userId, listId).orElseThrow(
@@ -72,5 +74,12 @@ public class Validator {
         if (template.getUser() != null && template.getUser() != user) {
             throw new CustomException(ResponseCode.NO_TEMPLATE);
         }
+    }
+
+    public static List<FolderPackingList> validateFolderLists(FolderPackingListRepository folderPackingListRepository, Long folderId, List<Long> listIds) {
+        List<FolderPackingList> folderPackingLists = folderPackingListRepository.findByFolderIdAndAlonePackingListIdIn(folderId, listIds);
+        if(folderPackingLists.size() != listIds.size()) { throw new CustomException(ResponseCode.NO_FOLDER_LIST);}
+
+        return folderPackingLists;
     }
 }

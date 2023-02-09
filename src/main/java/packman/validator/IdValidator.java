@@ -1,23 +1,21 @@
 package packman.validator;
 
 import packman.entity.User;
-import packman.entity.packingList.TogetherAlonePackingList;
+import packman.entity.packingList.AlonePackingList;
 import packman.entity.template.Template;
 import packman.repository.UserRepository;
+import packman.repository.packingList.AlonePackingListRepository;
+import packman.repository.packingList.PackingListRepository;
+import packman.entity.packingList.TogetherAlonePackingList;
 import packman.repository.packingList.TogetherAlonePackingListRepository;
 import packman.repository.template.TemplateRepository;
 import packman.entity.Category;
 import packman.entity.Pack;
 import packman.entity.UserGroup;
-import packman.entity.packingList.AlonePackingList;
 import packman.entity.packingList.PackingList;
-import packman.entity.packingList.TogetherAlonePackingList;
 import packman.entity.packingList.TogetherPackingList;
 import packman.repository.CategoryRepository;
 import packman.repository.PackRepository;
-import packman.repository.packingList.AlonePackingListRepository;
-import packman.repository.packingList.PackingListRepository;
-import packman.repository.packingList.TogetherAlonePackingListRepository;
 import packman.repository.packingList.TogetherPackingListRepository;
 
 import packman.util.CustomException;
@@ -37,6 +35,13 @@ public class IdValidator {
         return templateRepository.findByIdAndIsDeleted(templateId, false).orElseThrow(
                 () -> new CustomException(ResponseCode.NO_TEMPLATE)
         );
+    }
+
+    public static List<AlonePackingList> validateAloneListIds(AlonePackingListRepository alonePackingListRepository, List<Long> aloneListIds) {
+        List<AlonePackingList> alonePackingLists = alonePackingListRepository.findByIdInAndIsAlonedAndPackingList_IsDeleted(aloneListIds, true, false);
+        if(alonePackingLists.size() != aloneListIds.size()) { throw new CustomException(ResponseCode.NO_LIST);}
+
+        return alonePackingLists;
     }
 
     public static Category validateCategoryId(CategoryRepository categoryRepository, Long categoryId) {
@@ -100,5 +105,4 @@ public class IdValidator {
                 () -> new CustomException(ResponseCode.NO_LIST)
         );
     }
-
 }
