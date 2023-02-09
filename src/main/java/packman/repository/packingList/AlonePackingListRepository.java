@@ -11,6 +11,10 @@ import java.util.Optional;
 public interface AlonePackingListRepository extends JpaRepository<AlonePackingList, Long> {
     boolean existsByInviteCode(String inviteCode);
     List<AlonePackingList> findByIdInAndIsAlonedAndPackingList_IsDeleted(List<Long> listIds, boolean isAloned, boolean isDeleted);
+    
     Optional<AlonePackingList> findByIdAndPackingList_IsDeleted(Long id, boolean isDeleted);
+    
     List<AlonePackingList> findByFolderPackingList_Folder_UserIdOrderByIdDesc(Long userId);
+    
+    Optional<AlonePackingList> findByInviteCodeAndIsAlonedAndPackingList_IsDeleted(String inviteCode, boolean isAloned, boolean isDeleted);
 }

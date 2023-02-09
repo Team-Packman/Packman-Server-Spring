@@ -50,4 +50,13 @@ public class AloneListController {
         );
     }
 
+    @GetMapping("/invite/{inviteCode}")
+    public ResponseEntity<ResponseMessage> getInviteAloneList(@PathVariable String inviteCode, HttpServletRequest request) {
+        Long userId = 1L;  //  임시 userId 1
+
+        return ResponseMessage.toResponseEntity(
+                ResponseCode.SUCCESS_GET_INVITE_ALONE_LIST,
+                aloneListService.getInviteAloneList(userId, inviteCode)
+        );
+    }
 }

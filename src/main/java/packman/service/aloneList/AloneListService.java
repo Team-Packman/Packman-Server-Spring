@@ -4,10 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import packman.dto.list.AloneListResponseDto;
-import packman.dto.list.DetailedAloneListResponseDto;
-import packman.dto.list.ListCreateDto;
-import packman.dto.list.ListResponseMapping;
+import packman.dto.list.*;
 import packman.entity.Category;
 import packman.entity.Folder;
 import packman.entity.FolderPackingList;
@@ -17,7 +14,10 @@ import packman.entity.packingList.PackingList;
 import packman.entity.template.Template;
 import packman.entity.template.TemplateCategory;
 import packman.entity.template.TemplatePack;
-import packman.repository.*;
+import packman.repository.CategoryRepository;
+import packman.repository.FolderPackingListRepository;
+import packman.repository.FolderRepository;
+import packman.repository.UserRepository;
 import packman.repository.packingList.AlonePackingListRepository;
 import packman.repository.packingList.PackingListRepository;
 import packman.repository.template.TemplateCategoryRepository;
@@ -149,5 +149,18 @@ public class AloneListService {
 
         // 폴더-패킹리스트 튜플 삭제
         folderPackingListRepository.deleteAllInBatch(folderPackingLists);
+    }
+
+    public InviteAloneListResponseDto getInviteAloneList(Long userId, String inviteCode) {
+        validateUserId(userRepository, userId);
+        AlonePackingList alonePackingList = validateAlonePackingListByInviteCode(alonePackingListRepository, inviteCode);
+        Long ownerId = alonePackingList.getFolderPackingList().getFolder().getUser().getId();
+
+        boolean isOwner = ownerId.equals(userId);
+
+        return InviteAloneListResponseDto.builder()
+                .id(alonePackingList.getId().toString())
+                .IsOwner(isOwner)
+                .build();
     }
 }

@@ -1,26 +1,13 @@
 package packman.validator;
 
+import lombok.RequiredArgsConstructor;
 import packman.entity.*;
 import packman.entity.packingList.AlonePackingList;
-import packman.entity.packingList.TogetherAlonePackingList;
-import packman.entity.template.Template;
-import packman.repository.FolderPackingListRepository;
-import packman.repository.FolderRepository;
-import packman.repository.PackRepository;
-import packman.repository.UserGroupRepository;
-import lombok.RequiredArgsConstructor;
-import packman.entity.FolderPackingList;
-import packman.entity.packingList.TogetherPackingList;
-import packman.entity.Category;
-import packman.entity.Folder;
-import packman.entity.Pack;
-import packman.entity.UserGroup;
-import packman.entity.packingList.AlonePackingList;
 import packman.entity.packingList.PackingList;
-import packman.repository.CategoryRepository;
-import packman.repository.FolderPackingListRepository;
-import packman.repository.FolderRepository;
-import packman.repository.PackRepository;
+import packman.entity.packingList.TogetherAlonePackingList;
+import packman.entity.packingList.TogetherPackingList;
+import packman.entity.template.Template;
+import packman.repository.*;
 import packman.repository.packingList.AlonePackingListRepository;
 import packman.repository.packingList.PackingListRepository;
 import packman.repository.packingList.TogetherAlonePackingListRepository;
@@ -30,6 +17,7 @@ import packman.util.CustomException;
 import packman.util.ResponseCode;
 
 import java.util.List;
+
 import static packman.validator.IdValidator.*;
 
 @RequiredArgsConstructor
@@ -165,5 +153,11 @@ public class Validator {
         validateCategoryPack(category, pack);
 
         return pack;
+    }
+
+    public static AlonePackingList validateAlonePackingListByInviteCode(AlonePackingListRepository alonePackingListRepository, String inviteCode) {
+        return alonePackingListRepository.findByInviteCodeAndIsAlonedAndPackingList_IsDeleted(inviteCode, true, false).orElseThrow(
+                () -> new CustomException(ResponseCode.NO_LIST)
+        );
     }
 }
