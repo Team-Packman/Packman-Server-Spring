@@ -93,6 +93,8 @@ public enum ResponseCode {
     GET_LIST_TITLE_DEPARTURE_DATE_SUCCESS(HttpStatus.OK, true, "패킹리스트 제목, 날짜 조회 성공"),
     GET_RECENT_CREATED_LIST_SUCCESS(HttpStatus.OK, true, "최근 생성된 리스트 조회 성공"),
     NO_EXIST_USER_LIST(HttpStatus.OK, true, "유저가 생성한 리스트가 없습니다"),
+    SUCCESS_GET_INVITE_LIST(HttpStatus.OK, true, "공유된 패킹리스트 조회 성공"),
+    INVALID_LIST_TYPE(HttpStatus.BAD_REQUEST, false, "유효하지 않은 리스트 타입입니다"),
 
     // template
     NO_TEMPLATE(HttpStatus.NOT_FOUND, false, "존재하지 않는 템플릿입니다"),

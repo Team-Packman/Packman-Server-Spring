@@ -14,6 +14,7 @@ import packman.entity.template.TemplateCategory;
 import packman.entity.template.TemplatePack;
 import packman.repository.CategoryRepository;
 import packman.entity.packingList.PackingList;
+import packman.entity.packingList.TogetherPackingList;
 import packman.repository.FolderPackingListRepository;
 import packman.repository.UserRepository;
 import packman.repository.packingList.AlonePackingListRepository;
@@ -98,7 +99,9 @@ public class ListService {
 
         listRepository.findByIdAndIsDeleted(listId, false).ifPresentOrElse(t -> {
             t.setDepartureDate(departureDate);
-        }, () -> {throw new CustomException(ResponseCode.NO_LIST);});
+        }, () -> {
+            throw new CustomException(ResponseCode.NO_LIST);
+        });
 
         return new DepartureDateResponseDto(departureDateRequestDto.getId(), departureDateRequestDto.getDepartureDate());
     }
@@ -171,5 +174,33 @@ public class ListService {
                 .id(packingList.getId().toString())
                 .title(packingList.getTitle())
                 .departureDate(packingList.getDepartureDate().toString()).build();
+    }
+
+    public InviteListResponseDto getInviteList(String listType, String inviteCode) {
+        Long listId;
+        String title, departureDate;
+
+        if (listType.equals("alone")) {
+            AlonePackingList alonePackingList = validateAlonePackingListByInviteCode(alonePackingListRepository, inviteCode);
+            listId = alonePackingList.getId();
+            title = alonePackingList.getPackingList().getTitle();
+            departureDate = alonePackingList.getPackingList().getDepartureDate().toString();
+        } else if (listType.equals("together")) {
+            TogetherPackingList togetherPackingList = validateTogetherPackingListByInviteCode(togetherPackingListRepository, inviteCode);
+            listId = togetherPackingList.getId();
+            title = togetherPackingList.getPackingList().getTitle();
+            departureDate = togetherPackingList.getPackingList().getDepartureDate().toString();
+        } else {
+            throw new CustomException(ResponseCode.INVALID_LIST_TYPE);
+        }
+
+        ListResponseMapping listResponseMapping = packingListRepository.findByIdAndTitle(listId, title);
+
+        return InviteListResponseDto.builder()
+                .id(listResponseMapping.getId())
+                .title(title)
+                .departureDate(departureDate)
+                .category(listResponseMapping.getCategory())
+                .build();
     }
 }

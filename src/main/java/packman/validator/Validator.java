@@ -4,8 +4,10 @@ import lombok.RequiredArgsConstructor;
 import packman.entity.*;
 import packman.entity.packingList.AlonePackingList;
 import packman.entity.packingList.PackingList;
-import packman.entity.packingList.TogetherAlonePackingList;
 import packman.entity.packingList.TogetherPackingList;
+import packman.repository.FolderPackingListRepository;
+import packman.repository.FolderRepository;
+import packman.entity.packingList.TogetherAlonePackingList;
 import packman.entity.template.Template;
 import packman.repository.*;
 import packman.repository.packingList.AlonePackingListRepository;
@@ -157,6 +159,12 @@ public class Validator {
 
     public static AlonePackingList validateAlonePackingListByInviteCode(AlonePackingListRepository alonePackingListRepository, String inviteCode) {
         return alonePackingListRepository.findByInviteCodeAndIsAlonedAndPackingList_IsDeleted(inviteCode, true, false).orElseThrow(
+                () -> new CustomException(ResponseCode.NO_LIST)
+        );
+    }
+
+    public static TogetherPackingList validateTogetherPackingListByInviteCode(TogetherPackingListRepository togetherPackingListRepository, String inviteCode) {
+        return togetherPackingListRepository.findByInviteCode(inviteCode).orElseThrow(
                 () -> new CustomException(ResponseCode.NO_LIST)
         );
     }

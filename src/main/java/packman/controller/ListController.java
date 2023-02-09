@@ -64,4 +64,11 @@ public class ListController {
                 listService.getPackingListTitleAndDate(listId, isAloned, userId)
         );
     }
+    @GetMapping("/{listType}/share/{inviteCode}")
+    public ResponseEntity<ResponseMessage> getInviteTogetherList(@PathVariable("listType") String listType, @PathVariable("inviteCode") String inviteCode, HttpServletRequest request) {
+        return ResponseMessage.toResponseEntity(
+                ResponseCode.SUCCESS_GET_INVITE_LIST,
+                listService.getInviteList(listType, inviteCode)
+        );
+    }
 }
