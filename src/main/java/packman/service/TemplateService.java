@@ -20,7 +20,7 @@ public class TemplateService {
         validateUserId(userRepository, userId);
 
         TemplateListResponseDto templateListResponseDto = TemplateListResponseDto.builder()
-                .basicTemplate(templateRepository.findByIsAlonedAndIsDeletedAndUserIdNull(true, false))
+                .basicTemplate(templateRepository.findByUserIdAndIsAlonedAndIsDeleted(null,true, false))
                 .myTemplate(templateRepository.findByUserIdAndIsAlonedAndIsDeleted(userId, true,false)).build();
 
         return templateListResponseDto;
