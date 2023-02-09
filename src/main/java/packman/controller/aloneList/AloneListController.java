@@ -29,6 +29,16 @@ public class AloneListController {
         );
     }
 
+    @GetMapping("/{listId}")
+    public ResponseEntity<ResponseMessage> getAloneList(@PathVariable("listId") Long listId, HttpServletRequest request) {
+        Long userId = 1L;
+
+        return ResponseMessage.toResponseEntity(
+                ResponseCode.SUCCESS_GET_ALONE_LIST,
+                aloneListService.getAloneList(listId, userId)
+        );
+    }
+
     @DeleteMapping("/{folderId}/{listId}")
     public ResponseEntity<ResponseNonDataMessage> deleteAloneList(@PathVariable("folderId") Long folderId, @PathVariable("listId") List<Long> listIds, HttpServletRequest request) {
         Long userId = 1L;

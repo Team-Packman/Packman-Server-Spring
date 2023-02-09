@@ -1,8 +1,10 @@
 package packman.validator;
 
+import packman.entity.*;
 import packman.entity.User;
 import packman.entity.packingList.TogetherAlonePackingList;
 import packman.entity.template.Template;
+import packman.repository.FolderPackingListRepository;
 import packman.repository.UserRepository;
 import packman.entity.packingList.AlonePackingList;
 import packman.repository.packingList.AlonePackingListRepository;
@@ -95,6 +97,12 @@ public class IdValidator {
 
     public static TogetherPackingList validateTogetherPackingListId(TogetherPackingListRepository togetherPackingListRepository, Long togetherId) {
         return togetherPackingListRepository.findById(togetherId).orElseThrow(
+                () -> new CustomException(ResponseCode.NO_LIST)
+        );
+    }
+
+    public static FolderPackingList validateUserAloneListId(FolderPackingListRepository folderPackingListRepository, Long userId, Long listId) {
+        return folderPackingListRepository.findByFolder_UserIdAndAlonePackingListIdAndAlonePackingList_IsAlonedAndAlonePackingList_PackingList_IsDeleted(userId, listId, true, false).orElseThrow(
                 () -> new CustomException(ResponseCode.NO_LIST)
         );
     }

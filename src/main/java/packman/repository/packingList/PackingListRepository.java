@@ -16,6 +16,7 @@ import java.util.Optional;
 public interface PackingListRepository extends JpaRepository<PackingList, Long> {
     Optional<PackingList> findByIdAndIsDeleted(Long listId, boolean isDeleted);
     ListResponseMapping findByIdAndTitle(Long listId, String title);
+    ListResponseMapping findProjectionById(Long listId);
     @Modifying(clearAutomatically = true)
     @Query("update PackingList p set p.isDeleted = true where p in :packingLists")
     void updatelistIsDeletedTrue(@Param("packingLists") List<PackingList> packingLists);
