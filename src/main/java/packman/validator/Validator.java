@@ -7,15 +7,20 @@ import packman.entity.packingList.AlonePackingList;
 import packman.entity.packingList.PackingList;
 import packman.repository.PackRepository;
 import packman.repository.UserGroupRepository;
+import lombok.RequiredArgsConstructor;
+import packman.entity.Folder;
+import packman.entity.FolderPackingList;
+import packman.entity.template.Template;
+import packman.entity.packingList.TogetherPackingList;
 import packman.repository.packingList.PackingListRepository;
 import packman.repository.packingList.TogetherPackingListRepository;
 import packman.util.CustomException;
 import packman.util.ResponseCode;
 
 import java.util.List;
-
 import static packman.validator.IdValidator.*;
 
+@RequiredArgsConstructor
 public class Validator {
     public static void validateUserList(FolderPackingListRepository folderPackingListRepository, Long userId, Long listId) {
         folderPackingListRepository.findByFolder_UserIdAndAlonePackingListId(userId, listId).orElseThrow(
@@ -66,9 +71,28 @@ public class Validator {
         );
     }
 
-    public static UserGroup validateUserInUserGroup(UserGroupRepository userGroupRepository, Group group, Long packerId){
+    public static UserGroup validateUserInUserGroup(UserGroupRepository userGroupRepository, Group group, Long packerId) {
         return userGroupRepository.findByGroupAndUserIdAndUser_IsDeleted(group, packerId, false).orElseThrow(
                 () -> new CustomException(ResponseCode.NO_PACKER)
         );
+    }
+    public static void validateTogetherListDeleted(TogetherPackingList togetherPackingList) {
+        PackingList packingList = togetherPackingList.getPackingList();
+        if (packingList.getIsDeleted()) {
+            throw new CustomException(ResponseCode.NO_LIST);
+        }
+    }
+
+    public static void validateUserTemplate(Template template, User user) {
+        if (template.getUser() != null && template.getUser() != user) {
+            throw new CustomException(ResponseCode.NO_TEMPLATE);
+        }
+    }
+
+    public static List<FolderPackingList> validateFolderLists(FolderPackingListRepository folderPackingListRepository, Long folderId, List<Long> listIds) {
+        List<FolderPackingList> folderPackingLists = folderPackingListRepository.findByFolderIdAndAlonePackingListIdIn(folderId, listIds);
+        if(folderPackingLists.size() != listIds.size()) { throw new CustomException(ResponseCode.NO_FOLDER_LIST);}
+
+        return folderPackingLists;
     }
 }
