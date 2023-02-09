@@ -57,9 +57,11 @@ public enum ResponseCode {
     SUCCESS_CREATE_ALONE_PACK(HttpStatus.OK, true, "혼자 패킹리스트 짐 생성 성공"),
     SUCCESS_UPDATE_ALONE_PACK(HttpStatus.OK, true, "혼자 패킹리스트 짐 수정 성공"),
     SUCCESS_DELETE_ALONE_PACK(HttpStatus.OK, true, "혼자 패킹리스트 짐 삭제 성공"),
+    SUCCESS_CREATE_TOGETHER_PACK(HttpStatus.OK, true, "함께 패킹리스트 짐 생성 성공"),
+    SUCCESS_UPDATE_TOGETHER_PACK(HttpStatus.OK, true, "함께 패킹리스트 짐 수정 성공"),
+    SUCCESS_DELETE_TOGETHER_PACK(HttpStatus.OK, true, "함께 패킹리스트 짐 삭제 성공"),
     NO_PACK(HttpStatus.NOT_FOUND, false, "존재하지 않는 짐입니다"),
     NO_CATEGORY_PACK(HttpStatus.BAD_REQUEST, false, "리스트에 존재하지 않는 짐입니다"),
-    SUCCESS_CREATE_TOGETHER_PACK(HttpStatus.OK, true, "함께 패킹리스트 짐 생성 성공"),
     NO_PACKER(HttpStatus.BAD_REQUEST, false, "그룹에 존재하지 않는 패커입니다"),
 
 
@@ -73,7 +75,6 @@ public enum ResponseCode {
 
     // togetherPackingList
     SUCCESS_CREATE_TOGETHER_CATEGORY(HttpStatus.OK, true, "함께 패킹리스트 카테고리 생성 성공"),
-    SUCCESS_UPDATE_TOGETHER_PACK(HttpStatus.OK, true, "함께 패킹리스트 짐 수정 성공"),
     SUCCESS_INVITE_TOGETHER_PACKING(HttpStatus.OK, true, "함께 패킹리스트 초대 성공"),
     SUCCESS_UPDATE_TOGETHER_CATEGORY(HttpStatus.OK, true, "함께 패킹리스트 카테고리 수정 성공"),
     SUCCESS_DELETE_TOGETHER_CATEGORY(HttpStatus.OK, true, "함께 패킹리스트 카테고리 삭제 성공"),

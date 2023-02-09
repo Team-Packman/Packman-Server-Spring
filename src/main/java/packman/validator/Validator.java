@@ -2,7 +2,6 @@ package packman.validator;
 
 import packman.entity.*;
 import packman.entity.packingList.AlonePackingList;
-import packman.entity.packingList.PackingList;
 import packman.entity.packingList.TogetherAlonePackingList;
 import packman.entity.template.Template;
 import packman.repository.FolderPackingListRepository;
@@ -10,9 +9,19 @@ import packman.repository.FolderRepository;
 import packman.repository.PackRepository;
 import packman.repository.UserGroupRepository;
 import lombok.RequiredArgsConstructor;
-import packman.entity.Folder;
 import packman.entity.FolderPackingList;
 import packman.entity.packingList.TogetherPackingList;
+import packman.entity.Category;
+import packman.entity.Folder;
+import packman.entity.Pack;
+import packman.entity.UserGroup;
+import packman.entity.packingList.AlonePackingList;
+import packman.entity.packingList.PackingList;
+import packman.repository.CategoryRepository;
+import packman.repository.FolderPackingListRepository;
+import packman.repository.FolderRepository;
+import packman.repository.PackRepository;
+import packman.repository.packingList.AlonePackingListRepository;
 import packman.repository.packingList.PackingListRepository;
 import packman.repository.packingList.TogetherAlonePackingListRepository;
 import packman.repository.packingList.TogetherPackingListRepository;
@@ -37,10 +46,15 @@ public class Validator {
         );
     }
 
-    public static void validateUserAloneList(Long userId, AlonePackingList alonePackingList) {
+    public static PackingList validateUserAloneList(Long userId, Long aloneListId, AlonePackingListRepository alonePackingListRepository, PackingListRepository packingListRepository) {
+        PackingList packingList = validatePackingListId(packingListRepository, aloneListId);
+        AlonePackingList alonePackingList = validateAlonePackingListId(alonePackingListRepository, aloneListId);
+
         if (!alonePackingList.getFolderPackingList().getFolder().getUser().getId().equals(userId)) {
             throw new CustomException(ResponseCode.NO_LIST);
         }
+
+        return packingList;
     }
 
     public static void validateListCategory(PackingList packingList, Category category) {
@@ -141,5 +155,15 @@ public class Validator {
         if (members.contains(userId)) {
             throw new CustomException(ResponseCode.NO_DELETE_MAKER);
         }
+    }
+
+    public static Pack validateListCategoryPack(PackingList packingList, Long categoryId, Long packId, CategoryRepository categoryRepository, PackRepository packRepository) {
+        Category category = validateCategoryId(categoryRepository, categoryId);
+        Pack pack = validatePackId(packRepository, packId);
+
+        validateListCategory(packingList, category);
+        validateCategoryPack(category, pack);
+
+        return pack;
     }
 }

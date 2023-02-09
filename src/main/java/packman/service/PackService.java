@@ -17,7 +17,8 @@ import packman.repository.packingList.PackingListRepository;
 import packman.repository.packingList.TogetherPackingListRepository;
 import packman.validator.Validator;
 
-import static packman.validator.IdValidator.*;
+import static packman.validator.IdValidator.validateCategoryId;
+import static packman.validator.IdValidator.validateUserId;
 import static packman.validator.LengthValidator.validatePackLength;
 import static packman.validator.Validator.*;
 
@@ -36,9 +37,7 @@ public class PackService {
         Long aloneListId = Long.valueOf(packCreateDto.getListId());
 
         validateUserId(userRepository, userId);
-
-        PackingList packingList = validatePackingListId(packingListRepository, aloneListId);
-        validateUserAloneList(userId, validateAlonePackingListId(alonePackingListRepository, aloneListId));
+        PackingList packingList = validateUserAloneList(userId, aloneListId, alonePackingListRepository, packingListRepository);
 
         addPackInCategory(packCreateDto, packingList);
 
@@ -73,8 +72,7 @@ public class PackService {
         Long aloneListId = Long.valueOf(packUpdateDto.getListId());
 
         validateUserId(userRepository, userId);
-        PackingList packingList = validatePackingListId(packingListRepository, aloneListId);
-        validateUserAloneList(userId, validateAlonePackingListId(alonePackingListRepository, aloneListId));
+        PackingList packingList = validateUserAloneList(userId, aloneListId, alonePackingListRepository, packingListRepository);
 
         updatePackInCategory(packUpdateDto, packingList);
 
@@ -97,15 +95,24 @@ public class PackService {
         String packName = packUpdateDto.getName();
         Long packId = Long.valueOf(packUpdateDto.getId());
 
-        Category category = validateCategoryId(categoryRepository, categoryId);
-        Pack pack = validatePackId(packRepository, packId);
-
         validatePackLength(packName);
-
-        validateListCategory(packingList, category);
-        validateCategoryPack(category, pack);
+        Pack pack = validateListCategoryPack(packingList, categoryId, packId, categoryRepository, packRepository);
 
         pack.setChecked(packUpdateDto.getIsChecked());
         pack.setName(packName);
+    }
+
+    public void deleteAlonePack(Long listId, Long categoryId, Long packId, Long userId) {
+        validateUserId(userRepository, userId);
+        PackingList packingList = validateUserAloneList(userId, listId, alonePackingListRepository, packingListRepository);
+
+        packRepository.delete(validateListCategoryPack(packingList, categoryId, packId, categoryRepository, packRepository));
+    }
+
+    public void deleteTogetherPack(Long listId, Long categoryId, Long packId, Long userId) {
+        validateUserId(userRepository, userId);
+        PackingList packingList = validateTogetherList(userId, listId, packingListRepository, togetherPackingListRepository);
+
+        packRepository.delete(validateListCategoryPack(packingList, categoryId, packId, categoryRepository, packRepository));
     }
 }
