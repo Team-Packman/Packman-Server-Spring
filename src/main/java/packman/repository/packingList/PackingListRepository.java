@@ -17,5 +17,5 @@ public interface PackingListRepository extends JpaRepository<PackingList, Long> 
     CategoryResponseDto findByIdAndTitle(Long listId, String title);
     @Modifying(clearAutomatically = true)
     @Query("update PackingList p set p.isDeleted = true where p in :packingLists")
-    void UpdatelistIsDeletedTrue(@Param("packingLists") List<PackingList> packingLists);
+    void updatelistIsDeletedTrue(@Param("packingLists") List<PackingList> packingLists);
 }
