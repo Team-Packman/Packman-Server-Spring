@@ -1,5 +1,6 @@
 package packman.entity.packingList;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -25,7 +26,7 @@ public class AlonePackingList {
     @MapsId
     @JoinColumn(name = "packing_list_id")
     private PackingList packingList;
-
+    @Setter(AccessLevel.NONE)
     @Column(nullable = false)
     private boolean isAloned = true;
 
@@ -49,5 +50,9 @@ public class AlonePackingList {
     public AlonePackingList(PackingList packingList, String inviteCode){
         this.packingList = packingList;
         this.inviteCode = inviteCode;
+    }
+    
+    public void setIsAloned(boolean isAloned) {
+        this.isAloned = isAloned;
     }
 }

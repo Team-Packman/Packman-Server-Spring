@@ -2,16 +2,11 @@ package packman.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import packman.dto.list.DepartureDateRequestDto;
 import packman.dto.list.ListTitleRequestDto;
 import packman.dto.list.TemplateUpdateDto;
 import packman.service.ListService;
-import packman.util.CustomException;
 import packman.util.ResponseCode;
 import packman.util.ResponseMessage;
 
@@ -60,5 +55,13 @@ public class ListController {
         );
     }
 
+    @GetMapping("/{listId}/title-date")
+    public ResponseEntity<ResponseMessage> getPackingListTitleAndDate(@PathVariable Long listId, @RequestParam boolean isAloned, HttpServletRequest request) {
+        Long userId = 1L;
 
+        return ResponseMessage.toResponseEntity(
+                ResponseCode.GET_LIST_TITLE_DEPARTURE_DATE_SUCCESS,
+                listService.getPackingListTitleAndDate(listId, isAloned, userId)
+        );
+    }
 }

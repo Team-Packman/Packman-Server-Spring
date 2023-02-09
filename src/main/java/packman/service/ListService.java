@@ -13,12 +13,15 @@ import packman.entity.template.Template;
 import packman.entity.template.TemplateCategory;
 import packman.entity.template.TemplatePack;
 import packman.repository.CategoryRepository;
+import packman.entity.packingList.PackingList;
 import packman.repository.FolderPackingListRepository;
 import packman.repository.UserRepository;
+import packman.repository.packingList.AlonePackingListRepository;
 import packman.repository.packingList.PackingListRepository;
 import packman.repository.packingList.TogetherAlonePackingListRepository;
 import packman.repository.template.TemplateCategoryRepository;
 import packman.repository.template.TemplateRepository;
+import packman.repository.packingList.TogetherPackingListRepository;
 import packman.util.CustomException;
 import packman.util.ResponseCode;
 
@@ -43,6 +46,9 @@ public class ListService {
     private final TemplateRepository templateRepository;
     private final TemplateCategoryRepository templateCategoryRepository;
     private final CategoryRepository categoryRepository;
+    private final PackingListRepository packingListRepository;
+    private final TogetherPackingListRepository togetherPackingListRepository;
+    private final AlonePackingListRepository alonePackingListRepository;
 
     public ListTitleResponseDto updateTitle(ListTitleRequestDto listTitleRequestDto, Long userId) {
         Long listId = Long.parseLong(listTitleRequestDto.getId());
@@ -107,23 +113,23 @@ public class ListService {
         User user = validateUserId(userRepository, userId);
 
         // 업데이트에 사용할 aloneList, title
-        if(templateUpdateDto.getIsAloned()){
+        if (templateUpdateDto.getIsAloned()) {
             aloneList = validateUserAloneListIsSaved(folderPackingListRepository, userId, Long.parseLong(templateUpdateDto.getId()), templateUpdateDto.getIsSaved());
             title = aloneList.getPackingList().getTitle();
             categories = aloneList.getPackingList().getCategory();
-        } else{
+        } else {
             TogetherAlonePackingList togetherAlonePackingList = validateUserTogetherListIsSaved(togetherAlonePackingListRepository, Long.parseLong(templateUpdateDto.getId()), user, templateUpdateDto.getIsSaved());
             title = togetherAlonePackingList.getTogetherPackingList().getPackingList().getTitle();
             categories = togetherAlonePackingList.getTogetherPackingList().getPackingList().getCategory();
             aloneList = togetherAlonePackingList.getAlonePackingList();
         }
 
-        if(!templateUpdateDto.getIsSaved()){ // 템플릿을 처음 생성하는 경우
+        if (!templateUpdateDto.getIsSaved()) { // 템플릿을 처음 생성하는 경우
             // isSaved 템플릿 저장으로 변경
             aloneList.getPackingList().setIsSaved(true);
             //템플릿 생성
             template = templateRepository.save(new Template(templateUpdateDto.getIsAloned(), title, aloneList, user));
-        } else{ // 이미 템플릿이 존재하는 경우
+        } else { // 이미 템플릿이 존재하는 경우
             template = validateListTemplate(templateRepository, aloneList);
             // 템플릿 이름 업데이트
             template.setTitle(title);
@@ -145,10 +151,25 @@ public class ListService {
             });
         });
 
-        UpdatedTemplateResponseDto updatedTemplateResponseDto = UpdatedTemplateResponseDto.builder()
+        return UpdatedTemplateResponseDto.builder()
                 .id(templateUpdateDto.getId())
                 .isSaved(aloneList.getPackingList().getIsSaved()).build();
+    }
 
-        return updatedTemplateResponseDto;
+    public ListResponseDto getPackingListTitleAndDate(Long listId, boolean isAloned, Long userId) {
+
+        if(!isAloned) {
+            TogetherAlonePackingList togetherAlonePackingList = validateTogetherAlonePackingListId(togetherAlonePackingListRepository, listId);
+            listId = togetherAlonePackingList.getAlonePackingList().getId();
+        }
+
+        AlonePackingList alonePackingList = validateAlonePackingListId(alonePackingListRepository , listId);
+        PackingList packingList = alonePackingList.getPackingList();
+        validateUserList(folderPackingListRepository, userId, packingList.getId());
+
+        return ListResponseDto.builder()
+                .id(packingList.getId().toString())
+                .title(packingList.getTitle())
+                .departureDate(packingList.getDepartureDate().toString()).build();
     }
 }
