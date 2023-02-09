@@ -4,11 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import packman.dto.list.AloneListResponseDto;
-import packman.dto.list.DetailedAloneListResponseDto;
-import packman.dto.list.InviteAloneListResponseDto;
-import packman.dto.list.ListCreateDto;
-import packman.dto.list.ListResponseMapping;
+import packman.dto.list.*;
 import packman.entity.Category;
 import packman.entity.Folder;
 import packman.entity.FolderPackingList;
@@ -18,7 +14,10 @@ import packman.entity.packingList.PackingList;
 import packman.entity.template.Template;
 import packman.entity.template.TemplateCategory;
 import packman.entity.template.TemplatePack;
-import packman.repository.*;
+import packman.repository.CategoryRepository;
+import packman.repository.FolderPackingListRepository;
+import packman.repository.FolderRepository;
+import packman.repository.UserRepository;
 import packman.repository.packingList.AlonePackingListRepository;
 import packman.repository.packingList.PackingListRepository;
 import packman.repository.template.TemplateCategoryRepository;
@@ -29,12 +28,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static packman.validator.IdValidator.validateTemplateId;
-import static packman.validator.IdValidator.validateUserId;
+import static packman.validator.IdValidator.*;
 import static packman.validator.LengthValidator.validateListLength;
 import static packman.validator.Validator.*;
-import static packman.validator.Validator.validateAlonePackingListByInviteCode;
-import static packman.validator.Validator.validateUserFolder;
 
 
 @Service
