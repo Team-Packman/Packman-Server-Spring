@@ -7,6 +7,7 @@ import packman.entity.packingList.TogetherAlonePackingList;
 import packman.entity.packingList.TogetherPackingList;
 import packman.entity.template.Template;
 import packman.repository.CategoryRepository;
+import packman.repository.FolderPackingListRepository;
 import packman.repository.GroupRepository;
 import packman.repository.PackRepository;
 import packman.repository.UserRepository;
@@ -48,6 +49,22 @@ public class IdValidator {
         );
     }
 
+    public static List<AlonePackingList> validateAloneListIds(AlonePackingListRepository alonePackingListRepository, List<Long> aloneListIds) {
+        List<AlonePackingList> alonePackingLists = alonePackingListRepository.findByIdInAndIsAlonedAndPackingList_IsDeleted(aloneListIds, true, false);
+        if(alonePackingLists.size() != aloneListIds.size()) { throw new CustomException(ResponseCode.NO_LIST);}
+
+        return alonePackingLists;
+    }
+
+    public static List<TogetherAlonePackingList> validateTogetherListIds(TogetherAlonePackingListRepository togetherAlonePackingListRepository, List<Long> linkListIds) {
+        List<TogetherAlonePackingList> togetherAlonePackingLists = togetherAlonePackingListRepository.findByIdInAndTogetherPackingList_PackingList_IsDeletedAndAlonePackingList_PackingList_IsDeletedAndAlonePackingList_IsAloned(linkListIds, false, false, false);
+        if (togetherAlonePackingLists.size() != linkListIds.size()) {
+            throw new CustomException(ResponseCode.NO_LIST);
+        }
+
+        return togetherAlonePackingLists;
+    }
+
     public static Category validateCategoryId(CategoryRepository categoryRepository, Long categoryId) {
         return categoryRepository.findById(categoryId).orElseThrow(
                 () -> new CustomException(ResponseCode.NO_CATEGORY)
@@ -64,8 +81,9 @@ public class IdValidator {
         }
     }
 
+
     public static AlonePackingList validateAlonePackingListId(AlonePackingListRepository alonePackingListRepository, Long aloneId) {
-        return alonePackingListRepository.findById(aloneId).orElseThrow(
+        return alonePackingListRepository.findByIdAndPackingList_IsDeleted(aloneId, false).orElseThrow(
                 () -> new CustomException(ResponseCode.NO_LIST)
         );
     }
@@ -89,6 +107,34 @@ public class IdValidator {
 
     public static TogetherPackingList validateTogetherPackingListId(TogetherPackingListRepository togetherPackingListRepository, Long togetherId) {
         return togetherPackingListRepository.findById(togetherId).orElseThrow(
+                () -> new CustomException(ResponseCode.NO_LIST)
+        );
+    }
+
+    public static TogetherPackingList validateUserTogetherPackingListId(TogetherPackingListRepository togetherPackingListRepository, Long togetherListId, User user) {
+        return togetherPackingListRepository.findByIdAndPackingList_IsDeletedAndGroup_UserGroups_User(togetherListId, false, user).orElseThrow(
+                () -> new CustomException(ResponseCode.NO_LIST)
+        );
+    }
+
+    public static FolderPackingList validateUserAloneListId(FolderPackingListRepository folderPackingListRepository, Long userId, Long listId) {
+        return folderPackingListRepository.findByFolder_UserIdAndAlonePackingListIdAndAlonePackingList_IsAlonedAndAlonePackingList_PackingList_IsDeleted(userId, listId, true, false).orElseThrow(
+                () -> new CustomException(ResponseCode.NO_LIST)
+        );
+    }
+
+    public static TogetherPackingList validateTogetherPackingInviteCode(TogetherPackingListRepository togetherPackingListRepository, String inviteCode) {
+        TogetherPackingList togetherPackingList = togetherPackingListRepository
+                .findByInviteCode(inviteCode)
+                .orElseThrow(() -> new CustomException(ResponseCode.NO_LIST));
+        if (togetherPackingList.getPackingList().getIsDeleted() == true) {
+            throw new CustomException(ResponseCode.NO_LIST);
+        }
+        return togetherPackingList;
+    }
+
+    public static TogetherAlonePackingList validateTogetherAlonePackingListIdInDetail(TogetherAlonePackingListRepository togetherAlonePackingListRepository, Long linkId) {
+        return togetherAlonePackingListRepository.findByIdAndTogetherPackingList_PackingList_IsDeletedAndAlonePackingList_IsAlonedAndAlonePackingList_PackingList_IsDeleted(linkId, false, false, false).orElseThrow(
                 () -> new CustomException(ResponseCode.NO_LIST)
         );
     }

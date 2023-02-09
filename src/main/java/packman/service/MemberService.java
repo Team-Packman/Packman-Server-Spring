@@ -24,6 +24,7 @@ import java.util.List;
 
 import static packman.validator.IdValidator.*;
 import static packman.validator.Validator.validateEmptyUserInMember;
+import static packman.validator.Validator.validateUserGroupUser;
 import static packman.validator.Validator.validateNoDeleteMaker;
 
 @Service
@@ -46,7 +47,7 @@ public class MemberService {
 
         List<MemberUserDto> memberUserDtos = new ArrayList<>();
         for (UserGroup userGroup : userGroups) {
-            User member = userGroup.getUser();
+            User member = validateUserGroupUser(userGroup);
             memberUserDtos.add(MemberUserDto.builder()
                     .id(member.getId().toString())
                     .nickname(member.getNickname())
