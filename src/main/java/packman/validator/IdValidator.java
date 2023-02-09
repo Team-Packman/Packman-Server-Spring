@@ -6,11 +6,7 @@ import packman.entity.packingList.PackingList;
 import packman.entity.packingList.TogetherAlonePackingList;
 import packman.entity.packingList.TogetherPackingList;
 import packman.entity.template.Template;
-import packman.repository.CategoryRepository;
-import packman.repository.FolderPackingListRepository;
-import packman.repository.GroupRepository;
-import packman.repository.PackRepository;
-import packman.repository.UserRepository;
+import packman.repository.*;
 import packman.repository.packingList.AlonePackingListRepository;
 import packman.repository.packingList.PackingListRepository;
 import packman.repository.packingList.TogetherAlonePackingListRepository;
@@ -78,6 +74,18 @@ public class IdValidator {
 
         if (!userIdInGroup.contains(userId)) {
             throw new CustomException(ResponseCode.NO_MEMBER_USER);
+        }
+
+        return userIdInGroup;
+    }
+
+    public static void validateMemberUserId(List<UserGroup> userGroups, Long userId, List<Long> memberIds) {
+        List<Long> userIdInGroup = validateUserGroupUserId(userGroups, userId);
+
+        for (Long memberId : memberIds) {
+            if (!userIdInGroup.contains(memberId)) {
+                throw new CustomException(ResponseCode.NO_MEMBER_USER);
+            }
         }
     }
 

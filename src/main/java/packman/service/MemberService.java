@@ -23,9 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static packman.validator.IdValidator.*;
-import static packman.validator.Validator.validateEmptyUserInMember;
-import static packman.validator.Validator.validateUserGroupUser;
-import static packman.validator.Validator.validateNoDeleteMaker;
+import static packman.validator.Validator.*;
 
 @Service
 @Transactional
@@ -82,7 +80,7 @@ public class MemberService {
         validateEmptyUserInMember(userGroups.size());
 
         // 멤버에 존재하는 유저일 때
-        validateUserMemberId(userGroups, userId);
+        validateMemberUserId(userGroups, userId, memberIds);
 
         // 삭제할 권한이 없는 유저일 때
         validateNoMakerId(userGroups.get(0).getUser().getId(), userId);
