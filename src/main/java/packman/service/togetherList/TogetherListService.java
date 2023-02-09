@@ -8,6 +8,7 @@ import packman.dto.list.ListCreateDto;
 import packman.dto.list.ListResponseMapping;
 import packman.dto.list.TogetherListDto;
 import packman.dto.list.TogetherListResponseDto;
+import packman.dto.togetherList.PackerUpdateDto;
 import packman.dto.member.MemberAddDto;
 import packman.dto.member.MemberResponseDto;
 import packman.dto.togetherList.TogetherListInviteResponseDto;
@@ -31,6 +32,17 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+
+import static packman.validator.IdValidator.*;
+import static packman.validator.LengthValidator.validateListLength;
+import static packman.validator.Validator.*;
+
+import packman.dto.togetherList.TogetherListInviteResponseDto;
+import packman.entity.UserGroup;
+import packman.repository.UserGroupRepository;
+import packman.util.CustomException;
+import packman.util.ResponseCode;
+
 import java.util.stream.Collectors;
 import java.util.Optional;
 
@@ -200,7 +212,7 @@ public class TogetherListService {
         togetherAlonePackingListRepository.deleteAllInBatch(togetherAlonePackingLists);
 
         // 패킹리스트 isDeleted 처리
-        packingListRepository.updatelistIsDeletedTrue(lists);
+        packingListRepository.updateListIsDeletedTrue(lists);
 
         // packer null 설정
         if (!packs.isEmpty()) {
@@ -228,6 +240,28 @@ public class TogetherListService {
         } else {
             return new TogetherListInviteResponseDto(String.valueOf(togetherPackingList.getId()), false);
         }
+    }
+
+    public ListResponseMapping updatePacker(PackerUpdateDto packerUpdateDto, Long userId) {
+        Long packerId = Long.parseLong(packerUpdateDto.getPackerId());
+        // 유저 검증
+        User user = validateUserId(userRepository, userId);
+
+        // 유저의 함께 패킹리스트인지 검증
+        TogetherPackingList togetherPackingList = validateUserTogetherPackingListId(togetherPackingListRepository, Long.parseLong(packerUpdateDto.getListId()), user);
+
+        // 리스트에 존재하는 짐인지 검증
+        Pack pack = validateListPack(packRepository, togetherPackingList.getPackingList(), Long.parseLong(packerUpdateDto.getPackId()));
+
+        if(!packerId.equals(userId)){
+            // packer가 삭제 안된 user이며 userGroup에 존재하는지 검증
+            UserGroup userGroup = validateUserInUserGroup(userGroupRepository, togetherPackingList.getGroup(), packerId);
+            pack.setPacker(userGroup.getUser());
+        }else{
+            pack.setPacker(user);
+        }
+
+        return packingListRepository.findProjectionById(togetherPackingList.getId());
     }
 
     public MemberResponseDto addMember(MemberAddDto memberAddDto, Long userId) {

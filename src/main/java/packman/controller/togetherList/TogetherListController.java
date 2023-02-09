@@ -3,6 +3,7 @@ package packman.controller.togetherList;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import packman.dto.togetherList.PackerUpdateDto;
 import packman.dto.list.ListCreateDto;
 import packman.dto.member.MemberAddDto;
 import packman.service.togetherList.TogetherListService;
@@ -48,6 +49,16 @@ public class TogetherListController {
         return ResponseMessage.toResponseEntity(
                 ResponseCode.SUCCESS_INVITE_TOGETHER_PACKING,
                 togetherListService.getInviteTogetherList(userId, inviteCode)
+        );
+    }
+
+    @PatchMapping("/packer")
+    public ResponseEntity<ResponseMessage> updatePacker(@RequestBody @Valid PackerUpdateDto packerUpdateDto, HttpServletRequest request) {
+        Long userId = 1L;
+
+        return ResponseMessage.toResponseEntity(
+                ResponseCode.SUCCESS_UPDATE_PACKER,
+                togetherListService.updatePacker(packerUpdateDto, userId)
         );
     }
 

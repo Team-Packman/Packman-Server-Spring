@@ -101,6 +101,12 @@ public class IdValidator {
         );
     }
 
+    public static TogetherPackingList validateUserTogetherPackingListId(TogetherPackingListRepository togetherPackingListRepository, Long togetherListId, User user) {
+        return togetherPackingListRepository.findByIdAndPackingList_IsDeletedAndGroup_UserGroups_User(togetherListId, false, user).orElseThrow(
+                () -> new CustomException(ResponseCode.NO_LIST)
+        );
+    }
+
     public static FolderPackingList validateUserAloneListId(FolderPackingListRepository folderPackingListRepository, Long userId, Long listId) {
         return folderPackingListRepository.findByFolder_UserIdAndAlonePackingListIdAndAlonePackingList_IsAlonedAndAlonePackingList_PackingList_IsDeleted(userId, listId, true, false).orElseThrow(
                 () -> new CustomException(ResponseCode.NO_LIST)

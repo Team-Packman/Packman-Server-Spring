@@ -5,7 +5,6 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-import packman.entity.Pack;
 import packman.dto.list.ListResponseMapping;
 import packman.entity.packingList.PackingList;
 
@@ -19,5 +18,5 @@ public interface PackingListRepository extends JpaRepository<PackingList, Long> 
     ListResponseMapping findProjectionById(Long listId);
     @Modifying(clearAutomatically = true)
     @Query("update PackingList p set p.isDeleted = true where p in :packingLists")
-    void updatelistIsDeletedTrue(@Param("packingLists") List<PackingList> packingLists);
+    void updateListIsDeletedTrue(@Param("packingLists") List<PackingList> packingLists);
 }

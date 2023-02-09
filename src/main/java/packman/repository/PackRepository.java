@@ -8,11 +8,13 @@ import org.springframework.stereotype.Repository;
 import packman.entity.Pack;
 import packman.entity.packingList.PackingList;
 
+import java.util.Optional;
 import java.util.List;
 
 @Repository
 public interface PackRepository extends JpaRepository<Pack, Long> {
     List<Pack> findByCategory_PackingListAndPackerId(PackingList togetherListId, Long PackerId);
+    Optional<Pack> findByIdAndCategory_PackingList(Long packId, PackingList packingList);
 
     @Modifying(clearAutomatically = true)
     @Query("update Pack p set p.packer = null where p in :packs")

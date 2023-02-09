@@ -145,7 +145,7 @@ public class AloneListService {
         List<PackingList> lists = alonePackingLists.stream().map(aloneList -> aloneList.getPackingList()).collect(Collectors.toList());
 
         // 삭제할 패킹리스트 isDeleted true 처리
-        packingListRepository.updatelistIsDeletedTrue(lists);
+        packingListRepository.updateListIsDeletedTrue(lists);
 
         // 폴더-패킹리스트 튜플 삭제
         folderPackingListRepository.deleteAllInBatch(folderPackingLists);
