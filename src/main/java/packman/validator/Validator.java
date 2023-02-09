@@ -1,9 +1,6 @@
 package packman.validator;
 
-import packman.entity.Category;
-import packman.entity.Folder;
-import packman.entity.Pack;
-import packman.entity.UserGroup;
+import packman.entity.*;
 import packman.entity.packingList.AlonePackingList;
 import packman.entity.packingList.PackingList;
 import packman.repository.FolderPackingListRepository;
@@ -65,5 +62,12 @@ public class Validator {
         if (memberLength == 0) {
             throw new CustomException(ResponseCode.EMPTY_MEMBER);
         }
+    }
+
+    public static User validateUserGroupUser(UserGroup userGroup) {
+        if (userGroup.getUser().isDeleted()) {
+            throw new CustomException(ResponseCode.NO_USER);
+        }
+        return userGroup.getUser();
     }
 }
