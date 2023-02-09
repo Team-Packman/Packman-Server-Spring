@@ -11,6 +11,8 @@ import packman.util.ResponseMessage;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.Collection;
+import java.util.Collections;
 
 @RestController
 @RequiredArgsConstructor
@@ -85,5 +87,20 @@ public class FolderController {
         );
     }
 
+    @GetMapping("/recentCreatedList")
+    public ResponseEntity<ResponseMessage> getRecentCreatedList(HttpServletRequest request) {
+        Long userId = 3L;
 
+        if (folderService.getRecentCreatedList(userId) == null) {
+            return ResponseMessage.toResponseEntity(
+                    ResponseCode.NO_EXIST_USER_LIST,
+                    Collections.emptyList()
+            );
+        } else {
+            return ResponseMessage.toResponseEntity(
+                    ResponseCode.GET_RECENT_CREATED_LIST_SUCCESS,
+                    folderService.getRecentCreatedList(userId)
+            );
+        }
+    }
 }

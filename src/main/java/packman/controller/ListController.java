@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import packman.dto.list.DepartureDateRequestDto;
 import packman.dto.list.ListTitleRequestDto;
+import packman.dto.list.TemplateUpdateDto;
 import packman.service.ListService;
 import packman.util.ResponseCode;
 import packman.util.ResponseMessage;
@@ -44,6 +45,25 @@ public class ListController {
         );
     }
 
+    @PatchMapping("/myTemplate")
+    public ResponseEntity<ResponseMessage> updateMyTempalte(@RequestBody @Valid TemplateUpdateDto templateUpdateDto, HttpServletRequest request) {
+        Long userId = 1L;
+
+        return ResponseMessage.toResponseEntity(
+                ResponseCode.UPDATE_LIST_MY_TEMPLATE_SUCCESS,
+                listService.updateMyTemplate(templateUpdateDto, userId)
+        );
+    }
+
+    @GetMapping("/{listId}/title-date")
+    public ResponseEntity<ResponseMessage> getPackingListTitleAndDate(@PathVariable Long listId, @RequestParam boolean isAloned, HttpServletRequest request) {
+        Long userId = 1L;
+
+        return ResponseMessage.toResponseEntity(
+                ResponseCode.GET_LIST_TITLE_DEPARTURE_DATE_SUCCESS,
+                listService.getPackingListTitleAndDate(listId, isAloned, userId)
+        );
+    }
     @GetMapping("/{listType}/share/{inviteCode}")
     public ResponseEntity<ResponseMessage> getInviteTogetherList(@PathVariable("listType") String listType, @PathVariable("inviteCode") String inviteCode, HttpServletRequest request) {
         return ResponseMessage.toResponseEntity(

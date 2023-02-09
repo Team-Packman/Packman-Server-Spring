@@ -4,10 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import packman.dto.list.AloneListResponseDto;
-import packman.dto.list.InviteAloneListResponseDto;
-import packman.dto.list.ListCreateDto;
-import packman.dto.list.ListResponseMapping;
+import packman.dto.list.*;
 import packman.entity.Category;
 import packman.entity.Folder;
 import packman.entity.FolderPackingList;
@@ -17,7 +14,10 @@ import packman.entity.packingList.PackingList;
 import packman.entity.template.Template;
 import packman.entity.template.TemplateCategory;
 import packman.entity.template.TemplatePack;
-import packman.repository.*;
+import packman.repository.CategoryRepository;
+import packman.repository.FolderPackingListRepository;
+import packman.repository.FolderRepository;
+import packman.repository.UserRepository;
 import packman.repository.packingList.AlonePackingListRepository;
 import packman.repository.packingList.PackingListRepository;
 import packman.repository.template.TemplateCategoryRepository;
@@ -26,12 +26,11 @@ import packman.repository.template.TemplateRepository;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.stream.Collectors;
 
-import static packman.validator.IdValidator.validateTemplateId;
-import static packman.validator.IdValidator.validateUserId;
+import static packman.validator.IdValidator.*;
 import static packman.validator.LengthValidator.validateListLength;
-import static packman.validator.Validator.validateAlonePackingListByInviteCode;
-import static packman.validator.Validator.validateUserFolder;
+import static packman.validator.Validator.*;
 
 
 @Service
@@ -46,7 +45,6 @@ public class AloneListService {
     private final CategoryRepository categoryRepository;
     private final TemplateRepository templateRepository;
     private final TemplateCategoryRepository templateCategoryRepository;
-    private final PackRepository packRepository;
 
     public AloneListResponseDto createAloneList(ListCreateDto listCreateDto, Long userId) {
         Long folderId = Long.parseLong(listCreateDto.getFolderId());
@@ -108,6 +106,49 @@ public class AloneListService {
                 .isSaved(savedList.getIsSaved()).build();
 
         return aloneListResponseDto;
+    }
+
+    public DetailedAloneListResponseDto getAloneList(Long listId, Long userId) {
+        // 유저 검증(삭제 안된 유저)
+        validateUserId(userRepository, userId);
+
+        // 유저의 혼자 패킹리스트인지 검증
+        FolderPackingList folderPackingList = validateUserAloneListId(folderPackingListRepository, userId, listId);
+
+        ListResponseMapping categories = packingListRepository.findProjectionById(listId);
+
+        DetailedAloneListResponseDto detailedAloneListResponseDto = DetailedAloneListResponseDto.builder()
+                .id(folderPackingList.getAlonePackingList().getId().toString())
+                .folderId(folderPackingList.getFolder().getId().toString())
+                .category(categories.getCategory())
+                .inviteCode(folderPackingList.getAlonePackingList().getInviteCode())
+                .isSaved(folderPackingList.getAlonePackingList().getPackingList().getIsSaved()).build();
+
+        return detailedAloneListResponseDto;
+    }
+
+    public void deleteAloneList(Long userId, Long folderId, List<Long> listIds) {
+
+        // 유저 검증(삭제 안된 유저)
+        validateUserId(userRepository, userId);
+
+        // 유저 소유 폴더, 혼자 패킹리스트 폴더인지 검증
+        validateUserFolder(folderRepository, folderId, userId, true);
+
+        // 혼자 패킹 리스트, 존재하는 리스트인지 검증
+        List<AlonePackingList> alonePackingLists = validateAloneListIds(alonePackingListRepository, listIds);
+
+        // 해당 리스트가 폴더 속에 있는지 검증
+        List<FolderPackingList> folderPackingLists = validateFolderLists(folderPackingListRepository, folderId, listIds);
+
+        // 삭제할 패킹리스트 취합
+        List<PackingList> lists = alonePackingLists.stream().map(aloneList -> aloneList.getPackingList()).collect(Collectors.toList());
+
+        // 삭제할 패킹리스트 isDeleted true 처리
+        packingListRepository.updateListIsDeletedTrue(lists);
+
+        // 폴더-패킹리스트 튜플 삭제
+        folderPackingListRepository.deleteAllInBatch(folderPackingLists);
     }
 
     public InviteAloneListResponseDto getInviteAloneList(Long userId, String inviteCode) {

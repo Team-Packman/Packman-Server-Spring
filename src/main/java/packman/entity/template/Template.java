@@ -3,8 +3,10 @@ package packman.entity.template;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import packman.entity.Category;
 import packman.entity.User;
 import packman.entity.packingList.AlonePackingList;
+import packman.entity.packingList.PackingList;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -43,4 +45,13 @@ public class Template {
     @OrderBy("id asc")
     @OneToMany(mappedBy = "template", cascade = CascadeType.ALL)
     private List<TemplateCategory> categories = new ArrayList<>();
+
+    public Template(boolean isAloned, String title, AlonePackingList alonePackingList, User user){
+        this.isAloned = isAloned;
+        this.title = title;
+        this.alonePackingList = alonePackingList;
+        this.user  = user;
+    }
+
+    public void addTemplateCategory(TemplateCategory templateCategory) { this.categories.add(templateCategory); }
 }
