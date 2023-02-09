@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import packman.entity.packingList.AlonePackingList;
+import packman.entity.packingList.PackingList;
 
 import javax.persistence.*;
 

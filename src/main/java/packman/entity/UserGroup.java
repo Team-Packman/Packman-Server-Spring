@@ -3,6 +3,7 @@ package packman.entity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import packman.entity.packingList.PackingList;
 
 import javax.persistence.*;
 
@@ -25,4 +26,9 @@ public class UserGroup {
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "group_id", nullable = false)
     private Group group;
+
+    public UserGroup(User user, Group group) {
+        this.user = user;
+        this.group = group;
+    }
 }

@@ -22,6 +22,7 @@ import packman.util.ResponseCode;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -146,15 +147,18 @@ public class FolderService {
             throw new CustomException(ResponseCode.FAIL_CREATE_FOLDER);
         }
 
-        Folder folder = new Folder(request, user);
+        Folder folder = new Folder(user, name, request.getIsAloned());
         folderRepository.save(folder);
 
-        List<FolderIdNameMapping> aloneFolders = folderRepository.findByUserIdAndIsAlonedOrderByIdDesc(userId, true);
-        List<FolderIdNameMapping> togetherFolders = folderRepository.findByUserIdAndIsAlonedOrderByIdDesc(userId, false);
+        List<Folder> folders = folderRepository.findByUserIdOrderByIdDesc(userId);
+
+        List<FolderInfo> aloneFoldersResponse = getResponseFoldersByIsAloned(folders, true);
+
+        List<FolderInfo> togetherFoldersResponse = getResponseFoldersByIsAloned(folders, false);
 
         return new FolderResponseDto(
-                aloneFolders,
-                togetherFolders
+                aloneFoldersResponse,
+                togetherFoldersResponse
         );
     }
 
@@ -162,14 +166,57 @@ public class FolderService {
         userRepository.findByIdAndIsDeleted(userId, false).orElseThrow(
                 () -> new CustomException(ResponseCode.NO_USER)
         );
+        List<Folder> folders = folderRepository.findByUserIdOrderByIdDesc(userId);
 
-        List<FolderIdNameMapping> aloneFolders = folderRepository.findByUserIdAndIsAlonedOrderByIdDesc(userId, true);
-        List<FolderIdNameMapping> togetherFolders = folderRepository.findByUserIdAndIsAlonedOrderByIdDesc(userId, false);
+        List<FolderInfo> aloneFoldersResponse = getResponseFoldersByIsAloned(folders, true);
+
+        List<FolderInfo> togetherFoldersResponse = getResponseFoldersByIsAloned(folders, false);
 
         return new FolderResponseDto(
-                aloneFolders,
-                togetherFolders
+                aloneFoldersResponse,
+                togetherFoldersResponse
         );
+    }
+
+    public FolderResponseDto updateFolder(FolderUpdateRequestDto folderUpdateRequestDto, Long userId) {
+        userRepository.findByIdAndIsDeleted(userId, false).orElseThrow(
+                () -> new CustomException(ResponseCode.NO_USER)
+        );
+        String name = folderUpdateRequestDto.getName();
+
+        // validation
+        if (name.length() > 8) {
+            throw new CustomException(ResponseCode.FAIL_CREATE_FOLDER);
+        }
+        Folder folder = folderRepository.findById(Long.parseLong(folderUpdateRequestDto.getId()))
+                .orElseThrow(
+                        () -> new CustomException(ResponseCode.NO_FOLDER)
+                );
+
+        folder.setName(folderUpdateRequestDto.getName());
+
+        List<Folder> folders = folderRepository.findByUserIdOrderByIdDesc(userId);
+
+        List<FolderInfo> aloneFoldersResponse = getResponseFoldersByIsAloned(folders, true);
+
+        List<FolderInfo> togetherFoldersResponse = getResponseFoldersByIsAloned(folders, false);
+
+        return new FolderResponseDto(
+                aloneFoldersResponse,
+                togetherFoldersResponse
+        );
+
+    }
+    private List<FolderInfo> getResponseFoldersByIsAloned(List<Folder> folders, boolean isAloned) {
+        List<Folder> foldersByIsAloned = folders.stream().filter(f -> f.getIsAloned() == isAloned)
+                .collect(Collectors.toList());
+
+        return foldersByIsAloned.stream().map(f -> {
+            Long folderId = f.getId();
+            String folderName = f.getName();
+            String folderListNum = f.getListNum();
+            return new FolderInfo(Long.toString(folderId), folderName, folderListNum);
+        }).collect(Collectors.toList());
     }
 
 }

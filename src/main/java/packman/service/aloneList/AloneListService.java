@@ -4,9 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import packman.dto.category.CategoryResponseDto;
 import packman.dto.list.AloneListResponseDto;
 import packman.dto.list.ListCreateDto;
+import packman.dto.list.ListResponseMapping;
 import packman.entity.Category;
 import packman.entity.Folder;
 import packman.entity.FolderPackingList;
@@ -94,7 +94,7 @@ public class AloneListService {
                 });
             });
         }
-        CategoryResponseDto savedCategories = packingListRepository.findByIdAndTitle(savedList.getId(), savedList.getTitle());
+        ListResponseMapping savedCategories = packingListRepository.findByIdAndTitle(savedList.getId(), savedList.getTitle());
 
         AloneListResponseDto aloneListResponseDto = AloneListResponseDto.builder()
                 .id(Long.toString(savedList.getId()))
