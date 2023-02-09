@@ -1,12 +1,12 @@
 package packman.validator;
 
 import packman.entity.User;
-import packman.entity.packingList.AlonePackingList;
+import packman.entity.packingList.TogetherAlonePackingList;
 import packman.entity.template.Template;
 import packman.repository.UserRepository;
+import packman.entity.packingList.AlonePackingList;
 import packman.repository.packingList.AlonePackingListRepository;
 import packman.repository.packingList.PackingListRepository;
-import packman.entity.packingList.TogetherAlonePackingList;
 import packman.repository.packingList.TogetherAlonePackingListRepository;
 import packman.repository.template.TemplateRepository;
 import packman.entity.Category;
@@ -42,6 +42,15 @@ public class IdValidator {
         if(alonePackingLists.size() != aloneListIds.size()) { throw new CustomException(ResponseCode.NO_LIST);}
 
         return alonePackingLists;
+    }
+
+    public static List<TogetherAlonePackingList> validateTogetherListIds(TogetherAlonePackingListRepository togetherAlonePackingListRepository, List<Long> linkListIds) {
+        List<TogetherAlonePackingList> togetherAlonePackingLists = togetherAlonePackingListRepository.findByIdInAndTogetherPackingList_PackingList_IsDeletedAndAlonePackingList_PackingList_IsDeletedAndAlonePackingList_IsAloned(linkListIds, false, false, false);
+        if (togetherAlonePackingLists.size() != linkListIds.size()) {
+            throw new CustomException(ResponseCode.NO_LIST);
+        }
+
+        return togetherAlonePackingLists;
     }
 
     public static Category validateCategoryId(CategoryRepository categoryRepository, Long categoryId) {

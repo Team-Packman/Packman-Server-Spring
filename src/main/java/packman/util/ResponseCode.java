@@ -68,6 +68,7 @@ public enum ResponseCode {
 
     //togetherPackingList
     SUCCESS_CREATE_TOGETHER_LIST(HttpStatus.OK, true, "함께 패킹리스트 생성 성공"),
+    SUCCESS_DELETE_TOGETHER_LIST(HttpStatus.OK, true, "폴더 속 함께 패킹리스트 삭제 성공"),
 
     // packingList
     UPDATE_LIST_TITLE_SUCCESS(HttpStatus.OK, true, "패킹리스트 제목 수정 성공"),

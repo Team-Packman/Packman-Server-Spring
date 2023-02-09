@@ -8,9 +8,11 @@ import packman.dto.member.MemberAddDto;
 import packman.service.togetherList.TogetherListService;
 import packman.util.ResponseCode;
 import packman.util.ResponseMessage;
+import packman.util.ResponseNonDataMessage;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.List;
 
 
 @RestController
@@ -26,6 +28,17 @@ public class TogetherListController {
         return ResponseMessage.toResponseEntity(
                 ResponseCode.SUCCESS_CREATE_TOGETHER_LIST,
                 togetherListService.createTogetherList(listCreateDto, userId)
+        );
+    }
+
+    @DeleteMapping("/{folderId}/{listId}")
+    public ResponseEntity<ResponseNonDataMessage> deleteTogetherList(@PathVariable("folderId") Long folderId, @PathVariable("listId") List<Long> listIds, HttpServletRequest request) {
+        Long userId = 1L;
+
+        togetherListService.deleteTogetherList(userId, folderId, listIds);
+
+        return ResponseNonDataMessage.toResponseEntity(
+                ResponseCode.SUCCESS_DELETE_TOGETHER_LIST
         );
     }
 
