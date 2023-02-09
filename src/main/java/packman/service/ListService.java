@@ -91,11 +91,10 @@ public class ListService {
         return new DepartureDateResponseDto(departureDateRequestDto.getId(), departureDateRequestDto.getDepartureDate());
     }
 
-    public InviteListResponseDto getInviteList(Long userId, String listType, String inviteCode) {
-        validateUserId(userRepository, userId);
-
+    public InviteListResponseDto getInviteList(String listType, String inviteCode) {
         Long listId;
         String title, departureDate;
+
         if (listType.equals("alone")) {
             AlonePackingList alonePackingList = validateAlonePackingListByInviteCode(alonePackingListRepository, inviteCode);
             listId = alonePackingList.getId();

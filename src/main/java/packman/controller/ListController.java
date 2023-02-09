@@ -46,10 +46,9 @@ public class ListController {
 
     @GetMapping("/{listType}/share/{inviteCode}")
     public ResponseEntity<ResponseMessage> getInviteTogetherList(@PathVariable("listType") String listType, @PathVariable("inviteCode") String inviteCode, HttpServletRequest request) {
-        Long userId = 1L;
         return ResponseMessage.toResponseEntity(
                 ResponseCode.SUCCESS_GET_INVITE_LIST,
-                listService.getInviteList(userId, listType, inviteCode)
+                listService.getInviteList(listType, inviteCode)
         );
     }
 }
