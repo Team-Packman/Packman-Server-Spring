@@ -63,7 +63,7 @@ public class Validator {
     }
 
     public static AlonePackingList validateAlonePackingListByInviteCode(AlonePackingListRepository alonePackingListRepository, String inviteCode) {
-        return alonePackingListRepository.findByInviteCodeAndIsAloned(inviteCode, true).orElseThrow(
+        return alonePackingListRepository.findByInviteCodeAndIsAlonedAndPackingList_IsDeleted(inviteCode, true, false).orElseThrow(
                 () -> new CustomException(ResponseCode.NO_LIST)
         );
     }
