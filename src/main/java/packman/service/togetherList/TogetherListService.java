@@ -169,7 +169,7 @@ public class TogetherListService {
 
     public DetaildTogetherListResponseDto getTogetherList(Long listId, Long userId) {
         // 유저 검증
-        User user = validateUserId(userRepository, userId);
+        validateUserId(userRepository, userId);
         // 존재하는 함께 패킹리스트인지 검증
         TogetherAlonePackingList togetherAloneList = validateTogetherAlonePackingListId(togetherAlonePackingListRepository, listId);
         // 유저의 함께 패킹리스트인지 검증 및 folderId 찾기
