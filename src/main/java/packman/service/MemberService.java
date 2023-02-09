@@ -97,11 +97,11 @@ public class MemberService {
             TogetherPackingList togetherPackingList = togetherPackingListRepository.findByGroup(group);
             TogetherAlonePackingList togetherAlonePackingList = togetherAlonePackingListRepository.findByTogetherPackingListAndAlonePackingListFolderPackingListFolderUserId(togetherPackingList, id);
             listIds.add(togetherAlonePackingList.getId());
-//            togetherListService.deleteTogetherList(
-//                    id,
-//                    togetherAlonePackingList.getAlonePackingList().getFolderPackingList().getFolder().getId(),
-//                    listIds
-//            );
+            togetherListService.deleteTogetherList(
+                    id,
+                    togetherAlonePackingList.getAlonePackingList().getFolderPackingList().getFolder().getId(),
+                    listIds
+            );
         }
     }
 }
