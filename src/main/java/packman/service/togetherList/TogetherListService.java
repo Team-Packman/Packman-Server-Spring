@@ -194,7 +194,7 @@ public class TogetherListService {
         togetherAlonePackingListRepository.deleteAllInBatch(togetherAlonePackingLists);
 
         // 패킹리스트 isDeleted 처리
-        packingListRepository.UpdatelistIsDeletedTrue(lists);
+        packingListRepository.updatelistIsDeletedTrue(lists);
 
         // packer null 설정
         if(!packs.isEmpty()){packRepository.updatePackerNull(packs);}

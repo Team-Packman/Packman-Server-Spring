@@ -20,11 +20,9 @@ public class Validator {
     }
 
     public static Folder validateUserFolder(FolderRepository folderRepository, Long folderId, Long userId, boolean isAloned) {
-        Folder folder =  folderRepository.findByIdAndUserIdAndIsAloned(folderId, userId, isAloned).orElseThrow(
+        return folderRepository.findByIdAndUserIdAndIsAloned(folderId, userId, isAloned).orElseThrow(
                 () -> new CustomException(ResponseCode.NO_FOLDER)
         );
-
-        return folder;
     }
 
     public static List<FolderPackingList> validateFolderLists(FolderPackingListRepository folderPackingListRepository, Long folderId, List<Long> listIds) {
