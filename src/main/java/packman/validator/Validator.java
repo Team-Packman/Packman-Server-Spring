@@ -1,12 +1,12 @@
 package packman.validator;
 
 import packman.entity.*;
+import packman.entity.packingList.AlonePackingList;
+import packman.entity.packingList.PackingList;
 import packman.entity.packingList.TogetherAlonePackingList;
 import packman.entity.template.Template;
 import packman.repository.FolderPackingListRepository;
 import packman.repository.FolderRepository;
-import packman.entity.packingList.AlonePackingList;
-import packman.entity.packingList.PackingList;
 import packman.repository.PackRepository;
 import packman.repository.UserGroupRepository;
 import lombok.RequiredArgsConstructor;
@@ -66,6 +66,19 @@ public class Validator {
         validateUserMemberId(userGroups, userId);
 
         return packingList;
+    }
+
+    public static void validateEmptyUserInMember(int memberLength) {
+        if (memberLength == 0) {
+            throw new CustomException(ResponseCode.EMPTY_MEMBER);
+        }
+    }
+
+    public static User validateUserGroupUser(UserGroup userGroup) {
+        if (userGroup.getUser().isDeleted()) {
+            throw new CustomException(ResponseCode.NO_USER);
+        }
+        return userGroup.getUser();
     }
 
     public static Template validateListTemplate(TemplateRepository templateRepository, AlonePackingList aloneList){

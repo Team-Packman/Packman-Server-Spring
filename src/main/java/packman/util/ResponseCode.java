@@ -24,6 +24,8 @@ public enum ResponseCode {
 
     // member
     NO_MEMBER_USER(HttpStatus.BAD_REQUEST, false, "멤버에 존재하지 않는 유저입니다"),
+    SUCCESS_GET_MEMBER(HttpStatus.OK, true, "멤버 조회 성공"),
+    EMPTY_MEMBER(HttpStatus.BAD_REQUEST, false, "멤버가 비어있습니다"),
     DUPLICATED_MEMBER(HttpStatus.BAD_REQUEST, false, "이미 추가된 멤버입니다"),
     SUCCESS_ADD_MEMBER(HttpStatus.OK, true, "그룹원 추가 성공"),
     // folder

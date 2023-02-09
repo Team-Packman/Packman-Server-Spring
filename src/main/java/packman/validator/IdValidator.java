@@ -1,25 +1,20 @@
 package packman.validator;
 
 import packman.entity.*;
-import packman.entity.User;
-import packman.entity.packingList.TogetherAlonePackingList;
-import packman.entity.template.Template;
-import packman.repository.FolderPackingListRepository;
-import packman.repository.UserRepository;
-import packman.repository.packingList.TogetherAlonePackingListRepository;
-import packman.repository.template.TemplateRepository;
 import packman.entity.packingList.AlonePackingList;
+import packman.entity.packingList.PackingList;
+import packman.entity.packingList.TogetherAlonePackingList;
+import packman.entity.packingList.TogetherPackingList;
+import packman.entity.template.Template;
+import packman.repository.CategoryRepository;
+import packman.repository.FolderPackingListRepository;
+import packman.repository.PackRepository;
+import packman.repository.UserRepository;
 import packman.repository.packingList.AlonePackingListRepository;
 import packman.repository.packingList.PackingListRepository;
-import packman.entity.Category;
-import packman.entity.Pack;
-import packman.entity.UserGroup;
-import packman.entity.packingList.PackingList;
-import packman.entity.packingList.TogetherPackingList;
-import packman.repository.CategoryRepository;
-import packman.repository.PackRepository;
+import packman.repository.packingList.TogetherAlonePackingListRepository;
 import packman.repository.packingList.TogetherPackingListRepository;
-
+import packman.repository.template.TemplateRepository;
 import packman.util.CustomException;
 import packman.util.ResponseCode;
 
@@ -123,14 +118,14 @@ public class IdValidator {
         return togetherPackingList;
     }
 
-    public static TogetherAlonePackingList validateTogetherAlonePackingListId(TogetherAlonePackingListRepository togetherAlonePackingListRepository, Long listId) {
-        return togetherAlonePackingListRepository.findById(listId).orElseThrow(
+    public static TogetherAlonePackingList validateTogetherAlonePackingListIdInDetail(TogetherAlonePackingListRepository togetherAlonePackingListRepository, Long linkId) {
+        return togetherAlonePackingListRepository.findByIdAndTogetherPackingList_PackingList_IsDeletedAndAlonePackingList_IsAlonedAndAlonePackingList_PackingList_IsDeleted(linkId, false, false, false).orElseThrow(
                 () -> new CustomException(ResponseCode.NO_LIST)
         );
     }
 
-    public static TogetherAlonePackingList validateTogetherAlonePackingListIdInDetail(TogetherAlonePackingListRepository togetherAlonePackingListRepository, Long linkId) {
-        return togetherAlonePackingListRepository.findByIdAndTogetherPackingList_PackingList_IsDeletedAndAlonePackingList_IsAlonedAndAlonePackingList_PackingList_IsDeleted(linkId, false, false, false).orElseThrow(
+    public static TogetherAlonePackingList validateTogetherAlonePackingListId(TogetherAlonePackingListRepository togetherAlonePackingListRepository, Long integratedId) {
+        return togetherAlonePackingListRepository.findById(integratedId).orElseThrow(
                 () -> new CustomException(ResponseCode.NO_LIST)
         );
     }
