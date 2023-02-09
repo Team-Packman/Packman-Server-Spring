@@ -181,7 +181,7 @@ public class TogetherListService {
         // 리스트에 존재하는 짐인지 검증
         Pack pack = validateListPack(packRepository, togetherPackingList.getPackingList(), Long.parseLong(packerUpdateDto.getPackId()));
 
-        if(packerId != userId){
+        if(!packerId.equals(userId)){
             // packer가 삭제 안된 user이며 userGroup에 존재하는지 검증
             UserGroup userGroup = validateUserInUserGroup(userGroupRepository, togetherPackingList.getGroup(), packerId);
             pack.setPacker(userGroup.getUser());
