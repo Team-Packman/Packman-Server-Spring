@@ -59,7 +59,7 @@ public class MemberService {
         validateEmptyUserInMember(userGroups.size());
 
         // 멤버에 존재하지 않는 유저일 때
-        validateUserMemberId(userGroups, userId);
+        validateUserGroupUserId(userGroups, userId);
 
         return MemberResponseDto.builder()
                 .title(packingList.getTitle())

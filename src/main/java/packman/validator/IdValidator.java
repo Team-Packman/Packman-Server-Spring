@@ -71,7 +71,7 @@ public class IdValidator {
         );
     }
 
-    public static void validateUserMemberId(List<UserGroup> userGroups, Long userId) {
+    public static List<Long> validateUserGroupUserId(List<UserGroup> userGroups, Long userId) {
         List<Long> userIdInGroup = userGroups.stream()
                 .map(userGroup -> userGroup.getUser().getId())
                 .collect(Collectors.toList());

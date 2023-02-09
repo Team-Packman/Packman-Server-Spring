@@ -63,7 +63,8 @@ public class Validator {
         validateTogetherPackingListId(togetherPackingListRepository, togetherListId);
 
         List<UserGroup> userGroups = packingList.getTogetherPackingList().getGroup().getUserGroups();
-        validateUserMemberId(userGroups, userId);
+
+        validateUserGroupUserId(userGroups, userId);
 
         return packingList;
     }
