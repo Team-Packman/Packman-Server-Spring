@@ -23,7 +23,7 @@ public class Group {
     @OneToMany(mappedBy = "group", cascade = CascadeType.ALL)
     private List<UserGroup> userGroups = new ArrayList<>();
 
-    @OneToMany(mappedBy = "group", cascade = CascadeType.ALL)
-    private List<TogetherPackingList> togetherPackingLists = new ArrayList<>();
+    @OneToOne(mappedBy = "group", cascade = CascadeType.ALL)
+    private TogetherPackingList togetherPackingList;
 
 }

@@ -19,11 +19,13 @@ public enum ResponseCode {
     SUCCESS_GET_USER(HttpStatus.OK, true, "유저 조회 성공"),
     NO_USER(HttpStatus.UNAUTHORIZED, false, "존재하지 않는 유저입니다"),
     SUCCESS_DELETE_USER(HttpStatus.OK, true, "유저 탈퇴 성공"),
+
     SUCCESS_UPDATE_USER(HttpStatus.OK, true, "유저 수정 성공"),
 
     // member
     NO_MEMBER_USER(HttpStatus.BAD_REQUEST, false, "멤버에 존재하지 않는 유저입니다"),
-
+    DUPLICATED_MEMBER(HttpStatus.BAD_REQUEST, false, "이미 추가된 멤버입니다"),
+    SUCCESS_ADD_MEMBER(HttpStatus.OK, true, "그룹원 추가 성공"),
     // folder
     SUCCESS_GET_ALONE_FOLDERS(HttpStatus.OK, true, "혼자 패킹리스트 폴더 조회 성공"),
     SUCCESS_GET_TOGETHER_FOLDERS(HttpStatus.OK, true, "함께 패킹리스트 폴더 조회 성공"),
@@ -53,8 +55,10 @@ public enum ResponseCode {
     // alonePackingList
     SUCCESS_CREATE_ALONE_CATEGORY(HttpStatus.OK, true, "혼자 패킹리스트 카테고리 생성 성공"),
     SUCCESS_CREATE_ALONE_LIST(HttpStatus.OK, true, "혼자 패킹리스트 생성 성공"),
+    SUCCESS_DELETE_ALONE_LIST(HttpStatus.OK, true, "폴더 속 혼자 패킹리스트 삭제 성공"),
     SUCCESS_UPDATE_ALONE_CATEGORY(HttpStatus.OK, true, "혼자 패킹리스트 카테고리 수정 성공"),
     SUCCESS_DELETE_ALONE_CATEGORY(HttpStatus.OK, true, "혼자 패킹리스트 카테고리 삭제 성공"),
+    SUCCESS_GET_ALONE_LIST(HttpStatus.OK, true, "혼자 패킹리스트 상세조회 성공"),
 
     // togetherPackingList
     SUCCESS_CREATE_TOGETHER_CATEGORY(HttpStatus.OK, true, "함께 패킹리스트 카테고리 생성 성공"),
@@ -65,15 +69,19 @@ public enum ResponseCode {
 
     //togetherPackingList
     SUCCESS_CREATE_TOGETHER_LIST(HttpStatus.OK, true, "함께 패킹리스트 생성 성공"),
+    SUCCESS_DELETE_TOGETHER_LIST(HttpStatus.OK, true, "폴더 속 함께 패킹리스트 삭제 성공"),
 
     // packingList
     UPDATE_LIST_TITLE_SUCCESS(HttpStatus.OK, true, "패킹리스트 제목 수정 성공"),
     UPDATE_LIST_DEPARTURE_DATE_SUCCESS(HttpStatus.OK, true, "패킹리스트 출발날짜 수정 성공"),
     NO_LIST(HttpStatus.NOT_FOUND, false, "존재하지 않는 패킹리스트입니다"),
+    NO_FOLDER_LIST(HttpStatus.NOT_FOUND, false, "폴더에 존재하지 않는 패킹리스트입니다"),
+    GET_LIST_TITLE_DEPARTURE_DATE_SUCCESS(HttpStatus.OK, true, "패킹리스트 제목, 날짜 조회 성공"),
 
     // template
     NO_TEMPLATE(HttpStatus.NOT_FOUND, false, "존재하지 않는 템플릿입니다"),
-    SUCCESS_GET_ALONE_TEMPLATE_LIST(HttpStatus.OK, true, "혼자 패킹 템플릿 리스트 조회 성공");
+    SUCCESS_GET_ALONE_TEMPLATE_LIST(HttpStatus.OK, true, "혼자 패킹 템플릿 리스트 조회 성공"),
+    SUCCESS_GET_DETAILED_TEMPLATE(HttpStatus.OK, true, "템플릿 상세조회 성공");
 
     private final HttpStatus httpStatus;
     private final Boolean success;
