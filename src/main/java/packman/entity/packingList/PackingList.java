@@ -4,7 +4,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.format.annotation.DateTimeFormat;
+import org.hibernate.annotations.DynamicUpdate;
 import packman.entity.Category;
 import packman.entity.TimeStamped;
 
@@ -17,6 +17,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
+@DynamicUpdate
 @Table(name = "packing_list")
 public class PackingList extends TimeStamped {
     @Id
@@ -34,6 +35,7 @@ public class PackingList extends TimeStamped {
     @Column(nullable = false)
     private boolean isSaved = false;
     @Setter(AccessLevel.NONE)
+    @Getter(AccessLevel.NONE)
     @Column(nullable = false)
     private boolean isDeleted = false;
     @OrderBy("id asc")
@@ -50,13 +52,18 @@ public class PackingList extends TimeStamped {
         this.category.add(category);
     }
 
-    public PackingList(String title, LocalDate departureDate){
+    public boolean getIsSaved() {
+        return this.isSaved;
+    }
+
+    public boolean getIsDeleted() {
+        return this.isDeleted;
+    }
+    public void setIsDeleted(boolean isDeleted) { this.isDeleted = isDeleted;}
+
+    public PackingList(String title, LocalDate departureDate) {
         this.title = title;
         this.departureDate = departureDate;
     }
-
-    public boolean getIsSaved() { return this.isSaved; }
-
-    public void setIsDeleted(boolean isDeleted) { this.isDeleted = isDeleted;}
 
 }

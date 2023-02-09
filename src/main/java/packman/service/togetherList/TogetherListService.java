@@ -4,10 +4,13 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import packman.dto.category.CategoryResponseDto;
 import packman.dto.list.ListCreateDto;
+import packman.dto.list.ListResponseMapping;
 import packman.dto.list.TogetherListDto;
 import packman.dto.list.TogetherListResponseDto;
+import packman.dto.member.MemberAddDto;
+import packman.dto.member.MemberResponseDto;
+import packman.dto.togetherList.TogetherListInviteResponseDto;
 import packman.entity.*;
 import packman.entity.packingList.AlonePackingList;
 import packman.entity.packingList.PackingList;
@@ -29,10 +32,13 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.Optional;
 
+import static packman.validator.DuplicatedValidator.validateDuplicatedMember;
 import static packman.validator.IdValidator.*;
 import static packman.validator.LengthValidator.validateListLength;
 import static packman.validator.Validator.validateFolderLists;
+import static packman.validator.Validator.validateTogetherListDeleted;
 import static packman.validator.Validator.validateUserFolder;
 
 @Service
@@ -122,8 +128,8 @@ public class TogetherListService {
             });
         }
 
-        CategoryResponseDto savedMyIdCategories = packingListRepository.findByIdAndTitle(savedMyList.getId(), savedMyList.getTitle());
-        CategoryResponseDto savedTogetherCategories = packingListRepository.findByIdAndTitle(savedTogetherList.getId(), savedTogetherList.getTitle());
+        ListResponseMapping savedMyIdCategories = packingListRepository.findByIdAndTitle(savedMyList.getId(), savedMyList.getTitle());
+        ListResponseMapping savedTogetherCategories = packingListRepository.findByIdAndTitle(savedTogetherList.getId(), savedTogetherList.getTitle());
 
         TogetherListDto togetherListDto = TogetherListDto.builder()
                 .id(Long.toString(savedTogetherPackingList.getId()))
@@ -176,7 +182,7 @@ public class TogetherListService {
             lists.add(linkList.getAlonePackingList().getPackingList());
 
             //함께 패킹리스트 그룹의 유저-그룹 수가 1인(그룹에 본인만 존재) 패킹리스트 선별 == 함께 패킹리스트까지 삭제해야함
-            if(userGroupRepository.findByGroup(togetherList.getGroup()).size() == 1){
+            if (userGroupRepository.findByGroup(togetherList.getGroup()).size() == 1) {
                 // 그룹을 삭제해야 하기에 삭제할 그룹 취합
                 groups.add(togetherList.getGroup());
                 // 삭제할 함께 패킹리스트 추가
@@ -197,12 +203,77 @@ public class TogetherListService {
         packingListRepository.updatelistIsDeletedTrue(lists);
 
         // packer null 설정
-        if(!packs.isEmpty()){packRepository.updatePackerNull(packs);}
+        if (!packs.isEmpty()) {
+            packRepository.updatePackerNull(packs);
+        }
 
-        if(!groups.isEmpty()){
+        if (!groups.isEmpty()) {
             // 함께 패킹리스트의 groupId null로 set
             togetherPackingListRepository.updateGroupNull(groups);
             // 그룹 삭제
-            groupRepository.deleteAllInBatch(groups);}
+            groupRepository.deleteAllInBatch(groups);
+        }
+    }
+
+    public TogetherListInviteResponseDto getInviteTogetherList(Long userId, String inviteCode) {
+
+        // invitecode로 존재하는 패킹리스트인지 확인
+        TogetherPackingList togetherPackingList = validateTogetherPackingInviteCode(togetherPackingListRepository, inviteCode);
+
+        // 이미 추가된 멤버인지 확인
+        Optional<UserGroup> userGroup = userGroupRepository.findByGroupAndUserId(togetherPackingList.getGroup(), userId);
+        if (userGroup.isPresent()) {
+            TogetherAlonePackingList togetherAlonePackingList = togetherAlonePackingListRepository.findByTogetherPackingListAndAlonePackingListFolderPackingListFolderUserId(togetherPackingList, userId);
+            return new TogetherListInviteResponseDto(String.valueOf(togetherAlonePackingList.getId()), true);
+        } else {
+            return new TogetherListInviteResponseDto(String.valueOf(togetherPackingList.getId()), false);
+        }
+    }
+
+    public MemberResponseDto addMember(MemberAddDto memberAddDto, Long userId) {
+        User user = validateUserId(userRepository, userId);
+        TogetherAlonePackingList togetherAlonePackingList = validateTogetherAlonePackingListId(togetherAlonePackingListRepository, Long.parseLong(memberAddDto.getListId()));
+
+        TogetherPackingList togetherPackingList = togetherAlonePackingList.getTogetherPackingList();
+        validateTogetherListDeleted(togetherPackingList);
+
+        // 해당 유저가 그룹에 이미 존재하는지 확인
+        Group group = togetherPackingList.getGroup();
+        validateDuplicatedMember(group, user);
+
+        // user_group 추가
+        UserGroup userGroup = new UserGroup(user, group);
+        userGroupRepository.save(userGroup);
+
+        // 기본 폴더
+        Folder defaultFolder = folderRepository.findByUserIdAndNameAndIsAloned(userId, "기본", false)
+                .orElseGet(() -> {
+                    Folder folder = new Folder(user, "기본", false);
+                    folderRepository.save(folder);
+                    return folder;
+                });
+
+        PackingList packingList = togetherPackingList.getPackingList();
+
+        // 함께 속 혼자 패킹 생성
+        PackingList newPackingList = new PackingList(packingList.getTitle(), packingList.getDepartureDate());
+        packingListRepository.save(newPackingList);
+
+        AlonePackingList myPackingList = new AlonePackingList(newPackingList, false);
+        alonePackingListRepository.save(myPackingList);
+
+        newPackingList.setAlonePackingList(myPackingList);
+
+        // 기본 카테고리
+        Category category = new Category(newPackingList, "기본");
+        categoryRepository.save(category);
+
+        TogetherAlonePackingList newTogetherAlonePackingList = new TogetherAlonePackingList(togetherPackingList, myPackingList);
+        togetherAlonePackingListRepository.save(newTogetherAlonePackingList);
+
+        FolderPackingList folderPackingList = new FolderPackingList(defaultFolder, myPackingList);
+        folderPackingListRepository.save(folderPackingList);
+
+        return new MemberResponseDto(newTogetherAlonePackingList.getId().toString());
     }
 }
