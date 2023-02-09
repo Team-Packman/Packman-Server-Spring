@@ -5,13 +5,9 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import packman.dto.list.*;
-import packman.dto.list.ListCreateDto;
-import packman.dto.list.ListResponseMapping;
-import packman.dto.list.TogetherListDto;
-import packman.dto.list.TogetherListResponseDto;
-import packman.dto.togetherList.PackerUpdateDto;
 import packman.dto.member.MemberAddDto;
-import packman.dto.member.MemberResponseDto;
+import packman.dto.member.MemberAddResponseDto;
+import packman.dto.togetherList.PackerUpdateDto;
 import packman.dto.togetherList.TogetherListInviteResponseDto;
 import packman.entity.*;
 import packman.entity.packingList.AlonePackingList;
@@ -33,28 +29,13 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-
-import static packman.validator.IdValidator.*;
-import static packman.validator.LengthValidator.validateListLength;
-import static packman.validator.Validator.validateUserFolder;
-import static packman.validator.Validator.validateUserList;
-import static packman.validator.Validator.*;
-
-import packman.dto.togetherList.TogetherListInviteResponseDto;
-import packman.entity.UserGroup;
-import packman.repository.UserGroupRepository;
-import packman.util.CustomException;
-import packman.util.ResponseCode;
-
-import java.util.stream.Collectors;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static packman.validator.DuplicatedValidator.validateDuplicatedMember;
 import static packman.validator.IdValidator.*;
 import static packman.validator.LengthValidator.validateListLength;
-import static packman.validator.Validator.validateFolderLists;
-import static packman.validator.Validator.validateTogetherListDeleted;
-import static packman.validator.Validator.validateUserFolder;
+import static packman.validator.Validator.*;
 
 @Service
 @Transactional
@@ -295,7 +276,7 @@ public class TogetherListService {
         return packingListRepository.findProjectionById(togetherPackingList.getId());
     }
 
-    public MemberResponseDto addMember(MemberAddDto memberAddDto, Long userId) {
+    public MemberAddResponseDto addMember(MemberAddDto memberAddDto, Long userId) {
         User user = validateUserId(userRepository, userId);
         TogetherAlonePackingList togetherAlonePackingList = validateTogetherAlonePackingListId(togetherAlonePackingListRepository, Long.parseLong(memberAddDto.getListId()));
 
@@ -339,6 +320,6 @@ public class TogetherListService {
         FolderPackingList folderPackingList = new FolderPackingList(defaultFolder, myPackingList);
         folderPackingListRepository.save(folderPackingList);
 
-        return new MemberResponseDto(newTogetherAlonePackingList.getId().toString());
+        return new MemberAddResponseDto(newTogetherAlonePackingList.getId().toString());
     }
 }
