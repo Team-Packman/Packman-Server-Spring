@@ -19,7 +19,9 @@ public interface TogetherPackingListRepository extends JpaRepository<TogetherPac
     Optional<TogetherPackingList> findByInviteCode(String inviteCode);
     
     Optional<TogetherPackingList> findByIdAndPackingList_IsDeletedAndGroup_UserGroups_User(Long Id, boolean isDeleted, User user);
-    
+
+    TogetherPackingList findByGroup(Group group);
+
     @Modifying(clearAutomatically = true)
     @Query("update TogetherPackingList tp set tp.group = null where tp.group in :groups")
     void updateGroupNull(@Param("groups") List<Group> groups);
