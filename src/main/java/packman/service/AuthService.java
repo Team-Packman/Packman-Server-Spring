@@ -35,7 +35,50 @@ public class AuthService {
 
     @Value("${kakao.userProfileUrl}")
     private String kakaoUserProfileUrl;
-    
+
+    public KakaoLoginResponseDto kakaoLogin(KakaoUserProfileDto kakaoUserProfileDto) {
+        String email = kakaoUserProfileDto.getEmail();
+
+        KakaoLoginResponseDto kakaoLoginResponseDto = KakaoLoginResponseDto.builder()
+                .alreadyUser(false)
+                .email(kakaoUserProfileDto.getEmail())
+                .name(kakaoUserProfileDto.getName())
+                .gender(kakaoUserProfileDto.getGender())
+                .ageRange(kakaoUserProfileDto.getAgeRange())
+                .build();
+
+        Optional<User> optionalUser = userRepository.findByEmail(email);
+
+        // 신규 유저
+        if (optionalUser.isEmpty()) {
+            return kakaoLoginResponseDto;
+        }
+
+        // 탈퇴한 유저
+        User user = optionalUser.get();
+        if (user.isDeleted()) {
+            userRepository.delete(user);
+            return kakaoLoginResponseDto;
+        }
+
+        user.setRefreshToken(jwtTokenProvider.createRefreshToken());
+
+        // 선택사항 동의 유무 확인하는 코드 추가!
+
+        // 존재하는 유저
+        return KakaoLoginResponseDto.builder()
+                .alreadyUser(true)
+                .email(user.getEmail())
+                .name(user.getName())
+                .gender(user.getGender())
+                .ageRange(user.getAgeRange())
+                .nickname(user.getNickname())
+                .profileImage(user.getProfileImage())
+                .accessToken(jwtTokenProvider.createAccessToken(user.getEmail()))
+                .refreshToken(user.getRefreshToken())
+                .build();
+    }
+
     // 카카오 accessToken으로 유저 정보 받아오기
     public KakaoLoginResponseDto getKakaoUserProfile(AuthKakaoTokenDto authKakaoTokenDto) {
         // 서버에서 테스트할 때
