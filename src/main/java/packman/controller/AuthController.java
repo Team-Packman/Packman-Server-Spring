@@ -2,18 +2,16 @@ package packman.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import packman.auth.JwtTokenProvider;
-import packman.dto.auth.AuthKakaoLoginNewResponseDto;
-import packman.dto.auth.AuthKakaoLoginResponseDto;
-import packman.dto.auth.AuthKakaoTokenDto;
+import packman.dto.auth.KakaoLoginNewUserResponseDto;
+import packman.dto.auth.KakaoLoginResponseDto;
+import packman.dto.auth.AuthKakaoRequestDto;
 import packman.service.AuthService;
 import packman.util.ResponseCode;
 import packman.util.ResponseMessage;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 @RestController
@@ -25,12 +23,12 @@ public class AuthController {
 
 
     @PostMapping("/kakao")
-    public ResponseEntity<ResponseMessage> kakaoLogin(@RequestBody @Valid AuthKakaoTokenDto authKakaoTokenDto) {
+    public ResponseEntity<ResponseMessage> kakaoLogin(@RequestBody @Valid AuthKakaoRequestDto authKakaoRequestDto) {
 
-        AuthKakaoLoginResponseDto kakaoUserProfile = authService.getKakaoUserProfile(authKakaoTokenDto);
+        KakaoLoginResponseDto kakaoUserProfile = authService.getKakaoUserProfile(authKakaoRequestDto);
 
         if (!kakaoUserProfile.isAlreadyUser()) {
-            AuthKakaoLoginNewResponseDto authKakaoLoginNewResponseDto = AuthKakaoLoginNewResponseDto.builder()
+            KakaoLoginNewUserResponseDto kakaoLoginNewUserResponseDto = KakaoLoginNewUserResponseDto.builder()
                     .alreadyUser(kakaoUserProfile.isAlreadyUser())
                     .email(kakaoUserProfile.getEmail())
                     .name(kakaoUserProfile.getName())
@@ -40,7 +38,7 @@ public class AuthController {
 
             return ResponseMessage.toResponseEntity(
                     ResponseCode.SUCCESS_KAKAO_LOGIN,
-                    authKakaoLoginNewResponseDto
+                    kakaoLoginNewUserResponseDto
             );
         }
 
