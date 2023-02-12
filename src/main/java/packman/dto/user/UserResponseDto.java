@@ -1,10 +1,12 @@
 package packman.dto.user;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 
 @Data
 @AllArgsConstructor
+@Builder
 public class UserResponseDto{
     private boolean isAlreadyUser;
     private String id;
@@ -15,7 +17,7 @@ public class UserResponseDto{
     private String nickname;
     private String profileImage;
     private String accessToken;
-    //private String refreshToken;
+    private String refreshToken;
     private String path;
 }
 

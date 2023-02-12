@@ -26,10 +26,7 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/profile")
-    public ResponseEntity<ResponseMessage> createUser(@RequestBody @Valid UserCreateDto userCreateDto, BindingResult bindingResult, HttpServletRequest request) {
-        if(bindingResult.hasErrors()){
-            throw new CustomException(ResponseCode.NULL_VALUE);
-        }
+    public ResponseEntity<ResponseMessage> createUser(@RequestBody @Valid UserCreateDto userCreateDto, HttpServletRequest request) {
 
         return ResponseMessage.toResponseEntity(
                 ResponseCode.CREATE_USER_SUCCESS,

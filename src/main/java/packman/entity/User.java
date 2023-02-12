@@ -1,8 +1,6 @@
 package packman.entity;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import packman.dto.user.UserCreateDto;
 import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.security.core.GrantedAuthority;
@@ -18,7 +16,9 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 @DynamicUpdate
+@Builder
 @Table(name = "users")
 public class User extends TimeStamped implements UserDetails {
 
@@ -65,17 +65,6 @@ public class User extends TimeStamped implements UserDetails {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<UserGroup> userGroups = new ArrayList<>();
-
-    public User(UserCreateDto userCreateDto, String refreshToken) {
-        this.email = userCreateDto.getEmail();
-        this.nickname = userCreateDto.getNickname();
-        this.profileImage = userCreateDto.getProfileImage();
-        this.name = userCreateDto.getName();
-        this.path = userCreateDto.getPath();
-        this.gender = userCreateDto.getGender();
-        this.ageRange = userCreateDto.getAgeRange();
-        this.refreshToken = refreshToken;
-    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

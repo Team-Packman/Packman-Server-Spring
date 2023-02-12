@@ -3,6 +3,7 @@ package packman.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import packman.auth.JwtTokenProvider;
 import packman.dto.user.UserCreateDto;
 import packman.dto.user.UserResponseDto;
 import packman.dto.user.UserInfoResponseDto;
@@ -20,31 +21,39 @@ import static packman.validator.LengthValidator.validateUserNicknameLength;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
+    private final JwtTokenProvider jwtTokenProvider;
 
     public UserResponseDto createUser(UserCreateDto userCreateDto) {
-        String refreshToken = "2222"; //임시
-        String accessToken = "123"; //임시
+        String refreshToken = jwtTokenProvider.createRefreshToken();
+        String accessToken = jwtTokenProvider.createAccessToken(userCreateDto.getEmail());
 
         //닉네임 글자수 제한
-        if (userCreateDto.getNickname().length() > 4) {
-            throw new CustomException(ResponseCode.EXCEED_LENGTH);
-        }
-        User user = new User(userCreateDto, refreshToken);
+        validateUserNicknameLength(userCreateDto.getNickname());
+
+        User user = User.builder()
+                .email(userCreateDto.getEmail())
+                .nickname(userCreateDto.getNickname())
+                .profileImage(userCreateDto.getProfileImage())
+                .name(userCreateDto.getName())
+                .path(userCreateDto.getPath())
+                .gender(userCreateDto.getGender())
+                .ageRange(userCreateDto.getAgeRange())
+                .refreshToken(refreshToken).build();
 
         User createdUser = userRepository.save(user);
 
-        return new UserResponseDto(
-                true,
-                createdUser.getId().toString(),
-                createdUser.getEmail(),
-                createdUser.getName(),
-                createdUser.getGender(),
-                createdUser.getAgeRange(),
-                createdUser.getNickname(),
-                createdUser.getProfileImage(),
-                accessToken,
-                createdUser.getPath()
-        );
+        return UserResponseDto.builder()
+                .isAlreadyUser(true)
+                .id(createdUser.getId().toString())
+                .email(createdUser.getEmail())
+                .name(createdUser.getName())
+                .gender(createdUser.getGender())
+                .ageRange(createdUser.getAgeRange())
+                .nickname(createdUser.getNickname())
+                .profileImage(createdUser.getProfileImage())
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .path(createdUser.getPath()).build();
     }
     public UserInfoResponseDto getUser(Long userId) {
         User user = userRepository.findByIdAndIsDeleted(userId, false).orElseThrow(
