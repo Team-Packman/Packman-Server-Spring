@@ -7,7 +7,7 @@ import javax.validation.constraints.NotBlank;
 
 @Data
 @NoArgsConstructor
-public class AuthKakaoTokenDto {
+public class AuthKakaoRequestDto {
     @NotBlank
     private String accessToken;
 }
