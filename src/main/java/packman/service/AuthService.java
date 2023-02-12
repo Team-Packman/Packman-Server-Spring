@@ -14,8 +14,11 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import packman.auth.JwtTokenProvider;
-import packman.dto.auth.AuthKakaoResponseDto;
+import packman.dto.auth.*;
+import packman.entity.User;
 import packman.repository.UserRepository;
+
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -85,7 +88,7 @@ public class AuthService {
         // String accessToken = getKakaoAccessToken(authKakaoTokenDto.getAccessToken());
 
         String accessToken = authKakaoTokenDto.getAccessToken();
-
+        
         RestTemplate rt2 = new RestTemplate();
         
         HttpHeaders headers2 = new HttpHeaders();
@@ -148,13 +151,13 @@ public class AuthService {
 
         // Gson, Json Simple, ObjectMapper
         ObjectMapper objectMapper = new ObjectMapper();
-        AuthKakaoResponseDto authKakaoResponseDto;
+        KakaoTokenDto kakaoTokenDto;
         try {
-            authKakaoResponseDto = objectMapper.readValue(response.getBody(), AuthKakaoResponseDto.class);
+            kakaoTokenDto = objectMapper.readValue(response.getBody(), KakaoTokenDto.class);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
 
-        return authKakaoResponseDto.getAccess_token();
+        return kakaoTokenDto.getAccess_token();
     }
 }

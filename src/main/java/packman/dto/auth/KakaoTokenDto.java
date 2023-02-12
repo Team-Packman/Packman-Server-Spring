@@ -3,7 +3,7 @@ package packman.dto.auth;
 import lombok.Data;
 
 @Data
-public class AuthKakaoResponseDto {
+public class KakaoTokenDto {
     private String access_token;
     private String token_type;
     private String refresh_token;
