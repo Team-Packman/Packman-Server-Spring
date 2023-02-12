@@ -36,6 +36,45 @@ public class AuthService {
     @Value("${kakao.userProfileUrl}")
     private String kakaoUserProfileUrl;
     
+    // 카카오 accessToken으로 유저 정보 받아오기
+    public KakaoLoginResponseDto getKakaoUserProfile(AuthKakaoTokenDto authKakaoTokenDto) {
+        // 서버에서 테스트할 때
+        // String accessToken = getKakaoAccessToken(authKakaoTokenDto.getAccessToken());
+
+        String accessToken = authKakaoTokenDto.getAccessToken();
+
+        RestTemplate rt2 = new RestTemplate();
+        
+        HttpHeaders headers2 = new HttpHeaders();
+        headers2.add("Authorization", "Bearer " + accessToken);
+        headers2.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
+        
+        HttpEntity<MultiValueMap<String, String>> kakaoProfileRequest = new HttpEntity<>(headers2);
+        
+        ResponseEntity<String> response2 = rt2.exchange(
+                kakaoUserProfileUrl,
+                HttpMethod.POST,
+                kakaoProfileRequest,
+                String.class
+        );
+
+        ObjectMapper objectMapper2 = new ObjectMapper();
+        KakaoProfileDto kakaoProfileDto;
+        try {
+            kakaoProfileDto = objectMapper2.readValue(response2.getBody(), KakaoProfileDto.class);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+
+        KakaoUserProfileDto kakaoUserProfileDto = KakaoUserProfileDto.builder()
+                .name(kakaoProfileDto.properties.nickname)
+                .email(kakaoProfileDto.kakao_account.email)
+                .ageRange(kakaoProfileDto.kakao_account.age_range)
+                .gender(kakaoProfileDto.kakao_account.gender)
+                .build();
+
+        return kakaoLogin(kakaoUserProfileDto);
+    }
 
     // 서버에서 code로 accessToken 생성할 때 사용
     public String getKakaoAccessToken(String code) {
