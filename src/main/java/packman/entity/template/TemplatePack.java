@@ -24,4 +24,9 @@ public class TemplatePack {
 
     @Column(length = 12, nullable = false)
     private String name;
+
+    public TemplatePack(TemplateCategory templateCategory, String name){
+        this.templateCategory = templateCategory;
+        this.name = name;
+    }
 }

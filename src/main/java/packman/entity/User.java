@@ -3,19 +3,24 @@ package packman.entity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import packman.dto.user.UserRequestDto;
+import packman.dto.user.UserCreateDto;
+import org.hibernate.annotations.DynamicUpdate;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import packman.entity.template.Template;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
+@DynamicUpdate
 @Table(name = "users")
-public class User extends TimeStamped {
+public class User extends TimeStamped implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -61,14 +66,49 @@ public class User extends TimeStamped {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<UserGroup> userGroups = new ArrayList<>();
 
-    public User(UserRequestDto userRequestDto, String refreshToken){
-        this.email = userRequestDto.getEmail();
-        this.nickname = userRequestDto.getNickname();
-        this.profileImage = userRequestDto.getProfileImage();
-        this.name = userRequestDto.getName();
-        this.path=userRequestDto.getPath();
-        this.gender = userRequestDto.getGender();
-        this.ageRange=userRequestDto.getAgeRange();
+    public User(UserCreateDto userCreateDto, String refreshToken) {
+        this.email = userCreateDto.getEmail();
+        this.nickname = userCreateDto.getNickname();
+        this.profileImage = userCreateDto.getProfileImage();
+        this.name = userCreateDto.getName();
+        this.path = userCreateDto.getPath();
+        this.gender = userCreateDto.getGender();
+        this.ageRange = userCreateDto.getAgeRange();
         this.refreshToken = refreshToken;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return null;
+    }
+
+    @Override
+    public String getPassword() {
+        return null;
+    }
+
+    @Override
+    public String getUsername() {
+        return String.valueOf(id);
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return false;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return false;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return false;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return false;
     }
 }

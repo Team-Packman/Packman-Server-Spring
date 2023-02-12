@@ -3,6 +3,7 @@ package packman.entity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 
@@ -12,6 +13,7 @@ import static javax.persistence.FetchType.LAZY;
 @Getter
 @Setter
 @NoArgsConstructor
+@DynamicUpdate
 public class Pack {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,4 +33,9 @@ public class Pack {
 
     @Column(nullable = false)
     private boolean isChecked = false;
+
+    public Pack(Category category, String name) {
+        this.category = category;
+        this.name = name;
+    }
 }

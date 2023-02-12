@@ -30,10 +30,16 @@ public class TogetherPackingList {
     @Column(length = 5, nullable = false, unique = true)
     private String inviteCode;
 
-    @ManyToOne(fetch = LAZY)
+    @OneToOne(fetch = LAZY)
     @JoinColumn(name = "group_id")
     private Group group;
 
     @OneToMany(mappedBy = "togetherPackingList", cascade = CascadeType.ALL)
     private List<TogetherAlonePackingList> togetherAlonePackingLists = new ArrayList<>();
+
+    public TogetherPackingList(PackingList packingList, Group group, String inviteCode){
+        this.packingList = packingList;
+        this.group = group;
+        this.inviteCode = inviteCode;
+    }
 }

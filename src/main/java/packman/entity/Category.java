@@ -3,6 +3,7 @@ package packman.entity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.DynamicUpdate;
 import packman.entity.packingList.PackingList;
 
 import javax.persistence.*;
@@ -15,6 +16,7 @@ import static javax.persistence.FetchType.LAZY;
 @Getter
 @Setter
 @NoArgsConstructor
+@DynamicUpdate
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,8 +29,16 @@ public class Category {
 
     @Column(length = 12, nullable = false)
     private String name;
-
+    @OrderBy("id asc")
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
-    private List<Pack> packs = new ArrayList<>();
+    private List<Pack> pack = new ArrayList<>();
 
+    public Category(PackingList packingList, String name) {
+        this.packingList = packingList;
+        this.name = name;
+    }
+
+    public void addPack(Pack pack) {
+        this.pack.add(pack);
+    }
 }
