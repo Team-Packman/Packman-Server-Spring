@@ -24,10 +24,10 @@ public class UserService {
     private final JwtTokenProvider jwtTokenProvider;
 
     public UserResponseDto createUser(UserCreateDto userCreateDto) {
-        String refreshToken = jwtTokenProvider.createRefreshToken();
-
         //닉네임 글자수 제한
         validateUserNicknameLength(userCreateDto.getNickname());
+
+        String refreshToken = jwtTokenProvider.createRefreshToken();
 
         User user = User.builder()
                 .email(userCreateDto.getEmail())

@@ -1,5 +1,7 @@
 package packman.dto.user;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -7,7 +9,9 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 @Builder
+@JsonPropertyOrder({"isAlreadyUser", "id", "email", "name", "gender", "ageRange", "nickname", "profileImage", "accessToken", "refreshToken", "path" })
 public class UserResponseDto{
+    @JsonProperty("isAlreadyUser")
     private boolean isAlreadyUser;
     private String id;
     private String email;
