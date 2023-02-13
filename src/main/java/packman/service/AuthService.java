@@ -71,13 +71,14 @@ public class AuthService {
         // 존재하는 유저
         return KakaoLoginResponseDto.builder()
                 .alreadyUser(true)
+                .id(user.getId().toString())
                 .email(user.getEmail())
                 .name(user.getName())
                 .gender(user.getGender())
                 .ageRange(user.getAgeRange())
                 .nickname(user.getNickname())
                 .profileImage(user.getProfileImage())
-                .accessToken(jwtTokenProvider.createAccessToken(user.getEmail()))
+                .accessToken(jwtTokenProvider.createAccessToken(user.getId().toString()))
                 .refreshToken(user.getRefreshToken())
                 .build();
     }
