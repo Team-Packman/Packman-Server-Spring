@@ -248,8 +248,7 @@ public class TogetherListService {
                 .id(togetherAloneList.getId().toString())
                 .folderId(folderPackingList.getFolder().getId().toString())
                 .togetherPackingList(togetherListDto)
-                .myPackingList(myIdCategories)
-                .isMember(userGroupRepository.existsByGroupAndUserId(togetherAloneList.getTogetherPackingList().getGroup(), userId)).build();
+                .myPackingList(myIdCategories).build();
 
         return detaildTogetherListResponseDto;
     }

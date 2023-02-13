@@ -12,6 +12,4 @@ public class DetaildTogetherListResponseDto {
     String folderId;
     TogetherListDto togetherPackingList;
     ListResponseMapping myPackingList;
-    @JsonProperty("isMember")
-    boolean isMember;
 }
