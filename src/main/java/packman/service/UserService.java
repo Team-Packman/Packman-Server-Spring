@@ -25,7 +25,6 @@ public class UserService {
 
     public UserResponseDto createUser(UserCreateDto userCreateDto) {
         String refreshToken = jwtTokenProvider.createRefreshToken();
-        String accessToken = jwtTokenProvider.createAccessToken(userCreateDto.getEmail());
 
         //닉네임 글자수 제한
         validateUserNicknameLength(userCreateDto.getNickname());
@@ -41,6 +40,8 @@ public class UserService {
                 .refreshToken(refreshToken).build();
 
         User createdUser = userRepository.save(user);
+
+        String accessToken = jwtTokenProvider.createAccessToken(createdUser.getId().toString());
 
         return UserResponseDto.builder()
                 .isAlreadyUser(true)
