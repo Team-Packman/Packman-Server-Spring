@@ -24,7 +24,7 @@ public class ListController {
      */
     @PatchMapping("/title")
     public ResponseEntity<ResponseMessage> updateTitle(@RequestBody @Valid ListTitleRequestDto listTitleRequestDto, HttpServletRequest request) {
-        Long userId = 1L;
+        Long userId = Long.valueOf(request.getUserPrincipal().getName());
 
         return ResponseMessage.toResponseEntity(
                 ResponseCode.UPDATE_LIST_TITLE_SUCCESS,
@@ -37,7 +37,7 @@ public class ListController {
      */
     @PatchMapping("/departureDate")
     public ResponseEntity<ResponseMessage> updateDepartureDate(@RequestBody @Valid DepartureDateRequestDto departureDateRequestDto, HttpServletRequest request) {
-        Long userId = 1L;
+        Long userId = Long.valueOf(request.getUserPrincipal().getName());
 
         return ResponseMessage.toResponseEntity(
                 ResponseCode.UPDATE_LIST_DEPARTURE_DATE_SUCCESS,
@@ -47,7 +47,7 @@ public class ListController {
 
     @PatchMapping("/myTemplate")
     public ResponseEntity<ResponseMessage> updateMyTempalte(@RequestBody @Valid TemplateUpdateDto templateUpdateDto, HttpServletRequest request) {
-        Long userId = 1L;
+        Long userId = Long.valueOf(request.getUserPrincipal().getName());
 
         return ResponseMessage.toResponseEntity(
                 ResponseCode.UPDATE_LIST_MY_TEMPLATE_SUCCESS,
@@ -57,7 +57,7 @@ public class ListController {
 
     @GetMapping("/{listId}/title-date")
     public ResponseEntity<ResponseMessage> getPackingListTitleAndDate(@PathVariable Long listId, @RequestParam boolean isAloned, HttpServletRequest request) {
-        Long userId = 1L;
+        Long userId = Long.valueOf(request.getUserPrincipal().getName());
 
         return ResponseMessage.toResponseEntity(
                 ResponseCode.GET_LIST_TITLE_DEPARTURE_DATE_SUCCESS,
@@ -65,7 +65,8 @@ public class ListController {
         );
     }
     @GetMapping("/{listType}/share/{inviteCode}")
-    public ResponseEntity<ResponseMessage> getInviteTogetherList(@PathVariable("listType") String listType, @PathVariable("inviteCode") String inviteCode, HttpServletRequest request) {
+    public ResponseEntity<ResponseMessage> getInviteTogetherList(@PathVariable("listType") String listType, @PathVariable("inviteCode") String inviteCode) {
+
         return ResponseMessage.toResponseEntity(
                 ResponseCode.SUCCESS_GET_INVITE_LIST,
                 listService.getInviteList(listType, inviteCode)

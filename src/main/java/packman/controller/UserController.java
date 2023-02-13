@@ -36,7 +36,7 @@ public class UserController {
 
     @GetMapping
     public ResponseEntity<ResponseMessage> getUser(HttpServletRequest request) {
-        Long userId = 1L;  //  임시 userId 1
+        Long userId = Long.valueOf(request.getUserPrincipal().getName());
 
         return ResponseMessage.toResponseEntity(
                 ResponseCode.SUCCESS_GET_USER,
@@ -46,7 +46,7 @@ public class UserController {
 
     @DeleteMapping
     public ResponseEntity<ResponseNonDataMessage> deleteUser(HttpServletRequest request) {
-        Long userId = 1L;  //  임시 userId 1
+        Long userId = Long.valueOf(request.getUserPrincipal().getName());
 
         userService.deleteUser(userId);
 
@@ -57,7 +57,7 @@ public class UserController {
 
     @PatchMapping("/profile")
     public ResponseEntity<ResponseMessage> updateUser(@RequestBody @Valid UserUpdateDto userUpdateDto, HttpServletRequest request) {
-        Long userId = 1L;
+        Long userId = Long.valueOf(request.getUserPrincipal().getName());
 
         return ResponseMessage.toResponseEntity(
                 ResponseCode.SUCCESS_UPDATE_USER,

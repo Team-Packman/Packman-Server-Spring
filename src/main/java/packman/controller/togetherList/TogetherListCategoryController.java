@@ -22,7 +22,8 @@ public class TogetherListCategoryController {
 
     @PostMapping
     public ResponseEntity<ResponseMessage> createCategory(@RequestBody @Valid CategoryCreateDto categoryCreateDto, HttpServletRequest request) {
-        Long userId = 1L;
+        Long userId = Long.valueOf(request.getUserPrincipal().getName());
+
         return ResponseMessage.toResponseEntity(
                 ResponseCode.SUCCESS_CREATE_TOGETHER_CATEGORY,
                 togetherListCategoryService.createCategory(categoryCreateDto, userId)
@@ -31,7 +32,8 @@ public class TogetherListCategoryController {
 
     @PatchMapping
     public ResponseEntity<ResponseMessage> updateCategory(@RequestBody @Valid CategoryUpdateDto categoryUpdateDto, HttpServletRequest request) {
-        Long userId = 1L;
+        Long userId = Long.valueOf(request.getUserPrincipal().getName());
+
         return ResponseMessage.toResponseEntity(
                 ResponseCode.SUCCESS_UPDATE_TOGETHER_CATEGORY,
                 togetherListCategoryService.updateCategory(categoryUpdateDto, userId)
@@ -40,7 +42,8 @@ public class TogetherListCategoryController {
 
     @DeleteMapping("/{listId}/{categoryId}")
     public ResponseEntity<ResponseNonDataMessage> deleteCategory(@PathVariable("listId") Long listId, @PathVariable("categoryId") Long categoryId, HttpServletRequest request) {
-        Long userId = 1L;
+        Long userId = Long.valueOf(request.getUserPrincipal().getName());
+
         togetherListCategoryService.deleteCategory(listId, categoryId, userId);
         return ResponseNonDataMessage.toResponseEntity(
                 ResponseCode.SUCCESS_DELETE_TOGETHER_CATEGORY

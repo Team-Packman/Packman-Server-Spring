@@ -7,10 +7,11 @@ import lombok.Data;
 
 @Data
 @Builder
-@JsonPropertyOrder({"alreadyUser", "email", "name", "gender", "ageRange", "nickname", "profileImage", "accessToken", "refreshToken"})
+@JsonPropertyOrder({"alreadyUser", "id", "email", "name", "gender", "ageRange", "nickname", "profileImage", "accessToken", "refreshToken"})
 public class KakaoLoginResponseDto {
     @JsonProperty("isAlreadyUser")
     private boolean alreadyUser;
+    private String id;
     private String email;
     private String name;
     private String gender;

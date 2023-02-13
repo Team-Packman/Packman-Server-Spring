@@ -24,7 +24,7 @@ public class AloneListPackController {
 
     @PostMapping
     public ResponseEntity<ResponseMessage> createPack(@RequestBody @Valid PackCreateDto packCreateDto, HttpServletRequest request) {
-        Long userId = 1L;
+        Long userId = Long.valueOf(request.getUserPrincipal().getName());
 
         return ResponseMessage.toResponseEntity(
                 ResponseCode.SUCCESS_CREATE_ALONE_PACK,
@@ -34,7 +34,7 @@ public class AloneListPackController {
 
     @PatchMapping
     public ResponseEntity<ResponseMessage> updatePack(@RequestBody @Valid PackUpdateDto packUpdateDto, HttpServletRequest request) {
-        Long userId = 1L;
+        Long userId = Long.valueOf(request.getUserPrincipal().getName());
 
         return ResponseMessage.toResponseEntity(
                 ResponseCode.SUCCESS_UPDATE_ALONE_PACK,
@@ -45,7 +45,7 @@ public class AloneListPackController {
     @DeleteMapping("/{listId}/{categoryId}/{packId}")
     public ResponseEntity<ResponseNonDataMessage> deletePack(
             @PathVariable @NotBlank String listId, @PathVariable @NotBlank String categoryId, @PathVariable @NotBlank String packId, HttpServletRequest request) {
-        Long userId = 1L;
+        Long userId = Long.valueOf(request.getUserPrincipal().getName());
 
         packService.deleteAlonePack(Long.valueOf(listId), Long.valueOf(categoryId), Long.valueOf(packId), userId);
 
