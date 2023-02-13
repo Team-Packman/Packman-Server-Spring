@@ -21,7 +21,8 @@ public class AloneListCategoryController {
 
     @PostMapping
     public ResponseEntity<ResponseMessage> createCategory(@RequestBody @Valid CategoryCreateDto categoryRequestDto, HttpServletRequest request) {
-        Long userId = 1L;
+        Long userId = Long.valueOf(request.getUserPrincipal().getName());
+
         return ResponseMessage.toResponseEntity(
                 ResponseCode.SUCCESS_CREATE_ALONE_CATEGORY,
                 aloneListCategoryService.createCategory(categoryRequestDto, userId)
@@ -30,7 +31,8 @@ public class AloneListCategoryController {
 
     @PatchMapping
     public ResponseEntity<ResponseMessage> updateCategory(@RequestBody @Valid CategoryUpdateDto categoryUpdateDto, HttpServletRequest request) {
-        Long userId = 1L;
+        Long userId = Long.valueOf(request.getUserPrincipal().getName());
+
         return ResponseMessage.toResponseEntity(
                 ResponseCode.SUCCESS_UPDATE_ALONE_CATEGORY,
                 aloneListCategoryService.updateCategory(categoryUpdateDto, userId)
@@ -39,7 +41,8 @@ public class AloneListCategoryController {
 
     @DeleteMapping("/{listId}/{categoryId}")
     public ResponseEntity<ResponseNonDataMessage> deleteCategory(@PathVariable("listId") Long listId, @PathVariable("categoryId") Long categoryId, HttpServletRequest request) {
-        Long userId = 1L;
+        Long userId = Long.valueOf(request.getUserPrincipal().getName());
+
         aloneListCategoryService.deleteCategory(listId, categoryId, userId);
         return ResponseNonDataMessage.toResponseEntity(
                 ResponseCode.SUCCESS_DELETE_ALONE_CATEGORY

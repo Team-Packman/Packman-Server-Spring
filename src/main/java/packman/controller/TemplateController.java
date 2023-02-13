@@ -20,7 +20,7 @@ public class TemplateController {
 
     @GetMapping("/alone")
     public ResponseEntity<ResponseMessage> getAloneTemplateList(HttpServletRequest request) {
-        Long userId = 1L;
+        Long userId = Long.valueOf(request.getUserPrincipal().getName());
 
         return ResponseMessage.toResponseEntity(
                 ResponseCode.SUCCESS_GET_ALONE_TEMPLATE_LIST,
@@ -30,7 +30,7 @@ public class TemplateController {
 
     @GetMapping("/together")
     public ResponseEntity<ResponseMessage> getTogetherTemplateList(HttpServletRequest request) {
-        Long userId = 1L;
+        Long userId = Long.valueOf(request.getUserPrincipal().getName());
 
         return ResponseMessage.toResponseEntity(
                 ResponseCode.SUCCESS_GET_TOGETHER_TEMPLATE_LIST,
@@ -40,7 +40,8 @@ public class TemplateController {
 
     @GetMapping("/{templateId}")
     public ResponseEntity<ResponseMessage> getTemplate(@PathVariable Long templateId, HttpServletRequest request) {
-        Long userId = 1L;
+        Long userId = Long.valueOf(request.getUserPrincipal().getName());
+
         return ResponseMessage.toResponseEntity(
                 ResponseCode.SUCCESS_GET_DETAILED_TEMPLATE,
                 templateService.getTemplate(templateId, userId)

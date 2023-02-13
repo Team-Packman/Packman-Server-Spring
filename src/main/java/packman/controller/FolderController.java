@@ -22,7 +22,7 @@ public class FolderController {
 
     @GetMapping("/alone")
     public ResponseEntity<ResponseMessage> getAloneFolders(HttpServletRequest request) {
-        Long userId = 1L;  //  임시 userId 1
+        Long userId = Long.valueOf(request.getUserPrincipal().getName());
 
         return ResponseMessage.toResponseEntity(
                 ResponseCode.SUCCESS_GET_ALONE_FOLDERS,
@@ -32,7 +32,7 @@ public class FolderController {
 
     @GetMapping("/together")
     public ResponseEntity<ResponseMessage> getTogetherFolders(HttpServletRequest request) {
-        Long userId = 1L;  //  임시 userId 1
+        Long userId = Long.valueOf(request.getUserPrincipal().getName());
 
         return ResponseMessage.toResponseEntity(
                 ResponseCode.SUCCESS_GET_TOGETHER_FOLDERS,
@@ -42,7 +42,7 @@ public class FolderController {
 
     @GetMapping("/list/alone/{folderId}")
     public ResponseEntity<ResponseMessage> getAloneListsInFolder(@PathVariable Long folderId, HttpServletRequest request) {
-        Long userId = 1L;  //  임시 userId 1
+        Long userId = Long.valueOf(request.getUserPrincipal().getName());
 
         return ResponseMessage.toResponseEntity(
                 ResponseCode.SUCCESS_GET_ALONE_LISTS_IN_FOLDER,
@@ -52,7 +52,7 @@ public class FolderController {
 
     @GetMapping("/list/together/{folderId}")
     public ResponseEntity<ResponseMessage> getTogetherListsInFolder(@PathVariable Long folderId, HttpServletRequest request) {
-        Long userId = 1L;  //  임시 userId 1
+        Long userId = Long.valueOf(request.getUserPrincipal().getName());
 
         return ResponseMessage.toResponseEntity(
                 ResponseCode.SUCCESS_GET_TOGETHER_LISTS_IN_FOLDER,
@@ -62,7 +62,8 @@ public class FolderController {
 
     @PostMapping
     public ResponseEntity<ResponseMessage> createFolder(@RequestBody @Valid FolderRequestDto folderRequestDto, HttpServletRequest request) {
-        Long userId = 1L;
+        Long userId = Long.valueOf(request.getUserPrincipal().getName());
+
         return ResponseMessage.toResponseEntity(
                 ResponseCode.SUCCESS_CREATE_FOLDER,
                 folderService.createFolder(folderRequestDto, userId)
@@ -71,7 +72,8 @@ public class FolderController {
 
     @GetMapping
     public ResponseEntity<ResponseMessage> getFolders(HttpServletRequest request) {
-        Long userId = 1L;
+        Long userId = Long.valueOf(request.getUserPrincipal().getName());
+
         return ResponseMessage.toResponseEntity(
                 ResponseCode.SUCCESS_GET_FOLDERS,
                 folderService.getFolders(userId)
@@ -80,7 +82,8 @@ public class FolderController {
 
     @PatchMapping
     public ResponseEntity<ResponseMessage> updateFolder(@RequestBody @Valid FolderUpdateRequestDto folderUpdateRequestDto, HttpServletRequest request) {
-        Long userId = 1L;
+        Long userId = Long.valueOf(request.getUserPrincipal().getName());
+
         return ResponseMessage.toResponseEntity(
                 ResponseCode.SUCCESS_UPDATE_FOLDER,
                 folderService.updateFolder(folderUpdateRequestDto, userId)
@@ -89,7 +92,7 @@ public class FolderController {
 
     @GetMapping("/recentCreatedList")
     public ResponseEntity<ResponseMessage> getRecentCreatedList(HttpServletRequest request) {
-        Long userId = 3L;
+        Long userId = Long.valueOf(request.getUserPrincipal().getName());
 
         if (folderService.getRecentCreatedList(userId) == null) {
             return ResponseMessage.toResponseEntity(
