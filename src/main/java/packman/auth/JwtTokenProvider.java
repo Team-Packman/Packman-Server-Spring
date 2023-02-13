@@ -8,7 +8,9 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
+import packman.util.ResponseCode;
 
 import javax.servlet.http.HttpServletRequest;
 import java.security.Key;
@@ -29,8 +31,8 @@ public class JwtTokenProvider {
     public JwtTokenProvider(
             UserDetailsService userDetailsService,
             @Value("${jwt.token.secret-key}") String secretKey,
-            @Value("${jwt.access-token.expire-length}") int accessTokenExpireLength,
-            @Value("${jwt.refresh-token.expire-length}") int refreshTokenExpireLength) {
+            @Value("${jwt.access-token.expire-length}") long accessTokenExpireLength,
+            @Value("${jwt.refresh-token.expire-length}") long refreshTokenExpireLength) {
         this.userDetailsService = userDetailsService;
         this.secretKey = secretKey;
         this.accessTokenExpireLength = accessTokenExpireLength;
