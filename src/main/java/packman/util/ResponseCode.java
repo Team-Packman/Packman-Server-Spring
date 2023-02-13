@@ -15,6 +15,14 @@ public enum ResponseCode {
     EXCEED_LENGTH(HttpStatus.BAD_REQUEST, false, "제한된 글자수를 초과하였습니다"),
     EXCEED_LEN(HttpStatus.BAD_REQUEST, false, "제한된 글자수를 초과하였습니다"),
 
+    // token
+    SUCCESS_KAKAO_LOGIN(HttpStatus.OK, true, "소셜 로그인 토큰 생성"),
+    SUCCESS_GET_NEW_TOKEN(HttpStatus.OK, true, "토큰 재발급 성공"),
+    EXPIRED_TOKEN(HttpStatus.UNAUTHORIZED, false, "만료된 토큰입니다"),
+    INVALIDE_TOKEN(HttpStatus.UNAUTHORIZED, false, "유효하지 않은 토큰입니다"),
+    NO_TOKEN(HttpStatus.UNAUTHORIZED, false, "토큰이 없습니다"),
+
+
     // user
     SUCCESS_GET_USER(HttpStatus.OK, true, "유저 조회 성공"),
     NO_USER(HttpStatus.UNAUTHORIZED, false, "존재하지 않는 유저입니다"),
