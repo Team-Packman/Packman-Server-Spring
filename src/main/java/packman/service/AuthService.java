@@ -86,7 +86,7 @@ public class AuthService {
     // 카카오 accessToken으로 유저 정보 받아오기
     public KakaoLoginResponseDto getKakaoUserProfile(AuthKakaoRequestDto authKakaoRequestDto) {
         // 서버에서 테스트할 때
-        // String accessToken = getKakaoAccessToken(authKakaoTokenDto.getAccessToken());
+//        String accessToken = getKakaoAccessToken(authKakaoRequestDto.getAccessToken());
 
         String accessToken = authKakaoRequestDto.getAccessToken();
         
