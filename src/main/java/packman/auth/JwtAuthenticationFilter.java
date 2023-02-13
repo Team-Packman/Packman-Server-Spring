@@ -5,7 +5,9 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.filter.OncePerRequestFilter;
+import packman.entity.User;
 import packman.util.ResponseCode;
 
 import javax.servlet.FilterChain;
@@ -13,8 +15,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Collections;
-import java.util.List;
 
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
@@ -26,8 +26,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
         String accessToken = jwtTokenProvider.resolveAccessToken((HttpServletRequest) request);  // header에서 가져온 accessToken
 
+
         if (jwtTokenProvider.isValidateToken(accessToken).equals("ok")) {  // token 검증
-            setAuthentication(accessToken);
+            String userId = setAuthentication(accessToken);
+            if (userId == null) {
+                setErrorResponse(response, ResponseCode.NO_USER);
+                return;
+            }
         } else if (accessToken.equals("")) {
             setErrorResponse((HttpServletResponse) response, ResponseCode.NO_TOKEN);
             return;
@@ -41,9 +46,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         chain.doFilter(request, response);
     }
 
-    private void setAuthentication(String jwtToken) {
-        Authentication authentication = jwtTokenProvider.getAuthentication(jwtToken);  // 인증 객체 생성
-        SecurityContextHolder.getContext().setAuthentication(authentication);  // SecurityContextHolder에 인증 객체 저장
+    private String setAuthentication(String jwtToken) {
+        try {
+            Authentication authentication = jwtTokenProvider.getAuthentication(jwtToken);  // 인증 객체 생성
+            SecurityContextHolder.getContext().setAuthentication(authentication);  // SecurityContextHolder에 인증 객체 저장
+            User user = (User) authentication.getPrincipal();
+            return user.getUsername();
+        } catch (UsernameNotFoundException e) {
+            return null;
+        }
     }
 
     private void setErrorResponse(
