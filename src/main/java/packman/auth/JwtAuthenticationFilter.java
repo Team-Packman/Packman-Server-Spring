@@ -29,6 +29,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         if (jwtTokenProvider.isValidateToken(accessToken).equals("ok")) {  // token 검증
             String userId = setAuthentication(accessToken);
+
             if (userId == null) {
                 setErrorResponse(response, ResponseCode.NO_USER);
                 return;
