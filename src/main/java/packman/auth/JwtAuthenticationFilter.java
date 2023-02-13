@@ -3,6 +3,8 @@ package packman.auth;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -20,6 +22,7 @@ import java.io.IOException;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtTokenProvider jwtTokenProvider;
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     // Request로 들어오는 Jwt Token의 유효성을 검증하는 filter를 filterChain에 등록
     @Override
@@ -32,16 +35,21 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             if (userId == null) {
                 setErrorResponse(response, ResponseCode.NO_USER);
+                logger.info("userId is null");
                 return;
             }
+            logger.info("valid accessToken");
         } else if (accessToken.equals("")) {
             setErrorResponse((HttpServletResponse) response, ResponseCode.NO_TOKEN);
+            logger.info("no accessToken");
             return;
         } else if (jwtTokenProvider.isValidateToken(accessToken).equals("invalid_token")) {
             setErrorResponse((HttpServletResponse) response, ResponseCode.INVALIDE_TOKEN);
+            logger.info("invalid accessToken");
             return;
         } else if (jwtTokenProvider.isValidateToken(accessToken).equals("expired_token")) {
             setErrorResponse((HttpServletResponse) response, ResponseCode.EXPIRED_TOKEN);
+            logger.info("expired accessToken");
             return;
         }
         chain.doFilter(request, response);
