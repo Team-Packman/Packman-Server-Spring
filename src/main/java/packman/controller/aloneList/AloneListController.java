@@ -21,7 +21,7 @@ public class AloneListController {
 
     @PostMapping
     public ResponseEntity<ResponseMessage> createAloneList(@RequestBody @Valid ListCreateDto listCreateDto, HttpServletRequest request) {
-        Long userId = 1L;
+        Long userId = Long.valueOf(request.getUserPrincipal().getName());
 
         return ResponseMessage.toResponseEntity(
                 ResponseCode.SUCCESS_CREATE_ALONE_LIST,
@@ -31,7 +31,7 @@ public class AloneListController {
 
     @GetMapping("/{listId}")
     public ResponseEntity<ResponseMessage> getAloneList(@PathVariable("listId") Long listId, HttpServletRequest request) {
-        Long userId = 1L;
+        Long userId = Long.valueOf(request.getUserPrincipal().getName());
 
         return ResponseMessage.toResponseEntity(
                 ResponseCode.SUCCESS_GET_ALONE_LIST,
@@ -41,7 +41,7 @@ public class AloneListController {
 
     @DeleteMapping("/{folderId}/{listId}")
     public ResponseEntity<ResponseNonDataMessage> deleteAloneList(@PathVariable("folderId") Long folderId, @PathVariable("listId") List<Long> listIds, HttpServletRequest request) {
-        Long userId = 1L;
+        Long userId = Long.valueOf(request.getUserPrincipal().getName());
 
         aloneListService.deleteAloneList(userId, folderId, listIds);
 
@@ -52,7 +52,7 @@ public class AloneListController {
 
     @GetMapping("/invite/{inviteCode}")
     public ResponseEntity<ResponseMessage> getInviteAloneList(@PathVariable String inviteCode, HttpServletRequest request) {
-        Long userId = 1L;  //  임시 userId 1
+        Long userId = Long.valueOf(request.getUserPrincipal().getName());
 
         return ResponseMessage.toResponseEntity(
                 ResponseCode.SUCCESS_GET_INVITE_ALONE_LIST,

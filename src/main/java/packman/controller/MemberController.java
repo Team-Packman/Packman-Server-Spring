@@ -22,7 +22,7 @@ public class MemberController {
 
     @GetMapping("/{listId}")
     public ResponseEntity<ResponseMessage> getMember(@PathVariable @NotBlank String listId, HttpServletRequest request) {
-        Long userId = 1L;  //  임시 userId 1
+        Long userId = Long.valueOf(request.getUserPrincipal().getName());
 
         return ResponseMessage.toResponseEntity(
                 ResponseCode.SUCCESS_GET_MEMBER,
@@ -32,7 +32,7 @@ public class MemberController {
 
     @DeleteMapping("/{groupId}/{memberId}")
     public ResponseEntity<ResponseNonDataMessage> deleteMember(@PathVariable Long groupId, @PathVariable List<Long> memberId, HttpServletRequest request) {
-        Long userId = 1L;  // 임시 userId 1
+        Long userId = Long.valueOf(request.getUserPrincipal().getName());
 
         memberService.deleteMember(userId, groupId, memberId);
 

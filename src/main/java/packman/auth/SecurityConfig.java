@@ -75,7 +75,8 @@ public class SecurityConfig {
         return web -> {
             web.ignoring()
                     .antMatchers(
-                            "/auth/**"
+                            "/auth/**",
+                            "/list/*/share/**"
                     );
         };
     }
