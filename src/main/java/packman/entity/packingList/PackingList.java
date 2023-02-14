@@ -35,6 +35,7 @@ public class PackingList extends TimeStamped {
     @Setter(AccessLevel.NONE)
     @Column(nullable = false)
     private boolean isSaved = false;
+
     @Setter(AccessLevel.NONE)
     @Getter(AccessLevel.NONE)
     @Column(nullable = false)
