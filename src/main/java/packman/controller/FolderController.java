@@ -8,6 +8,7 @@ import packman.dto.folder.FolderUpdateRequestDto;
 import packman.service.FolderService;
 import packman.util.ResponseCode;
 import packman.util.ResponseMessage;
+import packman.util.ResponseNonDataMessage;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -108,11 +109,13 @@ public class FolderController {
     }
 
     @DeleteMapping("/{folderId}")
-    public ResponseEntity<ResponseMessage> deleteFolder(@PathVariable("folderId") String folderId, HttpServletRequest request) {
+    public ResponseEntity<ResponseNonDataMessage> deleteFolder(@PathVariable("folderId") String folderId, HttpServletRequest request) {
         Long userId = 1L;
-        return ResponseMessage.toResponseEntity(
-                ResponseCode.SUCCESS_DELETE_FOLDER,
-                folderService.deleteFolder(Long.parseLong(folderId), userId)
+
+        folderService.deleteFolder(Long.parseLong(folderId), userId);
+
+        return ResponseNonDataMessage.toResponseEntity(
+                ResponseCode.SUCCESS_DELETE_FOLDER
         );
     }
 

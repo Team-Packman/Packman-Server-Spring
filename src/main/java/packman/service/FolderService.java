@@ -274,7 +274,7 @@ public class FolderService {
                 .url(url).build();
     }
 
-    public FolderResponseDto deleteFolder(Long folderId, Long userId) {
+    public void deleteFolder(Long folderId, Long userId) {
         Folder folder = folderRepository
                 .findByIdAndUserId(folderId, userId)
                 .orElseThrow(
