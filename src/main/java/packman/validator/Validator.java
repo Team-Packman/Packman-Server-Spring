@@ -36,6 +36,12 @@ public class Validator {
         );
     }
 
+    public static Folder validateUserFolderCommon(FolderRepository folderRepository, Long folderId, Long userId) {
+        return folderRepository.findByIdAndUserId(folderId, userId).orElseThrow(
+                () -> new CustomException(ResponseCode.NO_FOLDER)
+        );
+    }
+
     public static PackingList validateUserAloneList(Long userId, Long aloneListId, AlonePackingListRepository alonePackingListRepository, PackingListRepository packingListRepository) {
         PackingList packingList = validatePackingListId(packingListRepository, aloneListId);
         AlonePackingList alonePackingList = validateAlonePackingListId(alonePackingListRepository, aloneListId);

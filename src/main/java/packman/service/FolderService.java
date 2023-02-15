@@ -33,6 +33,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static packman.validator.IdValidator.validateUserId;
+import static packman.validator.Validator.validateUserFolderCommon;
 
 @Service
 @Transactional
@@ -275,11 +276,8 @@ public class FolderService {
     }
 
     public void deleteFolder(Long folderId, Long userId) {
-        Folder folder = folderRepository
-                .findByIdAndUserId(folderId, userId)
-                .orElseThrow(
-                        () -> new CustomException(ResponseCode.NO_FOLDER)
-                );
+        Folder folder =validateUserFolderCommon(folderRepository, folderId, userId);
+
         List<FolderPackingList> folderPackingLists = folder.getFolderPackingList();
         if (folder.getIsAloned()) {
 //            AlonePackingListService의 delete 호출
