@@ -12,6 +12,7 @@ public enum ResponseCode {
     NOT_FOUND(HttpStatus.NOT_FOUND, false, "존재하지 않는 자원"),
     BAD_REQUEST(HttpStatus.BAD_REQUEST, false, "잘못된 요청"),
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, false, "서버 내부 오류입니다"),
+
     EXCEED_LENGTH(HttpStatus.BAD_REQUEST, false, "제한된 글자수를 초과하였습니다"),
     EXCEED_LEN(HttpStatus.BAD_REQUEST, false, "제한된 글자수를 초과하였습니다"),
 
@@ -22,12 +23,11 @@ public enum ResponseCode {
     INVALIDE_TOKEN(HttpStatus.UNAUTHORIZED, false, "유효하지 않은 토큰입니다"),
     NO_TOKEN(HttpStatus.UNAUTHORIZED, false, "토큰이 없습니다"),
 
-
     // user
     SUCCESS_GET_USER(HttpStatus.OK, true, "유저 조회 성공"),
     NO_USER(HttpStatus.UNAUTHORIZED, false, "존재하지 않는 유저입니다"),
     SUCCESS_DELETE_USER(HttpStatus.OK, true, "유저 탈퇴 성공"),
-
+    CREATE_USER_SUCCESS(HttpStatus.OK, true, "유저 생성 성공"),
     SUCCESS_UPDATE_USER(HttpStatus.OK, true, "유저 수정 성공"),
     NO_MAKER(HttpStatus.BAD_REQUEST, false, "삭제할 권한이 없는 유저입니다"),
     NO_DELETE_MAKER(HttpStatus.BAD_REQUEST, false, "생성자는 삭제할 수 없습니다"),
@@ -71,7 +71,6 @@ public enum ResponseCode {
     NO_PACK(HttpStatus.NOT_FOUND, false, "존재하지 않는 짐입니다"),
     NO_CATEGORY_PACK(HttpStatus.BAD_REQUEST, false, "리스트에 존재하지 않는 짐입니다"),
     NO_PACKER(HttpStatus.BAD_REQUEST, false, "그룹에 존재하지 않는 패커입니다"),
-
 
     // alonePackingList
     SUCCESS_CREATE_ALONE_CATEGORY(HttpStatus.OK, true, "혼자 패킹리스트 카테고리 생성 성공"),

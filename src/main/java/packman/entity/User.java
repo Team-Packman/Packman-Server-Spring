@@ -1,8 +1,7 @@
 package packman.entity;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import packman.dto.user.UserCreateDto;
 import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,7 +16,9 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 @DynamicUpdate
+@Builder
 @Table(name = "users")
 public class User extends TimeStamped implements UserDetails {
 
