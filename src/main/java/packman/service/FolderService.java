@@ -22,8 +22,10 @@ import packman.repository.UserRepository;
 import packman.repository.packingList.AlonePackingListRepository;
 import packman.repository.packingList.PackingListRepository;
 import packman.repository.packingList.TogetherAlonePackingListRepository;
+import packman.service.togetherList.TogetherListService;
 import packman.util.CustomException;
 import packman.util.ResponseCode;
+import packman.service.aloneList.AloneListService;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -33,7 +35,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static packman.validator.IdValidator.validateUserId;
-import static packman.validator.Validator.validateUserFolderCommon;
+import static packman.validator.Validator.validateFolder;
 
 @Service
 @Transactional
@@ -46,6 +48,8 @@ public class FolderService {
     private final CategoryRepository categoryRepository;
     private final AlonePackingListRepository alonePackingListRepository;
     private final TogetherAlonePackingListRepository togetherAlonePackingListRepository;
+    private final AloneListService aloneListService;
+    private final TogetherListService togetherListService;
 
     public List<FolderIdNameMapping> getAloneFolders(Long userId) {
         userRepository.findByIdAndIsDeleted(userId, false).orElseThrow(
@@ -276,28 +280,28 @@ public class FolderService {
     }
 
     public void deleteFolder(Long folderId, Long userId) {
-        Folder folder =validateUserFolderCommon(folderRepository, folderId, userId);
+        Folder folder =validateFolder(folderRepository, folderId);
 
         List<FolderPackingList> folderPackingLists = folder.getFolderPackingList();
+        // 폴더 내 패킹리스트 삭제
         if (folder.getIsAloned()) {
-//            AlonePackingListService의 delete 호출
-
-//            Stream<AlonePackingList> alonePackingLists = folderPackingLists.stream().map(folderPackingList -> folderPackingList.getAlonePackingList());
-//            List<PackingList> packingList = alonePackingLists.map(alonePackingList -> alonePackingList.getPackingList())
-//                    .collect(Collectors.toList());;
-//            packingList.forEach( list -> list.setIdDeleted(true));
-//            packingListRepository.saveAll(packingList);
-        } else {
-            List<TogetherAlonePackingList> togetherAlonePackingList = folderPackingLists.stream()
-                    .map( p -> {
-                return togetherAlonePackingListRepository.findByAlonePackingList(p.getAlonePackingList());
-                        })
+            List<Long> aloneListIds = folderPackingLists.stream()
+                    .map( folderPackingList -> folderPackingList.getAlonePackingList().getId())
                     .collect(Collectors.toList());
 
-            // 채워야할 곳
-            // togetherAlonePackingList에서 받은 id로 togetherListService.deleteTogetherList() 호출
-            //
+            aloneListIds.forEach(System.out::println);
+
+            aloneListService.deleteAloneList(userId, folderId, aloneListIds);
+        } else {
+            List<Long> togetherAloneListIds = folderPackingLists.stream()
+                    .map( folderPackingList -> { return togetherAlonePackingListRepository.findByAlonePackingList(folderPackingList.getAlonePackingList()).getId();})
+                    .collect(Collectors.toList());
+
+            togetherAloneListIds.forEach(System.out::println);
+
+            togetherListService.deleteTogetherList(userId, folderId, togetherAloneListIds);
         }
+
         // 폴더 삭제
         folderRepository.deleteById(folderId);
 

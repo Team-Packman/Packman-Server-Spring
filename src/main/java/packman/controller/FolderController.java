@@ -110,7 +110,7 @@ public class FolderController {
 
     @DeleteMapping("/{folderId}")
     public ResponseEntity<ResponseNonDataMessage> deleteFolder(@PathVariable("folderId") String folderId, HttpServletRequest request) {
-        Long userId = 1L;
+        Long userId = Long.valueOf(request.getUserPrincipal().getName());
 
         folderService.deleteFolder(Long.parseLong(folderId), userId);
 

@@ -36,8 +36,8 @@ public class Validator {
         );
     }
 
-    public static Folder validateUserFolderCommon(FolderRepository folderRepository, Long folderId, Long userId) {
-        return folderRepository.findByIdAndUserId(folderId, userId).orElseThrow(
+    public static Folder validateFolder(FolderRepository folderRepository, Long folderId) {
+        return folderRepository.findById(folderId).orElseThrow(
                 () -> new CustomException(ResponseCode.NO_FOLDER)
         );
     }
