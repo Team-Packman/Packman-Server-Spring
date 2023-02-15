@@ -150,9 +150,6 @@ public class TogetherListService {
         List<Group> groups = new ArrayList<>();
         List<PackingList> lists = new ArrayList<>(); //최종적으로 삭제할 packingList들을 담는 리스트
 
-        // 존재하는 유저인지 검증
-        validateUserId(userRepository, userId);
-
         // 유저 소유 폴더, 함께 패킹리스트 폴더인지 검증
         validateUserFolder(folderRepository, folderId, userId, false);
 
@@ -227,8 +224,6 @@ public class TogetherListService {
     }
 
     public DetaildTogetherListResponseDto getTogetherList(Long listId, Long userId) {
-        // 유저 검증
-        validateUserId(userRepository, userId);
         // 존재하는 함께 패킹리스트인지 검증
         TogetherAlonePackingList togetherAloneList = validateTogetherAlonePackingListIdInDetail(togetherAlonePackingListRepository, listId);
         // 유저의 함께 패킹리스트인지 검증 및 folderId 찾기

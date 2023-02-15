@@ -30,8 +30,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static packman.validator.IdValidator.validateUserId;
-
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -229,7 +227,6 @@ public class FolderService {
     }
 
     public RecentCreatedListResponseDto getRecentCreatedList(Long userId) {
-        validateUserId(userRepository, userId);
 
         List<AlonePackingList> alonePackingLists = alonePackingListRepository.findByFolderPackingList_Folder_UserIdOrderByIdDesc(userId);
 

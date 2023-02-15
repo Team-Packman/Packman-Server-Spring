@@ -36,7 +36,6 @@ public class MemberService {
     private final TogetherListService togetherListService;
 
     public MemberResponseDto getMember(Long userId, Long listId) {
-        validateUserId(userRepository, userId);
         TogetherPackingList togetherPackingList = validateTogetherAlonePackingListId(togetherAlonePackingListRepository, listId).getTogetherPackingList();
         PackingList packingList = togetherPackingList.getPackingList();
 
@@ -69,7 +68,6 @@ public class MemberService {
     }
 
     public void deleteMember(Long userId, Long groupId, List<Long> memberIds) {
-        validateUserId(userRepository, userId);
         Group group = validateGroupId(groupRepository, groupId);
 
         validateMemberId(userRepository, memberIds);

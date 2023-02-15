@@ -24,8 +24,6 @@ public class TemplateService {
     private final UserRepository userRepository;
 
     public TemplateListResponseDto getAloneTemplateList(Long userId) {
-        // 유저 검증
-        validateUserId(userRepository, userId);
 
         TemplateListResponseDto templateListResponseDto = TemplateListResponseDto.builder()
                 .basicTemplate(templateRepository.findByUserIdAndIsAlonedAndIsDeleted(null, true, false))
@@ -35,8 +33,6 @@ public class TemplateService {
     }
 
     public TemplateListResponseDto getTogetherTemplateList(Long userId) {
-        // 유저 검증
-        validateUserId(userRepository, userId);
 
         TemplateListResponseDto templateListResponseDto = TemplateListResponseDto.builder()
                 .basicTemplate(templateRepository.findByUserIdAndIsAlonedAndIsDeleted(null, false, false))
