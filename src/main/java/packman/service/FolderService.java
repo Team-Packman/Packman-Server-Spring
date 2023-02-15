@@ -289,15 +289,11 @@ public class FolderService {
                     .map( folderPackingList -> folderPackingList.getAlonePackingList().getId())
                     .collect(Collectors.toList());
 
-            aloneListIds.forEach(System.out::println);
-
             aloneListService.deleteAloneList(userId, folderId, aloneListIds);
         } else {
             List<Long> togetherAloneListIds = folderPackingLists.stream()
                     .map( folderPackingList -> { return togetherAlonePackingListRepository.findByAlonePackingList(folderPackingList.getAlonePackingList()).getId();})
                     .collect(Collectors.toList());
-
-            togetherAloneListIds.forEach(System.out::println);
 
             togetherListService.deleteTogetherList(userId, folderId, togetherAloneListIds);
         }
