@@ -3,6 +3,9 @@ package packman.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import packman.auth.JwtTokenProvider;
+import packman.dto.user.UserCreateDto;
+import packman.dto.user.UserResponseDto;
 import packman.dto.user.UserInfoResponseDto;
 import packman.dto.user.UserUpdateDto;
 import packman.entity.User;
@@ -18,7 +21,41 @@ import static packman.validator.LengthValidator.validateUserNicknameLength;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
+    private final JwtTokenProvider jwtTokenProvider;
 
+    public UserResponseDto createUser(UserCreateDto userCreateDto) {
+        //닉네임 글자수 제한
+        validateUserNicknameLength(userCreateDto.getNickname());
+
+        String refreshToken = jwtTokenProvider.createRefreshToken();
+
+        User user = User.builder()
+                .email(userCreateDto.getEmail())
+                .nickname(userCreateDto.getNickname())
+                .profileImage(userCreateDto.getProfileImage())
+                .name(userCreateDto.getName())
+                .path(userCreateDto.getPath())
+                .gender(userCreateDto.getGender())
+                .ageRange(userCreateDto.getAgeRange())
+                .refreshToken(refreshToken).build();
+
+        User createdUser = userRepository.save(user);
+
+        String accessToken = jwtTokenProvider.createAccessToken(createdUser.getId().toString());
+
+        return UserResponseDto.builder()
+                .isAlreadyUser(true)
+                .id(createdUser.getId().toString())
+                .email(createdUser.getEmail())
+                .name(createdUser.getName())
+                .gender(createdUser.getGender())
+                .ageRange(createdUser.getAgeRange())
+                .nickname(createdUser.getNickname())
+                .profileImage(createdUser.getProfileImage())
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .path(createdUser.getPath()).build();
+    }
     public UserInfoResponseDto getUser(Long userId) {
         User user = userRepository.findByIdAndIsDeleted(userId, false).orElseThrow(
                 () -> new CustomException(ResponseCode.NO_USER)

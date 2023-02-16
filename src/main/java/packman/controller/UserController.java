@@ -2,11 +2,18 @@ package packman.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import packman.dto.user.UserUpdateDto;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import packman.dto.user.UserCreateDto;
 import packman.service.UserService;
+import packman.util.CustomException;
 import packman.util.ResponseCode;
 import packman.util.ResponseMessage;
+import org.springframework.web.bind.annotation.*;
+import packman.dto.user.UserUpdateDto;
 import packman.util.ResponseNonDataMessage;
 
 import javax.servlet.http.HttpServletRequest;
@@ -17,6 +24,15 @@ import javax.validation.Valid;
 @RequestMapping("/user")
 public class UserController {
     private final UserService userService;
+
+    @PostMapping("/profile")
+    public ResponseEntity<ResponseMessage> createUser(@RequestBody @Valid UserCreateDto userCreateDto, HttpServletRequest request) {
+
+        return ResponseMessage.toResponseEntity(
+                ResponseCode.CREATE_USER_SUCCESS,
+                userService.createUser(userCreateDto)
+        );
+    }
 
     @GetMapping
     public ResponseEntity<ResponseMessage> getUser(HttpServletRequest request) {
