@@ -19,7 +19,7 @@ public class CorsFilter implements Filter {
 
         String origin = request.getHeader("origin");
 
-        if (origin.startsWith("https://www.packgirl.ml") || origin.startsWith("http://localhost:3000") {
+        if (origin.endsWith("packgirl.ml") || origin.startsWith("http://localhost:3000")) {
             response.setHeader("Access-Control-Allow-Origin", origin);
 
         }
