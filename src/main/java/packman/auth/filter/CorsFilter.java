@@ -18,7 +18,7 @@ public class CorsFilter implements Filter {
         HttpServletRequest request = (HttpServletRequest) req;
 
         response.setHeader("Access-Control-Allow-Origin", "https://www.packgirl.ml");
-        response.setHeader("Access-Control-Allow-Origin", "https://localhost:3000");
+        response.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
 
         response.setHeader("Access-Control-Allow-Credentials", "true");
 
