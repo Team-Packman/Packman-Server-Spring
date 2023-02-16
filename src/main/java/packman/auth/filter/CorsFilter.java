@@ -1,4 +1,4 @@
-package packman.auth;
+package packman.auth.filter;
 
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -18,7 +18,6 @@ public class CorsFilter implements Filter {
         HttpServletRequest request = (HttpServletRequest) req;
 
         response.setHeader("Access-Control-Allow-Origin", "https://www.packgirl.ml");
-        response.setHeader("Access-Control-Allow-Origin", "https://localhost:3000");
 
         response.setHeader("Access-Control-Allow-Credentials", "true");
 
