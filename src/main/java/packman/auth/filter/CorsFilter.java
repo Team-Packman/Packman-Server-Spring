@@ -17,14 +17,18 @@ public class CorsFilter implements Filter {
         HttpServletResponse response = (HttpServletResponse) res;
         HttpServletRequest request = (HttpServletRequest) req;
 
-        response.setHeader("Access-Control-Allow-Origin", "https://www.packgirl.ml, http://localhost:3000");
+        String origin = request.getHeader("origin");
+
+        if (origin.startsWith("https://www.packgirl.ml") || origin.startsWith("http://localhost:3000") {
+            response.setHeader("Access-Control-Allow-Origin", origin);
+
+        }
 
         response.setHeader("Access-Control-Allow-Credentials", "true");
 
         response.setHeader("Access-Control-Allow-Methods", "*");
         response.setHeader("Access-Control-Max-Age", "3600");
-        response.setHeader("Access-Control-Allow-Headers",
-                "Origin, X-Requested-With, Content-Type, Accept, Key, Authorization");
+        response.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Key, Authorization");
 
         if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
             response.setStatus(HttpServletResponse.SC_OK);
