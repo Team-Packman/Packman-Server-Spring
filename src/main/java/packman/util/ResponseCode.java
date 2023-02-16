@@ -52,6 +52,7 @@ public enum ResponseCode {
     NO_USER_FOLDER(HttpStatus.BAD_REQUEST, false, "유저에 존재하지 않는 폴더입니다"),
     NO_FOLDER(HttpStatus.NOT_FOUND, false, "존재하지 않는 폴더입니다"),
     SUCCESS_CREATE_FOLDER(HttpStatus.OK, true, "폴더 생성 성공"),
+    SUCCESS_DELETE_FOLDER(HttpStatus.OK, true, "폴더 삭제 성공"),
     FAIL_CREATE_FOLDER(HttpStatus.BAD_REQUEST, false, "제한된 글자수를 초과하였습니다"),
     SUCCESS_UPDATE_FOLDER(HttpStatus.OK, true, "폴더 수정 성공"),
     SUCCESS_GET_FOLDERS(HttpStatus.OK, true, "폴더 조회 성공"),
