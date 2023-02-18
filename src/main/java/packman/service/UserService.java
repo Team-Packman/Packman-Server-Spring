@@ -68,7 +68,7 @@ public class UserService {
                 () -> new CustomException(ResponseCode.NO_USER)
         );
 
-        user.setDeleted(true);
+        userRepository.setUserIsDeletedByUserId(userId);
     }
 
     public UserInfoResponseDto updateUser(UserUpdateDto userUpdateDto, Long userId) {
