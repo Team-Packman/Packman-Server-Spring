@@ -113,11 +113,15 @@ public class AuthService {
             throw new RuntimeException(e);
         }
 
+        // true인 경우 동의 x
+        String ageRange = kakaoProfileDto.kakao_account.age_range_needs_agreement ? "" : kakaoProfileDto.kakao_account.age_range;
+        String gender = kakaoProfileDto.kakao_account.gender_needs_agreement ? "" : kakaoProfileDto.kakao_account.gender;
+
         KakaoUserProfileDto kakaoUserProfileDto = KakaoUserProfileDto.builder()
                 .name(kakaoProfileDto.properties.nickname)
                 .email(kakaoProfileDto.kakao_account.email)
-                .ageRange(kakaoProfileDto.kakao_account.age_range)
-                .gender(kakaoProfileDto.kakao_account.gender)
+                .ageRange(ageRange)
+                .gender(gender)
                 .build();
 
         return kakaoLogin(kakaoUserProfileDto);
