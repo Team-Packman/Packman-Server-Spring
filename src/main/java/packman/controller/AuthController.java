@@ -4,9 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import packman.auth.JwtTokenProvider;
+import packman.dto.auth.AuthKakaoRequestDto;
 import packman.dto.auth.KakaoLoginNewUserResponseDto;
 import packman.dto.auth.KakaoLoginResponseDto;
-import packman.dto.auth.AuthKakaoRequestDto;
 import packman.service.AuthService;
 import packman.util.ResponseCode;
 import packman.util.ResponseMessage;
@@ -20,7 +20,6 @@ import javax.validation.Valid;
 public class AuthController {
     private final AuthService authService;
     private final JwtTokenProvider jwtTokenProvider;
-
 
     @PostMapping("/kakao")
     public ResponseEntity<ResponseMessage> kakaoLogin(@RequestBody @Valid AuthKakaoRequestDto authKakaoRequestDto) {
@@ -46,5 +45,15 @@ public class AuthController {
                 ResponseCode.SUCCESS_KAKAO_LOGIN,
                 kakaoUserProfile
         );
+    }
+
+    @GetMapping("/token")
+    public ResponseEntity<ResponseMessage> getNewToken(HttpServletRequest request) {
+        String accessToken = jwtTokenProvider.resolveAccessToken(request);
+        String refreshToken = jwtTokenProvider.resolveRefreshToken(request);
+
+        return ResponseMessage.toResponseEntity(
+                ResponseCode.SUCCESS_GET_NEW_TOKEN,
+                authService.getNewToken(accessToken, refreshToken));
     }
 }
