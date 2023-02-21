@@ -5,13 +5,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import packman.auth.JwtTokenProvider;
 import packman.dto.user.UserCreateDto;
-import packman.dto.user.UserResponseDto;
 import packman.dto.user.UserInfoResponseDto;
+import packman.dto.user.UserResponseDto;
 import packman.dto.user.UserUpdateDto;
+import packman.entity.Folder;
 import packman.entity.User;
 import packman.repository.UserRepository;
 import packman.util.CustomException;
 import packman.util.ResponseCode;
+
+import java.util.List;
 
 import static packman.validator.IdValidator.validateUserId;
 import static packman.validator.LengthValidator.validateUserNicknameLength;
@@ -22,6 +25,7 @@ import static packman.validator.LengthValidator.validateUserNicknameLength;
 public class UserService {
     private final UserRepository userRepository;
     private final JwtTokenProvider jwtTokenProvider;
+    private final FolderService folderService;
 
     public UserResponseDto createUser(UserCreateDto userCreateDto) {
         //닉네임 글자수 제한
@@ -56,6 +60,7 @@ public class UserService {
                 .refreshToken(refreshToken)
                 .path(createdUser.getPath()).build();
     }
+
     public UserInfoResponseDto getUser(Long userId) {
         User user = userRepository.findByIdAndIsDeleted(userId, false).orElseThrow(
                 () -> new CustomException(ResponseCode.NO_USER)
@@ -64,12 +69,17 @@ public class UserService {
     }
 
     public void deleteUser(Long userId) {
-        User user = userRepository.findByIdAndIsDeleted(userId, false).orElseThrow(
-                () -> new CustomException(ResponseCode.NO_USER)
-        );
+        User user = userRepository.findByIdAndIsDeleted(userId, false).orElseThrow(() -> new CustomException(ResponseCode.NO_USER));
 
-        user.setDeleted(true);
+        List<Folder> folders = user.getFolders();
+
+        for (Folder folder : folders) {
+            folderService.deleteFolder(folder.getId(), userId);
+        }
+
+        userRepository.setUserIsDeletedByUserId(userId);
     }
+
 
     public UserInfoResponseDto updateUser(UserUpdateDto userUpdateDto, Long userId) {
         User user = validateUserId(userRepository, userId);
