@@ -15,17 +15,16 @@ import packman.entity.User;
 import packman.entity.packingList.AlonePackingList;
 import packman.entity.packingList.PackingList;
 import packman.repository.CategoryRepository;
-import packman.entity.packingList.TogetherAlonePackingList;
 import packman.repository.FolderPackingListRepository;
 import packman.repository.FolderRepository;
 import packman.repository.UserRepository;
 import packman.repository.packingList.AlonePackingListRepository;
 import packman.repository.packingList.PackingListRepository;
 import packman.repository.packingList.TogetherAlonePackingListRepository;
+import packman.service.aloneList.AloneListService;
 import packman.service.togetherList.TogetherListService;
 import packman.util.CustomException;
 import packman.util.ResponseCode;
-import packman.service.aloneList.AloneListService;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -298,7 +297,6 @@ public class FolderService {
         }
 
         // 폴더 삭제
-        folderRepository.deleteById(folderId);
-
+        folderRepository.deleteFolderByFolderId(folderId);
     }
 }
