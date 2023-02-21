@@ -68,9 +68,11 @@ public class MemberService {
                 .build();
     }
 
-    public void deleteMember(Long userId, Long groupId, List<Long> memberIds) {
+    public void deleteMember(Long userId, Long listId, List<Long> memberIds) {
         validateUserId(userRepository, userId);
-        Group group = validateGroupId(groupRepository, groupId);
+        Group group = validateTogetherAlonePackingListId(togetherAlonePackingListRepository, listId)
+                .getTogetherPackingList()
+                .getGroup();
 
         validateMemberId(userRepository, memberIds);
 
