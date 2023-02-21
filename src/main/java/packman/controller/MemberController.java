@@ -30,11 +30,11 @@ public class MemberController {
         );
     }
 
-    @DeleteMapping("/{groupId}/{memberId}")
-    public ResponseEntity<ResponseNonDataMessage> deleteMember(@PathVariable Long groupId, @PathVariable List<Long> memberId, HttpServletRequest request) {
+    @DeleteMapping("/{listId}/{memberId}")
+    public ResponseEntity<ResponseNonDataMessage> deleteMember(@PathVariable Long listId, @PathVariable List<Long> memberId, HttpServletRequest request) {
         Long userId = Long.valueOf(request.getUserPrincipal().getName());
 
-        memberService.deleteMember(userId, groupId, memberId);
+        memberService.deleteMember(userId, listId, memberId);
 
         return ResponseNonDataMessage.toResponseEntity(
                 ResponseCode.SUCCESS_DELETE_MEMBER

@@ -29,7 +29,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
         String accessToken = jwtTokenProvider.resolveAccessToken((HttpServletRequest) request);  // header에서 가져온 accessToken
 
-
         if (jwtTokenProvider.isValidateToken(accessToken).equals("ok")) {  // token 검증
             String userId = setAuthentication(accessToken);
 
@@ -55,6 +54,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         chain.doFilter(request, response);
     }
 
+    // token으로 userId 얻기
     private String setAuthentication(String jwtToken) {
         try {
             Authentication authentication = jwtTokenProvider.getAuthentication(jwtToken);  // 인증 객체 생성

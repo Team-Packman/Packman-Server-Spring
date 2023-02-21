@@ -81,7 +81,14 @@ public class JwtTokenProvider {
 
     // Request의 Header에서 token값을 가져옴
     public String resolveAccessToken(HttpServletRequest request) {
-        return request.getHeader(AUTHORIZATION_HEADER);
+        String header = request.getHeader(AUTHORIZATION_HEADER);
+
+        if (header == null || !header.startsWith("Bearer ")) {
+            return "";
+        } else {
+            return header.split(" ")[1];
+        }
+
     }
 
     public String resolveRefreshToken(HttpServletRequest request) {
