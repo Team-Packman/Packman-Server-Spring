@@ -36,7 +36,6 @@ public class MemberService {
     private final TogetherListService togetherListService;
 
     public MemberResponseDto getMember(Long userId, Long listId) {
-        validateUserId(userRepository, userId);
         TogetherPackingList togetherPackingList = validateTogetherAlonePackingListId(togetherAlonePackingListRepository, listId).getTogetherPackingList();
         PackingList packingList = togetherPackingList.getPackingList();
 
