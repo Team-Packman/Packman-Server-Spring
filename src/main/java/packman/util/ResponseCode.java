@@ -22,6 +22,10 @@ public enum ResponseCode {
     EXPIRED_TOKEN(HttpStatus.UNAUTHORIZED, false, "만료된 토큰입니다"),
     INVALIDE_TOKEN(HttpStatus.UNAUTHORIZED, false, "유효하지 않은 토큰입니다"),
     NO_TOKEN(HttpStatus.UNAUTHORIZED, false, "토큰이 없습니다"),
+    NO_USER_REFRESH_TOKEN(HttpStatus.BAD_REQUEST, false, "유저의 리프레쉬 토큰이 아닙니다"),
+    REFRESH_TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, false, "만료된 리프레쉬 토큰입니다"),
+    VALID_ACCESS_TOKEN(HttpStatus.UNAUTHORIZED, false, "유효한 토큰입니다"),
+    NO_BEARER_TOKEN(HttpStatus.UNAUTHORIZED, false, "Bearer Token 형식이 아닙니다"),
 
     // user
     SUCCESS_GET_USER(HttpStatus.OK, true, "유저 조회 성공"),

@@ -15,6 +15,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findByEmail(String email);
 
+    Optional<User> findByIdAndRefreshToken(Long userId, String refreshToken);
+
     @Modifying(clearAutomatically = true)
     @Query("update User u set u.isDeleted = true where u.id = :userId")
     void setUserIsDeletedByUserId(@Param("userId") Long userId);
