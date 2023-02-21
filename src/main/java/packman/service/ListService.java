@@ -56,9 +56,6 @@ public class ListService {
         Long aloneListId = listId;
         String title = listTitleRequestDto.getTitle();
 
-        //유저 검증
-        validateUserId(userRepository, userId);
-
         //제목 글자수 검증
         validateListLength(title);
 
@@ -83,9 +80,6 @@ public class ListService {
         Long listId = Long.parseLong(departureDateRequestDto.getId());
         Long aloneListId = listId;
         LocalDate departureDate = LocalDate.parse(departureDateRequestDto.getDepartureDate(), DateTimeFormatter.ISO_DATE);
-
-        //유저 검증
-        validateUserId(userRepository, userId);
 
         if (!departureDateRequestDto.getIsAloned()) {
             TogetherAlonePackingList togetherAlonePackingList = togetherAlonePackingListRepository.findById(listId).orElseThrow(

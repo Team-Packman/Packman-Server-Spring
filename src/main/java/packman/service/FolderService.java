@@ -10,18 +10,22 @@ import packman.dto.list.RecentCreatedListResponseDto;
 import packman.dto.list.TogetherAloneListMapping;
 import packman.dto.pack.PackCountMapping;
 import packman.entity.Folder;
+import packman.entity.FolderPackingList;
 import packman.entity.User;
 import packman.entity.packingList.AlonePackingList;
 import packman.entity.packingList.PackingList;
 import packman.repository.CategoryRepository;
+import packman.entity.packingList.TogetherAlonePackingList;
 import packman.repository.FolderPackingListRepository;
 import packman.repository.FolderRepository;
 import packman.repository.UserRepository;
 import packman.repository.packingList.AlonePackingListRepository;
 import packman.repository.packingList.PackingListRepository;
 import packman.repository.packingList.TogetherAlonePackingListRepository;
+import packman.service.togetherList.TogetherListService;
 import packman.util.CustomException;
 import packman.util.ResponseCode;
+import packman.service.aloneList.AloneListService;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -31,6 +35,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static packman.validator.IdValidator.validateUserId;
+import static packman.validator.Validator.validateFolder;
 
 @Service
 @Transactional
@@ -43,6 +48,8 @@ public class FolderService {
     private final CategoryRepository categoryRepository;
     private final AlonePackingListRepository alonePackingListRepository;
     private final TogetherAlonePackingListRepository togetherAlonePackingListRepository;
+    private final AloneListService aloneListService;
+    private final TogetherListService togetherListService;
 
     public List<FolderIdNameMapping> getAloneFolders(Long userId) {
         userRepository.findByIdAndIsDeleted(userId, false).orElseThrow(
@@ -144,7 +151,6 @@ public class FolderService {
         listInFolderDtos.add(listInFolderDto);
     }
 
-
     public FolderResponseDto createFolder(FolderRequestDto request, Long userId) {
         User user = userRepository.findByIdAndIsDeleted(userId, false).orElseThrow(
                 () -> new CustomException(ResponseCode.NO_USER)
@@ -229,7 +235,6 @@ public class FolderService {
     }
 
     public RecentCreatedListResponseDto getRecentCreatedList(Long userId) {
-        validateUserId(userRepository, userId);
 
         List<AlonePackingList> alonePackingLists = alonePackingListRepository.findByFolderPackingList_Folder_UserIdOrderByIdDesc(userId);
 
@@ -271,5 +276,29 @@ public class FolderService {
                 .packTotalNum(listInFolderDto.getPackTotalNum())
                 .packRemainNum(listInFolderDto.getPackRemainNum())
                 .url(url).build();
+    }
+
+    public void deleteFolder(Long folderId, Long userId) {
+        Folder folder =validateFolder(folderRepository, folderId);
+
+        List<FolderPackingList> folderPackingLists = folder.getFolderPackingList();
+        // 폴더 내 패킹리스트 삭제
+        if (folder.getIsAloned()) {
+            List<Long> aloneListIds = folderPackingLists.stream()
+                    .map( folderPackingList -> folderPackingList.getAlonePackingList().getId())
+                    .collect(Collectors.toList());
+
+            aloneListService.deleteAloneList(userId, folderId, aloneListIds);
+        } else {
+            List<Long> togetherAloneListIds = folderPackingLists.stream()
+                    .map( folderPackingList -> { return togetherAlonePackingListRepository.findByAlonePackingList(folderPackingList.getAlonePackingList()).getId();})
+                    .collect(Collectors.toList());
+
+            togetherListService.deleteTogetherList(userId, folderId, togetherAloneListIds);
+        }
+
+        // 폴더 삭제
+        folderRepository.deleteById(folderId);
+
     }
 }

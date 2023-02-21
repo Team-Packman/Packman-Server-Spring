@@ -1,15 +1,12 @@
 package packman.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.DynamicUpdate;
-import packman.dto.folder.FolderRequestDto;
 
 import javax.persistence.*;
-import javax.validation.constraints.Null;
 import java.util.List;
 
 import static javax.persistence.FetchType.LAZY;
@@ -62,4 +59,5 @@ public class Folder extends TimeStamped {
     public boolean getIsAloned() {
         return this.isAloned;
     }
+
 }
