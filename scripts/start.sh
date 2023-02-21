@@ -2,6 +2,7 @@
 
 PROJECT_ROOT="/home/ubuntu/app"
 JAR_FILE="$PROJECT_ROOT/packman.jar"
+APP_NAME="packman.jar"
 
 APP_LOG="$PROJECT_ROOT/application.log"
 ERROR_LOG="$PROJECT_ROOT/error.log"
@@ -15,7 +16,8 @@ cp $PROJECT_ROOT/build/libs/*.jar $JAR_FILE
 
 # jar 파일 실행
 echo "$TIME_NOW > $JAR_FILE 파일 실행" >> $DEPLOY_LOG
-nohup java -jar $JAR_FILE > $APP_LOG 2> $ERROR_LOG &
+cd /$PROJECT_ROOT || exit
+nohup java -jar $APP_NAME > $APP_LOG 2> $ERROR_LOG &
 
-CURRENT_PID=$(pgrep -f $JAR_FILE)
+CURRENT_PID=$(pgrep -f $APP_NAME)
 echo "$TIME_NOW > 실행된 프로세스 아이디 $CURRENT_PID 입니다." >> $DEPLOY_LOG

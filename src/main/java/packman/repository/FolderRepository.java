@@ -1,6 +1,9 @@
 package packman.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import packman.dto.folder.FolderIdNameMapping;
 import packman.entity.Folder;
@@ -23,5 +26,8 @@ public interface FolderRepository extends JpaRepository<Folder, Long> {
 
     Optional<Folder> findByUserIdAndNameAndIsAloned(Long userId, String name, boolean isAloned);
 
+    @Modifying(clearAutomatically = true)
+    @Query("delete from Folder f where f.id = :folderId")
+    void deleteFolderByFolderId(@Param("folderId") Long folderId);
 }
 

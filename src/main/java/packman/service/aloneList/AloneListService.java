@@ -57,9 +57,6 @@ public class AloneListService {
             inviteCode = RandomStringUtils.randomAlphanumeric(5);
         } while (alonePackingListRepository.existsByInviteCode(inviteCode));
 
-        // 유저 검증
-        validateUserId(userRepository, userId);
-
         // 유저 소유 폴더 X 함께 패킹리스트 폴더 or 존재하지 않는 폴더의 경우
         Folder folder = validateUserFolder(folderRepository, folderId, userId, true);
 
@@ -109,8 +106,6 @@ public class AloneListService {
     }
 
     public DetailedAloneListResponseDto getAloneList(Long listId, Long userId) {
-        // 유저 검증(삭제 안된 유저)
-        validateUserId(userRepository, userId);
 
         // 유저의 혼자 패킹리스트인지 검증
         FolderPackingList folderPackingList = validateUserAloneListId(folderPackingListRepository, userId, listId);
@@ -128,9 +123,6 @@ public class AloneListService {
     }
 
     public void deleteAloneList(Long userId, Long folderId, List<Long> listIds) {
-
-        // 유저 검증(삭제 안된 유저)
-        validateUserId(userRepository, userId);
 
         // 유저 소유 폴더, 혼자 패킹리스트 폴더인지 검증
         validateUserFolder(folderRepository, folderId, userId, true);
@@ -152,7 +144,6 @@ public class AloneListService {
     }
 
     public InviteAloneListResponseDto getInviteAloneList(Long userId, String inviteCode) {
-        validateUserId(userRepository, userId);
         AlonePackingList alonePackingList = validateAlonePackingListByInviteCode(alonePackingListRepository, inviteCode);
         Long ownerId = alonePackingList.getFolderPackingList().getFolder().getUser().getId();
 
