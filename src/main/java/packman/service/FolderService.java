@@ -33,7 +33,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static packman.validator.IdValidator.validateUserId;
 import static packman.validator.Validator.validateFolder;
 
 @Service
@@ -134,14 +133,17 @@ public class FolderService {
         long packTotalNum = 0L;
         long packRemainNum = 0L;
 
+
         if (list.getCategory().size() != 0) {
-            CategoryPackMapping categoryPackMapping = categoryRepository.findByPackingListId(listId);
+            List<CategoryPackMapping> categoryPackMappings = categoryRepository.findByPackingListId(listId);
 
-            for (PackCountMapping packCountMapping : categoryPackMapping.getPack()) {
-                packTotalNum++;
+            for (CategoryPackMapping categoryPackMapping : categoryPackMappings) {
+                for (PackCountMapping packCountMapping : categoryPackMapping.getPack()) {
+                    packTotalNum++;
 
-                if (!packCountMapping.getIsChecked()) {
-                    packRemainNum++;
+                    if (!packCountMapping.getIsChecked()) {
+                        packRemainNum++;
+                    }
                 }
             }
         }
