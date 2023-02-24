@@ -11,7 +11,6 @@ import packman.entity.Pack;
 import packman.entity.packingList.PackingList;
 import packman.repository.CategoryRepository;
 import packman.repository.PackRepository;
-import packman.repository.UserRepository;
 import packman.repository.packingList.AlonePackingListRepository;
 import packman.repository.packingList.PackingListRepository;
 import packman.repository.packingList.TogetherPackingListRepository;
@@ -25,7 +24,6 @@ import static packman.validator.Validator.*;
 @Transactional
 @RequiredArgsConstructor
 public class PackService {
-    private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
     private final PackingListRepository packingListRepository;
     private final TogetherPackingListRepository togetherPackingListRepository;
@@ -53,7 +51,7 @@ public class PackService {
     }
 
     public void addPackInCategory(PackCreateDto packCreateDto, PackingList packingList) {
-        Long categoryId = Long.valueOf(packCreateDto.getListId());
+        Long categoryId = Long.valueOf(packCreateDto.getCategoryId());
         String packName = packCreateDto.getName();
 
         Category category = validateCategoryId(categoryRepository, categoryId);

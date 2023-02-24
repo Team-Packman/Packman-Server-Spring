@@ -5,7 +5,9 @@ import org.springframework.stereotype.Repository;
 import packman.dto.category.CategoryPackMapping;
 import packman.entity.Category;
 
+import java.util.List;
+
 @Repository
 public interface CategoryRepository extends JpaRepository<Category, Long> {
-    CategoryPackMapping findByPackingListId(Long listId);
+    List<CategoryPackMapping> findByPackingListId(Long listId);
 }
