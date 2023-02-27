@@ -90,15 +90,15 @@ public class Validator {
         return userGroup.getUser();
     }
 
-    public static Template validateListTemplate(TemplateRepository templateRepository, AlonePackingList aloneList){
+    public static Template validateListTemplate(TemplateRepository templateRepository, AlonePackingList aloneList) {
         return templateRepository.findByAlonePackingListAndIsDeleted(aloneList, false).orElseThrow(
                 () -> new CustomException(ResponseCode.NO_TEMPLATE)
         );
     }
 
-    public static AlonePackingList validateUserAloneListIsSaved(FolderPackingListRepository folderPackingListRepository,Long userId, Long listId, boolean isSaved){
+    public static AlonePackingList validateUserAloneListIsSaved(FolderPackingListRepository folderPackingListRepository, Long userId, Long listId, boolean isSaved) {
         FolderPackingList folderPackingList = validateUserAloneListId(folderPackingListRepository, userId, listId);
-        if(folderPackingList.getAlonePackingList().getPackingList().getIsSaved() != isSaved){
+        if (folderPackingList.getAlonePackingList().getPackingList().getIsSaved() != isSaved) {
             throw new CustomException(ResponseCode.NO_LIST);
         }
         return folderPackingList.getAlonePackingList();
@@ -114,8 +114,9 @@ public class Validator {
 
         return togetherAlonePackingList;
     }
-    public static Pack validateListPack(PackRepository packRepository, PackingList packingList, Long packId){
-        return packRepository.findByIdAndCategory_PackingList(packId,packingList).orElseThrow(
+
+    public static Pack validateListPack(PackRepository packRepository, PackingList packingList, Long packId) {
+        return packRepository.findByIdAndCategory_PackingList(packId, packingList).orElseThrow(
                 () -> new CustomException(ResponseCode.NO_PACK)
         );
     }
@@ -125,6 +126,7 @@ public class Validator {
                 () -> new CustomException(ResponseCode.NO_PACKER)
         );
     }
+
     public static void validateTogetherListDeleted(TogetherPackingList togetherPackingList) {
         PackingList packingList = togetherPackingList.getPackingList();
         if (packingList.getIsDeleted()) {
@@ -140,7 +142,9 @@ public class Validator {
 
     public static List<FolderPackingList> validateFolderLists(FolderPackingListRepository folderPackingListRepository, Long folderId, List<Long> listIds) {
         List<FolderPackingList> folderPackingLists = folderPackingListRepository.findByFolderIdAndAlonePackingListIdIn(folderId, listIds);
-        if(folderPackingLists.size() != listIds.size()) { throw new CustomException(ResponseCode.NO_FOLDER_LIST);}
+        if (folderPackingLists.size() != listIds.size()) {
+            throw new CustomException(ResponseCode.NO_FOLDER_LIST);
+        }
 
         return folderPackingLists;
     }
@@ -176,6 +180,12 @@ public class Validator {
     public static User validateUserRefreshToken(UserRepository userRepository, Long userId, String refreshToken) {
         return userRepository.findByIdAndRefreshToken(userId, refreshToken).orElseThrow(
                 () -> new CustomException(ResponseCode.NO_USER_REFRESH_TOKEN)
+        );
+    }
+
+    public static TogetherAlonePackingList validateTogetherAlonePackingListByTogetherList(TogetherAlonePackingListRepository togetherAlonePackingListRepository, TogetherPackingList togetherPackingList) {
+        return togetherAlonePackingListRepository.findOneByTogetherPackingList(togetherPackingList).orElseThrow(
+                () -> new CustomException(ResponseCode.NO_LIST)
         );
     }
 }

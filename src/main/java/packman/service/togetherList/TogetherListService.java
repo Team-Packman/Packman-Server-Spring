@@ -219,7 +219,8 @@ public class TogetherListService {
             TogetherAlonePackingList togetherAlonePackingList = togetherAlonePackingListRepository.findByTogetherPackingListAndAlonePackingListFolderPackingListFolderUserId(togetherPackingList, userId);
             return new TogetherListInviteResponseDto(String.valueOf(togetherAlonePackingList.getId()), true);
         } else {
-            return new TogetherListInviteResponseDto(String.valueOf(togetherPackingList.getId()), false);
+            TogetherAlonePackingList togetherAlonePackingList = validateTogetherAlonePackingListByTogetherList(togetherAlonePackingListRepository, togetherPackingList);
+            return new TogetherListInviteResponseDto(String.valueOf(togetherAlonePackingList.getId()), false);
         }
     }
 
