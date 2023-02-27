@@ -184,7 +184,7 @@ public class Validator {
     }
 
     public static TogetherAlonePackingList validateTogetherAlonePackingListByTogetherList(TogetherAlonePackingListRepository togetherAlonePackingListRepository, TogetherPackingList togetherPackingList) {
-        return togetherAlonePackingListRepository.findOneByTogetherPackingList(togetherPackingList).orElseThrow(
+        return togetherAlonePackingListRepository.findTop1ByTogetherPackingList(togetherPackingList).orElseThrow(
                 () -> new CustomException(ResponseCode.NO_LIST)
         );
     }
