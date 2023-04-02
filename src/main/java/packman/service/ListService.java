@@ -90,24 +90,34 @@ public class ListService {
 
     public DepartureDateResponseDto updateDepartureDate(DepartureDateRequestDto departureDateRequestDto, Long userId) {
         Long listId = Long.parseLong(departureDateRequestDto.getId());
-        Long aloneListId = listId;
+        ArrayList<AlonePackingList> aloneLists = new ArrayList<>();
         LocalDate departureDate = LocalDate.parse(departureDateRequestDto.getDepartureDate(), DateTimeFormatter.ISO_DATE);
 
         if (!departureDateRequestDto.getIsAloned()) {
             TogetherAlonePackingList togetherAlonePackingList = togetherAlonePackingListRepository.findById(listId).orElseThrow(
                     () -> new CustomException(ResponseCode.NO_LIST));
-            listId = togetherAlonePackingList.getTogetherPackingList().getId();
-            aloneListId = togetherAlonePackingList.getAlonePackingList().getId();
+            TogetherPackingList togetherPackingList = togetherAlonePackingList.getTogetherPackingList();
+            listId = togetherPackingList.getId();
+            List<TogetherAlonePackingList> togetherAlonePackingLists = togetherPackingList.getTogetherAlonePackingLists();
+            for (TogetherAlonePackingList togetherAloneList : togetherAlonePackingLists) {
+                aloneLists.add(togetherAloneList.getAlonePackingList());
+            }
+        } else {
+            // 유저의 패킹리스트인지 검증
+            validateUserList(folderPackingListRepository, userId, listId).getAlonePackingList();
         }
-
-        // 유저의 패킹리스트인지 검증
-        validateUserList(folderPackingListRepository, userId, aloneListId);
 
         listRepository.findByIdAndIsDeleted(listId, false).ifPresentOrElse(t -> {
             t.setDepartureDate(departureDate);
         }, () -> {
             throw new CustomException(ResponseCode.NO_LIST);
         });
+
+        for (AlonePackingList aloneList : aloneLists) {
+            listRepository.findByIdAndIsDeleted(aloneList.getId(), false).ifPresent(t -> {
+                t.setDepartureDate(departureDate);
+            });
+        }
 
         return new DepartureDateResponseDto(departureDateRequestDto.getId(), departureDateRequestDto.getDepartureDate());
     }
