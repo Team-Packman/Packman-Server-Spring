@@ -86,7 +86,7 @@ public class AloneListCategoryService {
         Category category = validateCategoryId(categoryRepository, categoryId);
 
         // no_list_category
-        if (category.getPackingList().getId() != listId) {
+        if (!category.getPackingList().getId().equals(listId)) {
             throw new CustomException(ResponseCode.NO_LIST_CATEGORY);
         }
         // delete
