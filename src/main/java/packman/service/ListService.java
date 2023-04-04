@@ -64,9 +64,11 @@ public class ListService {
                     () -> new CustomException(ResponseCode.NO_LIST));
             TogetherPackingList togetherPackingList = togetherAlonePackingList.getTogetherPackingList();
             listId = togetherPackingList.getId();
-            List<TogetherAlonePackingList> togetherAlonePackingLists = togetherPackingList.getTogetherAlonePackingLists();
-            for (TogetherAlonePackingList togetherAloneList : togetherAlonePackingLists) {
-                aloneLists.add(togetherAloneList.getAlonePackingList());
+            List<AlonePackingList> myPackingLists = alonePackingListRepository.findByTogetherAlonePackingList_TogetherPackingList(togetherPackingList);
+            for (AlonePackingList myPackingList : myPackingLists) {
+                listRepository.findByIdAndIsDeleted(myPackingList.getId(), false).ifPresent(t -> {
+                    t.setTitle(title);
+                });
             }
         } else {
             // 유저의 패킹리스트인지 검증
@@ -78,12 +80,6 @@ public class ListService {
         }, () -> {
             throw new CustomException(ResponseCode.NO_LIST);
         });
-
-        for (AlonePackingList aloneList : aloneLists) {
-            listRepository.findByIdAndIsDeleted(aloneList.getId(), false).ifPresent(t -> {
-                t.setTitle(title);
-            });
-        }
 
         return new ListTitleResponseDto(listTitleRequestDto.getId(), title);
     }
@@ -98,9 +94,11 @@ public class ListService {
                     () -> new CustomException(ResponseCode.NO_LIST));
             TogetherPackingList togetherPackingList = togetherAlonePackingList.getTogetherPackingList();
             listId = togetherPackingList.getId();
-            List<TogetherAlonePackingList> togetherAlonePackingLists = togetherPackingList.getTogetherAlonePackingLists();
-            for (TogetherAlonePackingList togetherAloneList : togetherAlonePackingLists) {
-                aloneLists.add(togetherAloneList.getAlonePackingList());
+            List<AlonePackingList> myPackingLists = alonePackingListRepository.findByTogetherAlonePackingList_TogetherPackingList(togetherPackingList);
+            for (AlonePackingList myPackingList : myPackingLists) {
+                listRepository.findByIdAndIsDeleted(myPackingList.getId(), false).ifPresent(t -> {
+                    t.setDepartureDate(departureDate);
+                });
             }
         } else {
             // 유저의 패킹리스트인지 검증
@@ -112,12 +110,6 @@ public class ListService {
         }, () -> {
             throw new CustomException(ResponseCode.NO_LIST);
         });
-
-        for (AlonePackingList aloneList : aloneLists) {
-            listRepository.findByIdAndIsDeleted(aloneList.getId(), false).ifPresent(t -> {
-                t.setDepartureDate(departureDate);
-            });
-        }
 
         return new DepartureDateResponseDto(departureDateRequestDto.getId(), departureDateRequestDto.getDepartureDate());
     }
