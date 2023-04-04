@@ -26,7 +26,7 @@ public class TogetherAlonePackingList {
     @JoinColumn(name = "together_packing_list_id", nullable = false)
     private TogetherPackingList togetherPackingList;
 
-    @ManyToOne(fetch = LAZY)
+    @OneToOne(fetch = LAZY)
     @JoinColumn(name = "my_packing_list_id", nullable = false, unique = true)
     private AlonePackingList alonePackingList;
 
