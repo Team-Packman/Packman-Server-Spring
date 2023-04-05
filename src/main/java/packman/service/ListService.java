@@ -8,21 +8,21 @@ import packman.entity.Category;
 import packman.entity.Pack;
 import packman.entity.User;
 import packman.entity.packingList.AlonePackingList;
+import packman.entity.packingList.PackingList;
 import packman.entity.packingList.TogetherAlonePackingList;
+import packman.entity.packingList.TogetherPackingList;
 import packman.entity.template.Template;
 import packman.entity.template.TemplateCategory;
 import packman.entity.template.TemplatePack;
 import packman.repository.CategoryRepository;
-import packman.entity.packingList.PackingList;
-import packman.entity.packingList.TogetherPackingList;
 import packman.repository.FolderPackingListRepository;
 import packman.repository.UserRepository;
 import packman.repository.packingList.AlonePackingListRepository;
 import packman.repository.packingList.PackingListRepository;
 import packman.repository.packingList.TogetherAlonePackingListRepository;
+import packman.repository.packingList.TogetherPackingListRepository;
 import packman.repository.template.TemplateCategoryRepository;
 import packman.repository.template.TemplateRepository;
-import packman.repository.packingList.TogetherPackingListRepository;
 import packman.util.CustomException;
 import packman.util.ResponseCode;
 
@@ -53,43 +53,49 @@ public class ListService {
 
     public ListTitleResponseDto updateTitle(ListTitleRequestDto listTitleRequestDto, Long userId) {
         Long listId = Long.parseLong(listTitleRequestDto.getId());
-        Long aloneListId = listId;
         String title = listTitleRequestDto.getTitle();
-
+        List<AlonePackingList> myPackingLists = new ArrayList<>();
         //제목 글자수 검증
         validateListLength(title);
 
         if (!listTitleRequestDto.getIsAloned()) {
-            TogetherAlonePackingList togetherAlonePackingList = togetherAlonePackingListRepository.findById(listId).orElseThrow(
-                    () -> new CustomException(ResponseCode.NO_LIST));
-            listId = togetherAlonePackingList.getTogetherPackingList().getId();
-            aloneListId = togetherAlonePackingList.getAlonePackingList().getId();
+            TogetherAlonePackingList togetherAlonePackingList = validateTogetherAlonePackingListId(togetherAlonePackingListRepository, listId);
+            TogetherPackingList togetherPackingList = togetherAlonePackingList.getTogetherPackingList();
+            listId = togetherPackingList.getId();
+            myPackingLists = alonePackingListRepository.findByTogetherAlonePackingList_TogetherPackingList(togetherPackingList);
+        } else {
+            // 유저의 패킹리스트인지 검증
+            validateUserList(folderPackingListRepository, userId, listId);
         }
-
-        // 유저의 패킹리스트인지 검증
-        validateUserList(folderPackingListRepository, userId, aloneListId);
 
         listRepository.findByIdAndIsDeleted(listId, false).ifPresentOrElse(t -> {
             t.setTitle(title);
-        }, () -> {throw new CustomException(ResponseCode.NO_LIST);});
+        }, () -> {
+            throw new CustomException(ResponseCode.NO_LIST);
+        });
 
+        for (AlonePackingList myPackingList : myPackingLists) {
+            listRepository.findByIdAndIsDeleted(myPackingList.getId(), false).ifPresent(t -> {
+                t.setTitle(title);
+            });
+        }
         return new ListTitleResponseDto(listTitleRequestDto.getId(), title);
     }
 
     public DepartureDateResponseDto updateDepartureDate(DepartureDateRequestDto departureDateRequestDto, Long userId) {
         Long listId = Long.parseLong(departureDateRequestDto.getId());
-        Long aloneListId = listId;
         LocalDate departureDate = LocalDate.parse(departureDateRequestDto.getDepartureDate(), DateTimeFormatter.ISO_DATE);
+        List<AlonePackingList> myPackingLists = new ArrayList<>();
 
         if (!departureDateRequestDto.getIsAloned()) {
-            TogetherAlonePackingList togetherAlonePackingList = togetherAlonePackingListRepository.findById(listId).orElseThrow(
-                    () -> new CustomException(ResponseCode.NO_LIST));
-            listId = togetherAlonePackingList.getTogetherPackingList().getId();
-            aloneListId = togetherAlonePackingList.getAlonePackingList().getId();
+            TogetherAlonePackingList togetherAlonePackingList = validateTogetherAlonePackingListId(togetherAlonePackingListRepository, listId);
+            TogetherPackingList togetherPackingList = togetherAlonePackingList.getTogetherPackingList();
+            listId = togetherPackingList.getId();
+            myPackingLists = alonePackingListRepository.findByTogetherAlonePackingList_TogetherPackingList(togetherPackingList);
+        } else {
+            // 유저의 패킹리스트인지 검증
+            validateUserList(folderPackingListRepository, userId, listId);
         }
-
-        // 유저의 패킹리스트인지 검증
-        validateUserList(folderPackingListRepository, userId, aloneListId);
 
         listRepository.findByIdAndIsDeleted(listId, false).ifPresentOrElse(t -> {
             t.setDepartureDate(departureDate);
@@ -97,6 +103,11 @@ public class ListService {
             throw new CustomException(ResponseCode.NO_LIST);
         });
 
+        for (AlonePackingList myPackingList : myPackingLists) {
+            listRepository.findByIdAndIsDeleted(myPackingList.getId(), false).ifPresent(t -> {
+                t.setDepartureDate(departureDate);
+            });
+        }
         return new DepartureDateResponseDto(departureDateRequestDto.getId(), departureDateRequestDto.getDepartureDate());
     }
 
@@ -155,12 +166,12 @@ public class ListService {
 
     public ListResponseDto getPackingListTitleAndDate(Long listId, boolean isAloned, Long userId) {
 
-        if(!isAloned) {
+        if (!isAloned) {
             TogetherAlonePackingList togetherAlonePackingList = validateTogetherAlonePackingListId(togetherAlonePackingListRepository, listId);
             listId = togetherAlonePackingList.getAlonePackingList().getId();
         }
 
-        AlonePackingList alonePackingList = validateAlonePackingListId(alonePackingListRepository , listId);
+        AlonePackingList alonePackingList = validateAlonePackingListId(alonePackingListRepository, listId);
         PackingList packingList = alonePackingList.getPackingList();
         validateUserList(folderPackingListRepository, userId, packingList.getId());
 

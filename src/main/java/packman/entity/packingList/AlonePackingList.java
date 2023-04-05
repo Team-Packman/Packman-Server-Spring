@@ -39,8 +39,8 @@ public class AlonePackingList {
     @OneToOne(mappedBy = "alonePackingList", cascade = CascadeType.ALL)
     private FolderPackingList folderPackingList;
 
-    @OneToMany(mappedBy = "alonePackingList", cascade = CascadeType.ALL)
-    private List<TogetherAlonePackingList> togetherAlonePackingLists = new ArrayList<>();
+    @OneToOne(mappedBy = "alonePackingList", cascade = CascadeType.ALL)
+    private TogetherAlonePackingList togetherAlonePackingList;
 
     public AlonePackingList(PackingList packingList, boolean isAloned) {
         this.packingList = packingList;
