@@ -53,26 +53,19 @@ public class ListService {
 
     public ListTitleResponseDto updateTitle(ListTitleRequestDto listTitleRequestDto, Long userId) {
         Long listId = Long.parseLong(listTitleRequestDto.getId());
-        ArrayList<AlonePackingList> aloneLists = new ArrayList<>();
         String title = listTitleRequestDto.getTitle();
-
+        List<AlonePackingList> myPackingLists = new ArrayList<>();
         //제목 글자수 검증
         validateListLength(title);
 
         if (!listTitleRequestDto.getIsAloned()) {
-            TogetherAlonePackingList togetherAlonePackingList = togetherAlonePackingListRepository.findById(listId).orElseThrow(
-                    () -> new CustomException(ResponseCode.NO_LIST));
+            TogetherAlonePackingList togetherAlonePackingList = validateTogetherAlonePackingListId(togetherAlonePackingListRepository, listId);
             TogetherPackingList togetherPackingList = togetherAlonePackingList.getTogetherPackingList();
             listId = togetherPackingList.getId();
-            List<AlonePackingList> myPackingLists = alonePackingListRepository.findByTogetherAlonePackingList_TogetherPackingList(togetherPackingList);
-            for (AlonePackingList myPackingList : myPackingLists) {
-                listRepository.findByIdAndIsDeleted(myPackingList.getId(), false).ifPresent(t -> {
-                    t.setTitle(title);
-                });
-            }
+            myPackingLists = alonePackingListRepository.findByTogetherAlonePackingList_TogetherPackingList(togetherPackingList);
         } else {
             // 유저의 패킹리스트인지 검증
-            validateUserList(folderPackingListRepository, userId, listId).getAlonePackingList();
+            validateUserList(folderPackingListRepository, userId, listId);
         }
 
         listRepository.findByIdAndIsDeleted(listId, false).ifPresentOrElse(t -> {
@@ -81,28 +74,27 @@ public class ListService {
             throw new CustomException(ResponseCode.NO_LIST);
         });
 
+        for (AlonePackingList myPackingList : myPackingLists) {
+            listRepository.findByIdAndIsDeleted(myPackingList.getId(), false).ifPresent(t -> {
+                t.setTitle(title);
+            });
+        }
         return new ListTitleResponseDto(listTitleRequestDto.getId(), title);
     }
 
     public DepartureDateResponseDto updateDepartureDate(DepartureDateRequestDto departureDateRequestDto, Long userId) {
         Long listId = Long.parseLong(departureDateRequestDto.getId());
-        ArrayList<AlonePackingList> aloneLists = new ArrayList<>();
         LocalDate departureDate = LocalDate.parse(departureDateRequestDto.getDepartureDate(), DateTimeFormatter.ISO_DATE);
+        List<AlonePackingList> myPackingLists = new ArrayList<>();
 
         if (!departureDateRequestDto.getIsAloned()) {
-            TogetherAlonePackingList togetherAlonePackingList = togetherAlonePackingListRepository.findById(listId).orElseThrow(
-                    () -> new CustomException(ResponseCode.NO_LIST));
+            TogetherAlonePackingList togetherAlonePackingList = validateTogetherAlonePackingListId(togetherAlonePackingListRepository, listId);
             TogetherPackingList togetherPackingList = togetherAlonePackingList.getTogetherPackingList();
             listId = togetherPackingList.getId();
-            List<AlonePackingList> myPackingLists = alonePackingListRepository.findByTogetherAlonePackingList_TogetherPackingList(togetherPackingList);
-            for (AlonePackingList myPackingList : myPackingLists) {
-                listRepository.findByIdAndIsDeleted(myPackingList.getId(), false).ifPresent(t -> {
-                    t.setDepartureDate(departureDate);
-                });
-            }
+            myPackingLists = alonePackingListRepository.findByTogetherAlonePackingList_TogetherPackingList(togetherPackingList);
         } else {
             // 유저의 패킹리스트인지 검증
-            validateUserList(folderPackingListRepository, userId, listId).getAlonePackingList();
+            validateUserList(folderPackingListRepository, userId, listId);
         }
 
         listRepository.findByIdAndIsDeleted(listId, false).ifPresentOrElse(t -> {
@@ -111,6 +103,11 @@ public class ListService {
             throw new CustomException(ResponseCode.NO_LIST);
         });
 
+        for (AlonePackingList myPackingList : myPackingLists) {
+            listRepository.findByIdAndIsDeleted(myPackingList.getId(), false).ifPresent(t -> {
+                t.setDepartureDate(departureDate);
+            });
+        }
         return new DepartureDateResponseDto(departureDateRequestDto.getId(), departureDateRequestDto.getDepartureDate());
     }
 
