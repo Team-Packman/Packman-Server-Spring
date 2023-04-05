@@ -17,11 +17,12 @@ import packman.entity.template.TemplatePack;
 import packman.repository.CategoryRepository;
 import packman.repository.FolderPackingListRepository;
 import packman.repository.FolderRepository;
-import packman.repository.UserRepository;
 import packman.repository.packingList.AlonePackingListRepository;
 import packman.repository.packingList.PackingListRepository;
 import packman.repository.template.TemplateCategoryRepository;
 import packman.repository.template.TemplateRepository;
+import packman.util.CustomException;
+import packman.util.ResponseCode;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -37,7 +38,6 @@ import static packman.validator.Validator.*;
 @Transactional
 @RequiredArgsConstructor
 public class AloneListService {
-    private final UserRepository userRepository;
     private final FolderRepository folderRepository;
     private final PackingListRepository packingListRepository;
     private final AlonePackingListRepository alonePackingListRepository;
@@ -94,32 +94,47 @@ public class AloneListService {
         }
         ListResponseMapping savedCategories = packingListRepository.findByIdAndTitle(savedList.getId(), savedList.getTitle());
 
-        AloneListResponseDto aloneListResponseDto = AloneListResponseDto.builder()
+        return AloneListResponseDto.builder()
                 .id(Long.toString(savedList.getId()))
                 .title(savedList.getTitle())
                 .departureDate(savedList.getDepartureDate().toString())
                 .category(savedCategories.getCategory())
                 .inviteCode(savedAloneList.getInviteCode())
                 .isSaved(savedList.getIsSaved()).build();
-
-        return aloneListResponseDto;
     }
 
-    public DetailedAloneListResponseDto getAloneList(Long listId, Long userId) {
+    public DetailedAloneListResponseDto getAloneList(Long listId, Long userId, String inviteCode) {
 
-        // 유저의 혼자 패킹리스트인지 검증
-        FolderPackingList folderPackingList = validateUserAloneListId(folderPackingListRepository, userId, listId);
+        // 생성자가 본인 패킹리스트 조회
+        if (inviteCode == null) {
+            // 유저의 혼자 패킹리스트인지 검증
+            FolderPackingList folderPackingList = validateUserAloneListId(folderPackingListRepository, userId, listId);
+
+            ListResponseMapping categories = packingListRepository.findProjectionById(listId);
+
+            return DetailedAloneListResponseDto.builder()
+                    .id(folderPackingList.getAlonePackingList().getId().toString())
+                    .folderId(folderPackingList.getFolder().getId().toString())
+                    .category(categories.getCategory())
+                    .inviteCode(folderPackingList.getAlonePackingList().getInviteCode())
+                    .isSaved(folderPackingList.getAlonePackingList().getPackingList().getIsSaved()).build();
+        }
+
+        // 초대코드로 패킹리스트 조회
+        AlonePackingList alonePackingList = validateAlonePackingListByInviteCode(alonePackingListRepository, inviteCode);
+
+        if (!alonePackingList.getId().equals(listId)) {
+            throw new CustomException(ResponseCode.NO_LIST);
+        }
 
         ListResponseMapping categories = packingListRepository.findProjectionById(listId);
 
-        DetailedAloneListResponseDto detailedAloneListResponseDto = DetailedAloneListResponseDto.builder()
-                .id(folderPackingList.getAlonePackingList().getId().toString())
-                .folderId(folderPackingList.getFolder().getId().toString())
+        return DetailedAloneListResponseDto.builder()
+                .id(alonePackingList.getId().toString())
+                .folderId(alonePackingList.getFolderPackingList().getFolder().getId().toString())
                 .category(categories.getCategory())
-                .inviteCode(folderPackingList.getAlonePackingList().getInviteCode())
-                .isSaved(folderPackingList.getAlonePackingList().getPackingList().getIsSaved()).build();
-
-        return detailedAloneListResponseDto;
+                .inviteCode(inviteCode)
+                .isSaved(alonePackingList.getPackingList().getIsSaved()).build();
     }
 
     public void deleteAloneList(Long userId, Long folderId, List<Long> listIds) {

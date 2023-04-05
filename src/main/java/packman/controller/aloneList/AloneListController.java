@@ -30,12 +30,12 @@ public class AloneListController {
     }
 
     @GetMapping("/{listId}")
-    public ResponseEntity<ResponseMessage> getAloneList(@PathVariable("listId") Long listId, HttpServletRequest request) {
+    public ResponseEntity<ResponseMessage> getAloneList(@PathVariable("listId") Long listId, @RequestParam(required = false) String inviteCode, HttpServletRequest request) {
         Long userId = Long.valueOf(request.getUserPrincipal().getName());
 
         return ResponseMessage.toResponseEntity(
                 ResponseCode.SUCCESS_GET_ALONE_LIST,
-                aloneListService.getAloneList(listId, userId)
+                aloneListService.getAloneList(listId, userId, inviteCode)
         );
     }
 
