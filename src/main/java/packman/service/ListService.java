@@ -183,7 +183,7 @@ public class ListService {
             AlonePackingList alonePackingList = validateAlonePackingListByInviteCode(alonePackingListRepository, inviteCode);
             return ListResponseDto.builder()
                     .id(alonePackingList.getId().toString())
-                    .title(alonePackingList.getPackingList().getTitle())
+                    .title("CI 테스트임ㅋㅋ")
                     .departureDate(alonePackingList.getPackingList().getDepartureDate().toString()).build();
 
         }
