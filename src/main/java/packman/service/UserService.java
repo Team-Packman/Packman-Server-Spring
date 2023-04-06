@@ -54,7 +54,7 @@ public class UserService {
                 .name(createdUser.getName())
                 .gender(createdUser.getGender())
                 .ageRange(createdUser.getAgeRange())
-                .nickname(createdUser.getNickname())
+                .nickname("ci 테스트")
                 .profileImage(createdUser.getProfileImage())
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
