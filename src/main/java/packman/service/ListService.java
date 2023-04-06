@@ -164,21 +164,29 @@ public class ListService {
                 .isSaved(aloneList.getPackingList().getIsSaved()).build();
     }
 
-    public ListResponseDto getPackingListTitleAndDate(Long listId, boolean isAloned, Long userId) {
+    public ListResponseDto getPackingListTitleAndDate(Long listId, boolean isAloned, Long userId, String inviteCode) {
+        if (inviteCode == null) {
+            if (!isAloned) {
+                TogetherAlonePackingList togetherAlonePackingList = validateTogetherAlonePackingListId(togetherAlonePackingListRepository, listId);
+                listId = togetherAlonePackingList.getAlonePackingList().getId();
+            }
 
-        if (!isAloned) {
-            TogetherAlonePackingList togetherAlonePackingList = validateTogetherAlonePackingListId(togetherAlonePackingListRepository, listId);
-            listId = togetherAlonePackingList.getAlonePackingList().getId();
+            AlonePackingList alonePackingList = validateAlonePackingListId(alonePackingListRepository, listId);
+            PackingList packingList = alonePackingList.getPackingList();
+            validateUserList(folderPackingListRepository, userId, packingList.getId());
+
+            return ListResponseDto.builder()
+                    .id(packingList.getId().toString())
+                    .title(packingList.getTitle())
+                    .departureDate(packingList.getDepartureDate().toString()).build();
+        } else {
+            AlonePackingList alonePackingList = validateAlonePackingListByInviteCode(alonePackingListRepository, inviteCode);
+            return ListResponseDto.builder()
+                    .id(alonePackingList.getId().toString())
+                    .title(alonePackingList.getPackingList().getTitle())
+                    .departureDate(alonePackingList.getPackingList().getDepartureDate().toString()).build();
+
         }
-
-        AlonePackingList alonePackingList = validateAlonePackingListId(alonePackingListRepository, listId);
-        PackingList packingList = alonePackingList.getPackingList();
-        validateUserList(folderPackingListRepository, userId, packingList.getId());
-
-        return ListResponseDto.builder()
-                .id(packingList.getId().toString())
-                .title(packingList.getTitle())
-                .departureDate(packingList.getDepartureDate().toString()).build();
     }
 
     public InviteListResponseDto getInviteList(String listType, String inviteCode) {

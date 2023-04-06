@@ -56,12 +56,12 @@ public class ListController {
     }
 
     @GetMapping("/{listId}/title-date")
-    public ResponseEntity<ResponseMessage> getPackingListTitleAndDate(@PathVariable Long listId, @RequestParam boolean isAloned, HttpServletRequest request) {
+    public ResponseEntity<ResponseMessage> getPackingListTitleAndDate(@PathVariable Long listId, @RequestParam boolean isAloned, @RequestParam(required = false) String inviteCode, HttpServletRequest request) {
         Long userId = Long.valueOf(request.getUserPrincipal().getName());
 
         return ResponseMessage.toResponseEntity(
                 ResponseCode.GET_LIST_TITLE_DEPARTURE_DATE_SUCCESS,
-                listService.getPackingListTitleAndDate(listId, isAloned, userId)
+                listService.getPackingListTitleAndDate(listId, isAloned, userId, inviteCode)
         );
     }
     @GetMapping("/{listType}/share/{inviteCode}")
