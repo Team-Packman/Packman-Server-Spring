@@ -17,7 +17,7 @@ public class CorsFilter implements Filter {
         HttpServletResponse response = (HttpServletResponse) res;
         HttpServletRequest request = (HttpServletRequest) req;
 
-        response.setHeader("Access-Control-Allow-Origin", "www.packman.kr");
+        response.setHeader("Access-Control-Allow-Origin", "https://www.packman.kr");
 //        response.setHeader("Access-Control-Allow-Origin", "*");
 
         response.setHeader("Access-Control-Allow-Credentials", "true");
