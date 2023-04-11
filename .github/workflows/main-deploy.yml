@@ -11,7 +11,7 @@ env:
   AWS_REGION: ap-northeast-2
   S3_BUCKET_NAME: packman-prod-s3
   CODE_DEPLOY_APPLICATION_NAME: packman-codeploy-prod
-  CODE_DEPLOY_DEPLOYMENT_GROUP_NAME: packma-codedeploy-prod-group
+  CODE_DEPLOY_DEPLOYMENT_GROUP_NAME: packman-codedeploy-prod-group
 
 permissions:
   contents: read
