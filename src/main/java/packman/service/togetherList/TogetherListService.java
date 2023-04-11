@@ -5,6 +5,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import packman.dto.list.*;
+import packman.dto.list.alone.MyListDto;
 import packman.dto.member.MemberAddDto;
 import packman.dto.member.MemberAddResponseDto;
 import packman.dto.togetherList.PackerUpdateDto;
@@ -132,16 +133,19 @@ public class TogetherListService {
                 .groupId(Long.toString(savedTogetherPackingList.getGroup().getId()))
                 .category(savedTogetherCategories.getCategory())
                 .inviteCode(savedTogetherPackingList.getInviteCode())
-                .isSaved(savedTogetherList.getIsSaved()).build();
+                .build();
 
-        TogetherListResponseDto togetherListResponseDto = TogetherListResponseDto.builder()
+        MyListDto myListDto = MyListDto.builder()
+                .category(savedMyIdCategories)
+                .isSaved(savedMyList.getIsSaved())
+                .build();
+
+        return TogetherListResponseDto.builder()
                 .id(Long.toString(savedTogetherAloneList.getId()))
                 .title(savedTogetherList.getTitle())
                 .departureDate(savedTogetherList.getDepartureDate().toString())
                 .togetherPackingList(togetherListDto)
-                .myPackingList(savedMyIdCategories).build();
-
-        return togetherListResponseDto;
+                .myPackingList(myListDto).build();
     }
 
     public void deleteTogetherList(Long userId, Long folderId, List<Long> listIds) {

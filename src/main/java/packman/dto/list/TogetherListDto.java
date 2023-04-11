@@ -14,6 +14,4 @@ public class TogetherListDto {
     String groupId;
     List<CategoryInfo> category;
     String inviteCode;
-    @JsonProperty("isSaved")
-    boolean isSaved;
 }
