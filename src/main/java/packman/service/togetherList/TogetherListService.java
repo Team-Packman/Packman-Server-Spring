@@ -242,15 +242,18 @@ public class TogetherListService {
                 .groupId(Long.toString(togetherAloneList.getTogetherPackingList().getGroup().getId()))
                 .category(togetherIdCategories.getCategory())
                 .inviteCode(togetherAloneList.getTogetherPackingList().getInviteCode())
-                .isSaved(togetherAloneList.getTogetherPackingList().getPackingList().getIsSaved()).build();
+                .build();
 
-        DetaildTogetherListResponseDto detaildTogetherListResponseDto= DetaildTogetherListResponseDto.builder()
+        MyListDto myListDto = MyListDto.builder()
+                .category(myIdCategories)
+                .isSaved(togetherAloneList.getAlonePackingList().getPackingList().getIsSaved())
+                .build();
+
+        return DetaildTogetherListResponseDto.builder()
                 .id(togetherAloneList.getId().toString())
                 .folderId(folderPackingList.getFolder().getId().toString())
                 .togetherPackingList(togetherListDto)
-                .myPackingList(myIdCategories).build();
-
-        return detaildTogetherListResponseDto;
+                .myPackingList(myListDto).build();
     }
 
     public ListResponseMapping updatePacker(PackerUpdateDto packerUpdateDto, Long userId) {
