@@ -115,8 +115,11 @@ public enum ResponseCode {
     SUCCESS_GET_DETAILED_TEMPLATE(HttpStatus.OK, true, "템플릿 상세조회 성공"),
 
     // 엿보기
-    SUCCESS_GET_HELP(HttpStatus.OK, true, "엿보기 조회 성공");
-
+    SUCCESS_GET_HELP(HttpStatus.OK, true, "엿보기 조회 성공"),
+    
+    // 알림
+    SUCCESS_GET_ALARM(HttpStatus.OK, true, "알림 조회 성공");
+    
     private final HttpStatus httpStatus;
     private final Boolean success;
     private final String message;
