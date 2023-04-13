@@ -267,15 +267,19 @@ public class TogetherListService {
         // 리스트에 존재하는 짐인지 검증
         Pack pack = validateListPack(packRepository, togetherPackingList.getPackingList(), Long.parseLong(packerUpdateDto.getPackId()));
 
-        if(!packerId.equals(userId)){
+        if (!packerId.equals(userId)) {
             // packer가 삭제 안된 user이며 userGroup에 존재하는지 검증
             UserGroup userGroup = validateUserInUserGroup(userGroupRepository, togetherPackingList.getGroup(), packerId);
             pack.setPacker(userGroup.getUser());
-        }else{
+        } else {
             pack.setPacker(user);
         }
 
-        return packingListRepository.findProjectionById(togetherPackingList.getId());
+        ListResponseMapping listResponseMapping = packingListRepository.findProjectionById(togetherPackingList.getId());
+
+        LogMessage.setNonDataLog("패킹리스트 수정", userId);
+
+        return listResponseMapping;
     }
 
     public MemberAddResponseDto addMember(MemberAddDto memberAddDto, Long userId) {

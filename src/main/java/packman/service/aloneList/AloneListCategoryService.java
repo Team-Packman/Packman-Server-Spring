@@ -12,6 +12,7 @@ import packman.repository.CategoryRepository;
 import packman.repository.packingList.AlonePackingListRepository;
 import packman.repository.packingList.PackingListRepository;
 import packman.util.CustomException;
+import packman.util.LogMessage;
 import packman.util.ResponseCode;
 
 import static packman.validator.DuplicatedValidator.validateDuplicatedCategory;
@@ -45,6 +46,9 @@ public class AloneListCategoryService {
 
         // response
         ListResponseMapping listResponseMapping = packingListRepository.findByIdAndTitle(Long.parseLong(categoryCreateDto.getListId()), packingList.getTitle());
+
+        LogMessage.setNonDataLog("패킹리스트 수정", userId);
+
         return listResponseMapping;
     }
 
@@ -71,6 +75,9 @@ public class AloneListCategoryService {
 
         // response
         ListResponseMapping categoryResponseDto = packingListRepository.findByIdAndTitle(Long.parseLong(categoryUpdateDto.getListId()), packingList.getTitle());
+
+        LogMessage.setNonDataLog("패킹리스트 수정", userId);
+
         return categoryResponseDto;
     }
 
@@ -92,5 +99,6 @@ public class AloneListCategoryService {
         // delete
         categoryRepository.delete(category);
 
+        LogMessage.setNonDataLog("패킹리스트 수정", userId);
     }
 }

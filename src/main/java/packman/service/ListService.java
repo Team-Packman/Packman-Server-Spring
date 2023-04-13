@@ -24,6 +24,7 @@ import packman.repository.packingList.TogetherPackingListRepository;
 import packman.repository.template.TemplateCategoryRepository;
 import packman.repository.template.TemplateRepository;
 import packman.util.CustomException;
+import packman.util.LogMessage;
 import packman.util.ResponseCode;
 
 import java.time.LocalDate;
@@ -79,7 +80,15 @@ public class ListService {
                 t.setTitle(title);
             });
         }
-        return new ListTitleResponseDto(listTitleRequestDto.getId(), title);
+
+        ListTitleResponseDto listTitleResponseDto = ListTitleResponseDto.builder()
+                .id(listTitleRequestDto.getId())
+                .title(title)
+                .build();
+
+        LogMessage.setNonDataLog("패킹리스트 수정", userId);
+
+        return listTitleResponseDto;
     }
 
     public DepartureDateResponseDto updateDepartureDate(DepartureDateRequestDto departureDateRequestDto, Long userId) {
@@ -108,7 +117,15 @@ public class ListService {
                 t.setDepartureDate(departureDate);
             });
         }
-        return new DepartureDateResponseDto(departureDateRequestDto.getId(), departureDateRequestDto.getDepartureDate());
+
+        DepartureDateResponseDto departureDateResponseDto = DepartureDateResponseDto.builder()
+                .id(departureDateRequestDto.getId())
+                .departureDate(departureDateRequestDto.getDepartureDate())
+                .build();
+
+        LogMessage.setNonDataLog("패킹리스트 수정", userId);
+
+        return departureDateResponseDto;
     }
 
     public UpdatedTemplateResponseDto updateMyTemplate(TemplateUpdateDto templateUpdateDto, Long userId) {
