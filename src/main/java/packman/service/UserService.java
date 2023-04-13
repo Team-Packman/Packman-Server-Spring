@@ -92,6 +92,8 @@ public class UserService {
         }
 
         userRepository.setUserIsDeletedByUserId(userId);
+
+        LogMessage.setNonDataLog("유저 탈퇴", userId);
     }
 
 
