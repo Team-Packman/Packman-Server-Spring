@@ -136,7 +136,8 @@ public class TogetherListService {
                 .build();
 
         MyListDto myListDto = MyListDto.builder()
-                .category(savedMyIdCategories)
+                .id(savedMyPackingList.getId().toString())
+                .category(savedMyIdCategories.getCategory())
                 .isSaved(savedMyList.getIsSaved())
                 .build();
 
@@ -245,7 +246,8 @@ public class TogetherListService {
                 .build();
 
         MyListDto myListDto = MyListDto.builder()
-                .category(myIdCategories)
+                .id(togetherAloneList.getAlonePackingList().getId().toString())
+                .category(myIdCategories.getCategory())
                 .isSaved(togetherAloneList.getAlonePackingList().getPackingList().getIsSaved())
                 .build();
 
