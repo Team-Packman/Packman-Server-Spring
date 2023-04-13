@@ -47,8 +47,8 @@ public class AuthController {
         );
     }
 
+    @CrossOrigin(origins = "*", allowedHeaders = "*")
     @GetMapping("/token")
-    @CrossOrigin(origins = "*")
     public ResponseEntity<ResponseMessage> getNewToken(HttpServletRequest request) {
         String accessToken = jwtTokenProvider.resolveAccessToken(request);
         String refreshToken = jwtTokenProvider.resolveRefreshToken(request);
