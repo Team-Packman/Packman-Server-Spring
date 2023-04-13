@@ -1,6 +1,9 @@
 package packman.auth;
 
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
@@ -101,10 +104,10 @@ public class JwtTokenProvider {
         try {
             Jwts.parserBuilder().setSigningKey(getSignKey()).build().parseClaimsJws(token);
             return "ok";
-        } catch (SecurityException | MalformedJwtException | IllegalArgumentException | UnsupportedJwtException ex) {
-            return "invalid_token";
         } catch (ExpiredJwtException ex) {
             return "expired_token";
+        } catch (Exception ex) {
+            return "invalid_token";
         }
     }
 
