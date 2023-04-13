@@ -1,11 +1,11 @@
 package packman.dto.list;
 
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 
 @Data
-@AllArgsConstructor
+@Builder
 public class DepartureDateResponseDto {
     private String id;
-    private String title;
+    private String departureDate;
 }

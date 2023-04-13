@@ -14,6 +14,7 @@ import packman.repository.PackRepository;
 import packman.repository.packingList.AlonePackingListRepository;
 import packman.repository.packingList.PackingListRepository;
 import packman.repository.packingList.TogetherPackingListRepository;
+import packman.util.LogMessage;
 import packman.validator.Validator;
 
 import static packman.validator.IdValidator.validateCategoryId;
@@ -37,7 +38,11 @@ public class PackService {
 
         addPackInCategory(packCreateDto, packingList);
 
-        return packingListRepository.findByIdAndTitle(aloneListId, packingList.getTitle());
+        ListResponseMapping listResponseMapping = packingListRepository.findByIdAndTitle(aloneListId, packingList.getTitle());
+
+        LogMessage.setNonDataLog("패킹리스트 수정", userId);
+
+        return listResponseMapping;
     }
 
     public ListResponseMapping createTogetherPack(PackCreateDto packCreateDto, Long userId) {
@@ -47,7 +52,11 @@ public class PackService {
 
         addPackInCategory(packCreateDto, packingList);
 
-        return packingListRepository.findByIdAndTitle(togetherListId, packingList.getTitle());
+        ListResponseMapping listResponseMapping = packingListRepository.findByIdAndTitle(togetherListId, packingList.getTitle());
+
+        LogMessage.setNonDataLog("패킹리스트 수정", userId);
+
+        return listResponseMapping;
     }
 
     public void addPackInCategory(PackCreateDto packCreateDto, PackingList packingList) {
@@ -70,7 +79,11 @@ public class PackService {
 
         updatePackInCategory(packUpdateDto, packingList);
 
-        return packingListRepository.findByIdAndTitle(aloneListId, packingList.getTitle());
+        ListResponseMapping listResponseMapping = packingListRepository.findByIdAndTitle(aloneListId, packingList.getTitle());
+
+        LogMessage.setNonDataLog("패킹리스트 수정", userId);
+
+        return listResponseMapping;
     }
 
     public ListResponseMapping updateTogetherPack(PackUpdateDto packUpdateDto, Long userId) {
@@ -80,7 +93,11 @@ public class PackService {
 
         updatePackInCategory(packUpdateDto, packingList);
 
-        return packingListRepository.findByIdAndTitle(togetherListId, packingList.getTitle());
+        ListResponseMapping listResponseMapping = packingListRepository.findByIdAndTitle(togetherListId, packingList.getTitle());
+
+        LogMessage.setNonDataLog("패킹리스트 수정", userId);
+
+        return listResponseMapping;
     }
 
     public void updatePackInCategory(PackUpdateDto packUpdateDto, PackingList packingList) {
@@ -99,11 +116,15 @@ public class PackService {
         PackingList packingList = validateUserAloneList(userId, listId, alonePackingListRepository, packingListRepository);
 
         packRepository.delete(validateListCategoryPack(packingList, categoryId, packId, categoryRepository, packRepository));
+
+        LogMessage.setNonDataLog("패킹리스트 수정", userId);
     }
 
     public void deleteTogetherPack(Long listId, Long categoryId, Long packId, Long userId) {
         PackingList packingList = validateTogetherList(userId, listId, packingListRepository, togetherPackingListRepository);
 
         packRepository.delete(validateListCategoryPack(packingList, categoryId, packId, categoryRepository, packRepository));
+
+        LogMessage.setNonDataLog("패킹리스트 수정", userId);
     }
 }

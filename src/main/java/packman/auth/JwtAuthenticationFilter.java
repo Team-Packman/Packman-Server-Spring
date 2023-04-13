@@ -34,21 +34,20 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             if (userId == null) {
                 setErrorResponse(response, ResponseCode.NO_USER);
-                logger.info("userId is null");
+                logger.error(ResponseCode.NO_USER.getMessage());
                 return;
             }
-            logger.info("valid accessToken");
         } else if (accessToken.equals("")) {
             setErrorResponse((HttpServletResponse) response, ResponseCode.NO_TOKEN);
-            logger.info("no accessToken");
+            logger.error(ResponseCode.NO_TOKEN.getMessage());
             return;
         } else if (jwtTokenProvider.isValidateToken(accessToken).equals("invalid_token")) {
             setErrorResponse((HttpServletResponse) response, ResponseCode.INVALIDE_TOKEN);
-            logger.info("invalid accessToken");
+            logger.error(ResponseCode.INVALIDE_TOKEN.getMessage());
             return;
         } else if (jwtTokenProvider.isValidateToken(accessToken).equals("expired_token")) {
             setErrorResponse((HttpServletResponse) response, ResponseCode.EXPIRED_TOKEN);
-            logger.info("expired accessToken");
+            logger.error(ResponseCode.EXPIRED_TOKEN.getMessage());
             return;
         }
         chain.doFilter(request, response);

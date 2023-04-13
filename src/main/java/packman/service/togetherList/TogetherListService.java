@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import packman.dto.list.*;
 import packman.dto.list.alone.MyListDto;
+import packman.dto.log.TogetherListLogDto;
 import packman.dto.member.MemberAddDto;
 import packman.dto.member.MemberAddResponseDto;
 import packman.dto.togetherList.PackerUpdateDto;
@@ -25,6 +26,7 @@ import packman.repository.packingList.TogetherAlonePackingListRepository;
 import packman.repository.packingList.TogetherPackingListRepository;
 import packman.repository.template.TemplateCategoryRepository;
 import packman.repository.template.TemplateRepository;
+import packman.util.LogMessage;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -141,12 +143,25 @@ public class TogetherListService {
                 .isSaved(savedMyList.getIsSaved())
                 .build();
 
-        return TogetherListResponseDto.builder()
+        TogetherListResponseDto togetherListResponseDto = TogetherListResponseDto.builder()
                 .id(Long.toString(savedTogetherAloneList.getId()))
                 .title(savedTogetherList.getTitle())
                 .departureDate(savedTogetherList.getDepartureDate().toString())
                 .togetherPackingList(togetherListDto)
                 .myPackingList(myListDto).build();
+
+        TogetherListLogDto togetherListLogDto = TogetherListLogDto.builder()
+                .id(savedTogetherPackingList.getId()
+                        .toString()).templateId(listCreateDto.getTemplateId())
+                .title(savedTogetherList.getTitle())
+                .departureDate(savedTogetherList.getDepartureDate().toString())
+                .groupId(Long.toString(savedTogetherPackingList.getGroup().getId()))
+                .category(savedTogetherCategories.getCategory())
+                .build();
+
+        LogMessage.setDataLog("함께 패킹리스트 생성", togetherListLogDto, userId);
+
+        return togetherListResponseDto;
     }
 
     public void deleteTogetherList(Long userId, Long folderId, List<Long> listIds) {
@@ -220,13 +235,20 @@ public class TogetherListService {
 
         // 이미 추가된 멤버인지 확인
         Optional<UserGroup> userGroup = userGroupRepository.findByGroupAndUserId(togetherPackingList.getGroup(), userId);
+        String integratedId;
+        boolean isMember;
+
+        TogetherAlonePackingList togetherAlonePackingList;
         if (userGroup.isPresent()) {
-            TogetherAlonePackingList togetherAlonePackingList = togetherAlonePackingListRepository.findByTogetherPackingListAndAlonePackingListFolderPackingListFolderUserId(togetherPackingList, userId);
-            return new TogetherListInviteResponseDto(String.valueOf(togetherAlonePackingList.getId()), true);
+            togetherAlonePackingList = togetherAlonePackingListRepository.findByTogetherPackingListAndAlonePackingListFolderPackingListFolderUserId(togetherPackingList, userId);
+            isMember = true;
         } else {
-            TogetherAlonePackingList togetherAlonePackingList = validateTogetherAlonePackingListByTogetherList(togetherAlonePackingListRepository, togetherPackingList);
-            return new TogetherListInviteResponseDto(String.valueOf(togetherAlonePackingList.getId()), false);
+            togetherAlonePackingList = validateTogetherAlonePackingListByTogetherList(togetherAlonePackingListRepository, togetherPackingList);
+            isMember = false;
         }
+        integratedId = togetherAlonePackingList.getId().toString();
+
+        return TogetherListInviteResponseDto.builder().id(integratedId).isMember(isMember).build();
     }
 
     public DetaildTogetherListResponseDto getTogetherList(Long listId, Long userId) {
@@ -269,15 +291,19 @@ public class TogetherListService {
         // 리스트에 존재하는 짐인지 검증
         Pack pack = validateListPack(packRepository, togetherPackingList.getPackingList(), Long.parseLong(packerUpdateDto.getPackId()));
 
-        if(!packerId.equals(userId)){
+        if (!packerId.equals(userId)) {
             // packer가 삭제 안된 user이며 userGroup에 존재하는지 검증
             UserGroup userGroup = validateUserInUserGroup(userGroupRepository, togetherPackingList.getGroup(), packerId);
             pack.setPacker(userGroup.getUser());
-        }else{
+        } else {
             pack.setPacker(user);
         }
 
-        return packingListRepository.findProjectionById(togetherPackingList.getId());
+        ListResponseMapping listResponseMapping = packingListRepository.findProjectionById(togetherPackingList.getId());
+
+        LogMessage.setNonDataLog("패킹리스트 수정", userId);
+
+        return listResponseMapping;
     }
 
     public MemberAddResponseDto addMember(MemberAddDto memberAddDto, Long userId) {
@@ -324,6 +350,10 @@ public class TogetherListService {
         FolderPackingList folderPackingList = new FolderPackingList(defaultFolder, myPackingList);
         folderPackingListRepository.save(folderPackingList);
 
-        return new MemberAddResponseDto(newTogetherAlonePackingList.getId().toString());
+        MemberAddResponseDto memberAddResponseDto = MemberAddResponseDto.builder().listId(newTogetherAlonePackingList.getId().toString()).build();
+
+        LogMessage.setDataLog("함께 패킹리스트 초대 - 그룹원 추가", memberAddResponseDto, userId);
+
+        return memberAddResponseDto;
     }
 }
