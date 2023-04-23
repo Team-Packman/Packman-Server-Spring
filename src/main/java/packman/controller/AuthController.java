@@ -47,7 +47,7 @@ public class AuthController {
         );
     }
 
-    @CrossOrigin(origins = "https://www.packman.kr", allowedHeaders = "*")
+    @CrossOrigin(origins = {"https://www.packman.kr", "https://packgirl.ml", "http://localhost:3000"}, allowedHeaders = "*")
     @GetMapping("/token")
     public ResponseEntity<ResponseMessage> getNewToken(HttpServletRequest request) {
         String accessToken = jwtTokenProvider.resolveAccessToken(request);
