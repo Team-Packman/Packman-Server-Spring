@@ -29,8 +29,9 @@ public class CorsFilter implements Filter {
         String origin = request.getHeader("Origin");
         String allowedOrigins = "https://www.packman.kr, https://www.packgirl.ml, http://localhost:3000";
 
+        logger.info("origin: " + origin);
+
         if (allowedOrigins.contains(origin)) {
-            logger.info("origin: " + origin);
             response.setHeader("Access-Control-Allow-Origin", origin);
         }
 
