@@ -1,5 +1,6 @@
 package packman.auth;
 
+import com.auth0.jwt.JWT;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -13,16 +14,20 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
+import packman.repository.UserRepository;
+import packman.util.CustomException;
 import packman.util.ResponseCode;
 
 import javax.servlet.http.HttpServletRequest;
 import java.security.Key;
 import java.util.Date;
+import java.util.Objects;
 
 @Component
 public class JwtTokenProvider {
 
     private final UserDetailsService userDetailsService;
+    private final UserRepository userRepository;
     private final String secretKey;
     private final long accessTokenExpireLength;
     private final long refreshTokenExpireLength;
@@ -33,10 +38,11 @@ public class JwtTokenProvider {
 
     public JwtTokenProvider(
             UserDetailsService userDetailsService,
-            @Value("${jwt.token.secret-key}") String secretKey,
+            UserRepository userRepository, @Value("${jwt.token.secret-key}") String secretKey,
             @Value("${jwt.access-token.expire-length}") long accessTokenExpireLength,
             @Value("${jwt.refresh-token.expire-length}") long refreshTokenExpireLength) {
         this.userDetailsService = userDetailsService;
+        this.userRepository = userRepository;
         this.secretKey = secretKey;
         this.accessTokenExpireLength = accessTokenExpireLength;
         this.refreshTokenExpireLength = refreshTokenExpireLength;
@@ -95,7 +101,9 @@ public class JwtTokenProvider {
     }
 
     public String resolveRefreshToken(HttpServletRequest request) {
-        return request.getHeader(REFRESH_AUTHORIZATION_HEADER);
+        String header = request.getHeader(REFRESH_AUTHORIZATION_HEADER);
+
+        return Objects.requireNonNullElse(header, "");
     }
 
 
@@ -114,5 +122,15 @@ public class JwtTokenProvider {
     private Key getSignKey() {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         return Keys.hmacShaKeyFor(keyBytes);
+    }
+
+    public Long validateUserRefreshToken(String accessToken, String refreshToken) {
+        Long userId = Long.valueOf(JWT.decode(accessToken).getSubject());
+
+        userRepository.findByIdAndRefreshToken(userId, refreshToken).orElseThrow(
+                () -> new CustomException(ResponseCode.NO_USER_REFRESH_TOKEN)
+        );
+
+        return userId;
     }
 }

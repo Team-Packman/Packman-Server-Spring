@@ -29,27 +29,78 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
         String accessToken = jwtTokenProvider.resolveAccessToken((HttpServletRequest) request);  // header에서 가져온 accessToken
 
-        if (jwtTokenProvider.isValidateToken(accessToken).equals("ok")) {  // token 검증
-            String userId = setAuthentication(accessToken);
+        if (request.getRequestURI().equals("/auth/token")) {
+            String refreshToken = jwtTokenProvider.resolveRefreshToken((HttpServletRequest) request);
 
-            if (userId == null) {
-                setErrorResponse(response, ResponseCode.NO_USER);
-                logger.error(ResponseCode.NO_USER.getMessage());
+            // 만료된 refreshToken
+            if (jwtTokenProvider.isValidateToken(refreshToken).equals("ok")) {
+                if (jwtTokenProvider.isValidateToken(accessToken).equals("ok")) {
+                    setErrorResponse((HttpServletResponse) response, ResponseCode.VALID_ACCESS_TOKEN);
+                    logger.error(ResponseCode.VALID_ACCESS_TOKEN.getMessage());
+                    return;
+                } else if (accessToken.equals("")) {
+                    setErrorResponse((HttpServletResponse) response, ResponseCode.NO_TOKEN);
+                    logger.error(ResponseCode.NO_TOKEN.getMessage());
+                    return;
+                } else if (jwtTokenProvider.isValidateToken(accessToken).equals("invalid_token")) {
+                    setErrorResponse((HttpServletResponse) response, ResponseCode.INVALIDE_TOKEN);
+                    logger.error(ResponseCode.INVALIDE_TOKEN.getMessage());
+                    return;
+                } else if (jwtTokenProvider.isValidateToken(accessToken).equals("expired_token")) {
+                    // 토큰 재발급 성공
+                    Long userId = jwtTokenProvider.validateUserRefreshToken(accessToken, refreshToken);
+
+                    String newAccessToken = jwtTokenProvider.createAccessToken(userId.toString());
+
+                    setAuthentication(newAccessToken);
+                    request.setAttribute("newAccessToken", newAccessToken);
+                } else {
+                    logger.error("토큰 관련 예외 exception");
+                    return;
+                }
+            } else if (jwtTokenProvider.isValidateToken(refreshToken).equals("expired_token")) {
+                setErrorResponse((HttpServletResponse) response, ResponseCode.REFRESH_TOKEN_EXPIRED);
+                logger.error(ResponseCode.REFRESH_TOKEN_EXPIRED.getMessage());
+                return;
+            } else if (refreshToken.equals("")) {
+                setErrorResponse((HttpServletResponse) response, ResponseCode.NO_TOKEN);
+                logger.error(ResponseCode.NO_TOKEN.getMessage());
+                return;
+            } else if (jwtTokenProvider.isValidateToken(refreshToken).equals("invalid_token")) {
+                setErrorResponse((HttpServletResponse) response, ResponseCode.INVALIDE_TOKEN);
+                logger.error(ResponseCode.INVALIDE_TOKEN.getMessage());
+                return;
+            } else {
+                logger.error("토큰 관련 예외 exception");
                 return;
             }
-        } else if (accessToken.equals("")) {
-            setErrorResponse((HttpServletResponse) response, ResponseCode.NO_TOKEN);
-            logger.error(ResponseCode.NO_TOKEN.getMessage());
-            return;
-        } else if (jwtTokenProvider.isValidateToken(accessToken).equals("invalid_token")) {
-            setErrorResponse((HttpServletResponse) response, ResponseCode.INVALIDE_TOKEN);
-            logger.error(ResponseCode.INVALIDE_TOKEN.getMessage());
-            return;
-        } else if (jwtTokenProvider.isValidateToken(accessToken).equals("expired_token")) {
-            setErrorResponse((HttpServletResponse) response, ResponseCode.EXPIRED_TOKEN);
-            logger.error(ResponseCode.EXPIRED_TOKEN.getMessage());
-            return;
+        } else {
+            if (jwtTokenProvider.isValidateToken(accessToken).equals("ok")) {  // token 검증
+                String userId = setAuthentication(accessToken);
+
+                if (userId == null) {
+                    setErrorResponse(response, ResponseCode.NO_USER);
+                    logger.error(ResponseCode.NO_USER.getMessage());
+                    return;
+                }
+            } else if (accessToken.equals("")) {
+                setErrorResponse((HttpServletResponse) response, ResponseCode.NO_TOKEN);
+                logger.error(ResponseCode.NO_TOKEN.getMessage());
+                return;
+            } else if (jwtTokenProvider.isValidateToken(accessToken).equals("invalid_token")) {
+                setErrorResponse((HttpServletResponse) response, ResponseCode.INVALIDE_TOKEN);
+                logger.error(ResponseCode.INVALIDE_TOKEN.getMessage());
+                return;
+            } else if (jwtTokenProvider.isValidateToken(accessToken).equals("expired_token")) {
+                setErrorResponse((HttpServletResponse) response, ResponseCode.EXPIRED_TOKEN);
+                logger.error(ResponseCode.EXPIRED_TOKEN.getMessage());
+                return;
+            } else {
+                logger.error("토큰 관련 예외 exception");
+                return;
+            }
         }
+
         chain.doFilter(request, response);
     }
 

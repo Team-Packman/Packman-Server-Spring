@@ -36,7 +36,7 @@ public class SecurityConfig {
                 .and()
 
                 .authorizeRequests()
-                .antMatchers("/auth/**")
+                .antMatchers()
                 .permitAll()
                 .and()
 
@@ -56,7 +56,7 @@ public class SecurityConfig {
         return web -> {
             web.ignoring()
                     .antMatchers(
-                            "/auth/**",
+                            "/auth/kakao",
                             "/list/*/share/**"
                     )
                     .antMatchers(
