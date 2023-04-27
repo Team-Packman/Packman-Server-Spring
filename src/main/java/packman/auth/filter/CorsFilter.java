@@ -1,5 +1,7 @@
 package packman.auth.filter;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
@@ -12,6 +14,7 @@ import java.io.IOException;
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class CorsFilter implements Filter {
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain)
             throws IOException, ServletException {
         HttpServletResponse response = (HttpServletResponse) res;
@@ -27,6 +30,7 @@ public class CorsFilter implements Filter {
         String allowedOrigins = "https://www.packman.kr, https://www.packgirl.ml, http://localhost:3000";
 
         if (allowedOrigins.contains(origin)) {
+            logger.info("origin: " + origin);
             response.setHeader("Access-Control-Allow-Origin", origin);
         }
 
