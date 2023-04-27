@@ -24,7 +24,7 @@ public class CorsFilter implements Filter {
 
         response.setHeader("Access-Control-Allow-Methods", "*");
         response.setHeader("Access-Control-Max-Age", "3600");
-        response.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Key, Authorization");
+        response.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Key, Authorization, Refresh");
 
         String origin = request.getHeader("Origin");
         String allowedOrigins = "https://www.packman.kr, https://www.packgirl.ml, http://localhost:3000";
