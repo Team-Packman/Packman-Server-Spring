@@ -177,12 +177,6 @@ public class Validator {
         );
     }
 
-    public static User validateUserRefreshToken(UserRepository userRepository, Long userId, String refreshToken) {
-        return userRepository.findByIdAndRefreshToken(userId, refreshToken).orElseThrow(
-                () -> new CustomException(ResponseCode.NO_USER_REFRESH_TOKEN)
-        );
-    }
-
     public static TogetherAlonePackingList validateTogetherAlonePackingListByTogetherList(TogetherAlonePackingListRepository togetherAlonePackingListRepository, TogetherPackingList togetherPackingList) {
         return togetherAlonePackingListRepository.findTop1ByTogetherPackingList(togetherPackingList).orElseThrow(
                 () -> new CustomException(ResponseCode.NO_LIST)
