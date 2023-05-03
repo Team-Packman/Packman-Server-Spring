@@ -7,7 +7,9 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -24,29 +26,24 @@ import java.util.Date;
 import java.util.Objects;
 
 @Component
+@RequiredArgsConstructor
 public class JwtTokenProvider {
 
     private final UserDetailsService userDetailsService;
     private final UserRepository userRepository;
-    private final String secretKey;
-    private final long accessTokenExpireLength;
-    private final long refreshTokenExpireLength;
+
+    @Value("${jwt.token.secret-key}")
+    private String secretKey;
+
+    @Value("${jwt.access-token.expire-length}")
+    private long accessTokenExpireLength;
+
+    @Value("${jwt.refresh-token.expire-length}")
+    private long refreshTokenExpireLength;
 
 
     private static final String AUTHORIZATION_HEADER = "Authorization";
     private static final String REFRESH_AUTHORIZATION_HEADER = "Refresh";
-
-    public JwtTokenProvider(
-            UserDetailsService userDetailsService,
-            UserRepository userRepository, @Value("${jwt.token.secret-key}") String secretKey,
-            @Value("${jwt.access-token.expire-length}") long accessTokenExpireLength,
-            @Value("${jwt.refresh-token.expire-length}") long refreshTokenExpireLength) {
-        this.userDetailsService = userDetailsService;
-        this.userRepository = userRepository;
-        this.secretKey = secretKey;
-        this.accessTokenExpireLength = accessTokenExpireLength;
-        this.refreshTokenExpireLength = refreshTokenExpireLength;
-    }
 
     // JWT 토큰 생성
     public String createAccessToken(String payload) {
