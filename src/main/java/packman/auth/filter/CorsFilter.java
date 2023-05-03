@@ -15,6 +15,7 @@ import java.io.IOException;
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class CorsFilter implements Filter {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain)
             throws IOException, ServletException {
         HttpServletResponse response = (HttpServletResponse) res;
@@ -27,9 +28,9 @@ public class CorsFilter implements Filter {
         response.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Key, Authorization, Refresh");
 
         String origin = request.getHeader("Origin");
-        String allowedOrigins = "https://www.packman.kr, https://www.packgirl.ml, http://localhost:3000";
+        logger.info("Origin: " + origin);
 
-        logger.info("origin: " + origin);
+        String allowedOrigins = "https://www.packman.kr, https://www.packgirl.ml, http://localhost:3000";
 
         if (allowedOrigins.contains(origin)) {
             response.setHeader("Access-Control-Allow-Origin", origin);
