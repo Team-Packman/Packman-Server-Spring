@@ -1,7 +1,5 @@
 package packman.auth.filter;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
@@ -10,11 +8,13 @@ import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class CorsFilter implements Filter {
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final List<String> ALLOWED_ORIGINS = Arrays.asList("https://www.packman.kr", "https://www.packgirl.ml", "http://localhost:3000");
 
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain)
             throws IOException, ServletException {
@@ -28,11 +28,8 @@ public class CorsFilter implements Filter {
         response.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Key, Authorization, Refresh");
 
         String origin = request.getHeader("Origin");
-        logger.info("Origin: " + origin);
 
-        String allowedOrigins = "https://www.packman.kr, https://www.packgirl.ml, http://localhost:3000";
-
-        if (allowedOrigins.contains(origin)) {
+        if (ALLOWED_ORIGINS.contains(origin)) {
             response.setHeader("Access-Control-Allow-Origin", origin);
         }
 
