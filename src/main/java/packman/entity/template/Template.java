@@ -3,10 +3,9 @@ package packman.entity.template;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import packman.entity.Category;
+import packman.entity.TimeStamped;
 import packman.entity.User;
 import packman.entity.packingList.AlonePackingList;
-import packman.entity.packingList.PackingList;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -18,7 +17,7 @@ import static javax.persistence.FetchType.LAZY;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Template {
+public class Template extends TimeStamped {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,7 +27,7 @@ public class Template {
     @Column(nullable = false)
     private boolean isAloned = true;
 
-    @Column(length = 8, nullable = false)
+    @Column(length = 12, nullable = false)
     private String title;
 
     @Column(nullable = false)

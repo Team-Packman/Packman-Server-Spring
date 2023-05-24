@@ -26,8 +26,8 @@ public class TemplateService {
     public TemplateListResponseDto getAloneTemplateList(Long userId) {
 
         TemplateListResponseDto templateListResponseDto = TemplateListResponseDto.builder()
-                .basicTemplate(templateRepository.findByUserIdAndIsAlonedAndIsDeleted(null, true, false))
-                .myTemplate(templateRepository.findByUserIdAndIsAlonedAndIsDeleted(userId, true, false)).build();
+                .basicTemplate(templateRepository.findByUserIdAndIsAlonedAndIsDeletedOrderByCreatedAt(null, true, false))
+                .myTemplate(templateRepository.findByUserIdAndIsAlonedAndIsDeletedOrderByCreatedAt(userId, true, false)).build();
 
         LogMessage.setNonDataLog("혼자 패킹 템플릿 리스트 조회", userId);
 
@@ -37,8 +37,8 @@ public class TemplateService {
     public TemplateListResponseDto getTogetherTemplateList(Long userId) {
 
         TemplateListResponseDto templateListResponseDto = TemplateListResponseDto.builder()
-                .basicTemplate(templateRepository.findByUserIdAndIsAlonedAndIsDeleted(null, false, false))
-                .myTemplate(templateRepository.findByUserIdAndIsAlonedAndIsDeleted(userId, false, false)).build();
+                .basicTemplate(templateRepository.findByUserIdAndIsAlonedAndIsDeletedOrderByCreatedAt(null, false, false))
+                .myTemplate(templateRepository.findByUserIdAndIsAlonedAndIsDeletedOrderByCreatedAt(userId, false, false)).build();
 
         LogMessage.setNonDataLog("함께 패킹 템플릿 리스트 조회", userId);
 
