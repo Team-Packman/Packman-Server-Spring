@@ -28,7 +28,7 @@ public class Template {
     @Column(nullable = false)
     private boolean isAloned = true;
 
-    @Column(length = 8, nullable = false)
+    @Column(length = 12, nullable = false)
     private String title;
 
     @Column(nullable = false)
