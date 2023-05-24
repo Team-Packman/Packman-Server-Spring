@@ -30,8 +30,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String accessToken = jwtTokenProvider.resolveAccessToken((HttpServletRequest) request);  // header에서 가져온 accessToken
 
         if (request.getRequestURI().equals("/auth/token")) {
-            logger.info("토큰 재발급");
-
             String refreshToken = jwtTokenProvider.resolveRefreshToken((HttpServletRequest) request);
 
             // 만료된 refreshToken
