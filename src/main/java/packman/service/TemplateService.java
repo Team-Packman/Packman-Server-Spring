@@ -4,13 +4,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import packman.dto.template.TemplateListResponseDto;
-import packman.repository.UserRepository;
-import packman.repository.template.TemplateRepository;
-
 import packman.dto.template.TemplateResponseDto;
 import packman.dto.template.TemplateResponseMapping;
 import packman.entity.User;
 import packman.entity.template.Template;
+import packman.repository.UserRepository;
+import packman.repository.template.TemplateRepository;
+import packman.util.LogMessage;
 
 import static packman.validator.IdValidator.validateTemplateId;
 import static packman.validator.IdValidator.validateUserId;
@@ -26,8 +26,10 @@ public class TemplateService {
     public TemplateListResponseDto getAloneTemplateList(Long userId) {
 
         TemplateListResponseDto templateListResponseDto = TemplateListResponseDto.builder()
-                .basicTemplate(templateRepository.findByUserIdAndIsAlonedAndIsDeleted(null, true, false))
-                .myTemplate(templateRepository.findByUserIdAndIsAlonedAndIsDeleted(userId, true, false)).build();
+                .basicTemplate(templateRepository.findByUserIdAndIsAlonedAndIsDeletedOrderByCreatedAt(null, true, false))
+                .myTemplate(templateRepository.findByUserIdAndIsAlonedAndIsDeletedOrderByCreatedAt(userId, true, false)).build();
+
+        LogMessage.setNonDataLog("혼자 패킹 템플릿 리스트 조회", userId);
 
         return templateListResponseDto;
     }
@@ -35,8 +37,10 @@ public class TemplateService {
     public TemplateListResponseDto getTogetherTemplateList(Long userId) {
 
         TemplateListResponseDto templateListResponseDto = TemplateListResponseDto.builder()
-                .basicTemplate(templateRepository.findByUserIdAndIsAlonedAndIsDeleted(null, false, false))
-                .myTemplate(templateRepository.findByUserIdAndIsAlonedAndIsDeleted(userId, false, false)).build();
+                .basicTemplate(templateRepository.findByUserIdAndIsAlonedAndIsDeletedOrderByCreatedAt(null, false, false))
+                .myTemplate(templateRepository.findByUserIdAndIsAlonedAndIsDeletedOrderByCreatedAt(userId, false, false)).build();
+
+        LogMessage.setNonDataLog("함께 패킹 템플릿 리스트 조회", userId);
 
         return templateListResponseDto;
     }

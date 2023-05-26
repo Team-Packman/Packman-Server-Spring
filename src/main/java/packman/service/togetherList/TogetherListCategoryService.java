@@ -14,6 +14,7 @@ import packman.repository.CategoryRepository;
 import packman.repository.packingList.PackingListRepository;
 import packman.repository.packingList.TogetherPackingListRepository;
 import packman.util.CustomException;
+import packman.util.LogMessage;
 import packman.util.ResponseCode;
 
 import java.util.List;
@@ -54,6 +55,9 @@ public class TogetherListCategoryService {
 
         // response
         ListResponseMapping categoryResponseDto = packingListRepository.findByIdAndTitle(Long.parseLong(categoryCreateDto.getListId()), packingList.getTitle());
+
+        LogMessage.setNonDataLog("패킹리스트 수정", userId);
+
         return categoryResponseDto;
     }
 
@@ -86,6 +90,9 @@ public class TogetherListCategoryService {
 
         // response
         ListResponseMapping categoryResponseDto = packingListRepository.findByIdAndTitle(Long.parseLong(categoryUpdateDto.getListId()), packingList.getTitle());
+
+        LogMessage.setNonDataLog("패킹리스트 수정", userId);
+
         return categoryResponseDto;
     }
 
@@ -108,6 +115,7 @@ public class TogetherListCategoryService {
         // delete
         categoryRepository.delete(category);
 
+        LogMessage.setNonDataLog("패킹리스트 수정", userId);
     }
 
 }

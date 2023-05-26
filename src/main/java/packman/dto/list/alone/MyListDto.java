@@ -1,4 +1,4 @@
-package packman.dto.list;
+package packman.dto.list.alone;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
@@ -9,9 +9,11 @@ import java.util.List;
 
 @Builder
 @Data
-public class TogetherListDto {
+public class MyListDto {
     String id;
-    String groupId;
+
     List<CategoryInfo> category;
-    String inviteCode;
+
+    @JsonProperty("isSaved")
+    boolean isSaved;
 }

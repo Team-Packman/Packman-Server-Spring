@@ -49,7 +49,7 @@ public class AuthController {
 
     @GetMapping("/token")
     public ResponseEntity<ResponseMessage> getNewToken(HttpServletRequest request) {
-        String accessToken = jwtTokenProvider.resolveAccessToken(request);
+        String accessToken = (String) request.getAttribute("newAccessToken");
         String refreshToken = jwtTokenProvider.resolveRefreshToken(request);
 
         return ResponseMessage.toResponseEntity(

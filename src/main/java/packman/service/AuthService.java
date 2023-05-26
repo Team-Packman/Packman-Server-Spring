@@ -1,6 +1,5 @@
 package packman.service;
 
-import com.auth0.jwt.JWT;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -18,12 +17,8 @@ import packman.auth.JwtTokenProvider;
 import packman.dto.auth.*;
 import packman.entity.User;
 import packman.repository.UserRepository;
-import packman.util.CustomException;
-import packman.util.ResponseCode;
 
 import java.util.Optional;
-
-import static packman.validator.Validator.validateUserRefreshToken;
 
 @Service
 @Transactional
@@ -172,27 +167,11 @@ public class AuthService {
     }
 
     public NewTokenResponseDto getNewToken(String accessToken, String refreshToken) {
-        Long userId = Long.valueOf(JWT.decode(accessToken).getSubject());
 
-        validateUserRefreshToken(userRepository, userId, refreshToken);
-
-        String validateAccessToken = jwtTokenProvider.isValidateToken(accessToken);
-        String validateRefreshToken = jwtTokenProvider.isValidateToken(refreshToken);
-
-        if (validateRefreshToken.equals("expired_token")) {
-            throw new CustomException(ResponseCode.REFRESH_TOKEN_EXPIRED);
-        }
-
-        if (validateAccessToken.equals("expired_token")) {
-            String newAccessToken = jwtTokenProvider.createAccessToken(userId.toString());
-
-            return NewTokenResponseDto.builder()
-                    .accessToken(newAccessToken)
-                    .refreshToken(refreshToken)
-                    .build();
-        }
-
-        // 둘 다 만료되지 않음
-        throw new CustomException(ResponseCode.VALID_ACCESS_TOKEN);
+        return NewTokenResponseDto.builder()
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .build();
     }
 }
+

@@ -1,9 +1,8 @@
 package packman.dto.list;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Data;
-import packman.dto.category.CategoryInfo;
+import packman.dto.list.alone.MyListDto;
 
 @Builder
 @Data
@@ -11,5 +10,5 @@ public class DetaildTogetherListResponseDto {
     String id;
     String folderId;
     TogetherListDto togetherPackingList;
-    ListResponseMapping myPackingList;
+    MyListDto myPackingList;
 }

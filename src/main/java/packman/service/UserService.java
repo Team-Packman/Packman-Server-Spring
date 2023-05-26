@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import packman.auth.JwtTokenProvider;
+import packman.dto.log.UserLogDto;
 import packman.dto.user.UserCreateDto;
 import packman.dto.user.UserInfoResponseDto;
 import packman.dto.user.UserResponseDto;
@@ -12,6 +13,7 @@ import packman.entity.Folder;
 import packman.entity.User;
 import packman.repository.UserRepository;
 import packman.util.CustomException;
+import packman.util.LogMessage;
 import packman.util.ResponseCode;
 
 import java.util.List;
@@ -47,6 +49,18 @@ public class UserService {
 
         String accessToken = jwtTokenProvider.createAccessToken(createdUser.getId().toString());
 
+        UserLogDto userLogDto = UserLogDto.builder()
+                .email(userCreateDto.getEmail())
+                .name(userCreateDto.getName())
+                .gender(userCreateDto.getGender())
+                .ageRange(userCreateDto.getAgeRange())
+                .nickname(userCreateDto.getNickname())
+                .profileImage(userCreateDto.getProfileImage())
+                .path(userCreateDto.getPath())
+                .build();
+
+        LogMessage.setDataLog("닉네임/프로필 등록", userLogDto, createdUser.getId());
+
         return UserResponseDto.builder()
                 .isAlreadyUser(true)
                 .id(createdUser.getId().toString())
@@ -78,6 +92,8 @@ public class UserService {
         }
 
         userRepository.setUserIsDeletedByUserId(userId);
+
+        LogMessage.setNonDataLog("유저 탈퇴", userId);
     }
 
 

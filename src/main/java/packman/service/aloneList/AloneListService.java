@@ -5,6 +5,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import packman.dto.list.*;
+import packman.dto.log.AloneListLogDto;
 import packman.entity.Category;
 import packman.entity.Folder;
 import packman.entity.FolderPackingList;
@@ -22,6 +23,7 @@ import packman.repository.packingList.PackingListRepository;
 import packman.repository.template.TemplateCategoryRepository;
 import packman.repository.template.TemplateRepository;
 import packman.util.CustomException;
+import packman.util.LogMessage;
 import packman.util.ResponseCode;
 
 import java.time.LocalDate;
@@ -45,6 +47,7 @@ public class AloneListService {
     private final CategoryRepository categoryRepository;
     private final TemplateRepository templateRepository;
     private final TemplateCategoryRepository templateCategoryRepository;
+
 
     public AloneListResponseDto createAloneList(ListCreateDto listCreateDto, Long userId) {
         Long folderId = Long.parseLong(listCreateDto.getFolderId());
@@ -93,6 +96,17 @@ public class AloneListService {
             });
         }
         ListResponseMapping savedCategories = packingListRepository.findByIdAndTitle(savedList.getId(), savedList.getTitle());
+
+        // 로그
+        AloneListLogDto aloneListLogDto = AloneListLogDto.builder()
+                .id(savedList.getId().toString())
+                .templateId(listCreateDto.getTemplateId())
+                .title(savedList.getTitle())
+                .departureDate(savedList.getDepartureDate().toString())
+                .category(savedCategories.getCategory())
+                .build();
+
+        LogMessage.setDataLog("혼자 패킹리스트 생성", aloneListLogDto, userId);
 
         return AloneListResponseDto.builder()
                 .id(Long.toString(savedList.getId()))
@@ -164,9 +178,13 @@ public class AloneListService {
 
         boolean isOwner = ownerId.equals(userId);
 
-        return InviteAloneListResponseDto.builder()
+        InviteAloneListResponseDto inviteAloneListResponseDto = InviteAloneListResponseDto.builder()
                 .id(alonePackingList.getId().toString())
                 .IsOwner(isOwner)
                 .build();
+
+        LogMessage.setDataLog("혼자 패킹리스트 초대", inviteAloneListResponseDto, userId);
+
+        return inviteAloneListResponseDto;
     }
 }
