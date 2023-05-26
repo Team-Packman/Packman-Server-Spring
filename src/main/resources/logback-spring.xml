@@ -3,13 +3,13 @@
 <configuration scan = "true" scanPeriod = "30 seconds">
     <timestamp key="BY_DATE" datePattern="yyyy-MM-dd"/>
     <property name="CONSOLE_LOG_PATTERN"
-              value="[%d{yyyy-MM-dd HH:mm:ss}:%-4relative] %green([%thread]) %highlight(%-5level) %boldWhite([%C.%M:%yellow(%L)]) - %msg%n"/>
+              value="[%d{yyyy-MM-dd HH:mm:ss, ${logback.timezone:-Asia/Seoul}}:%-4relative] %green([%thread]) %highlight(%-5level) %boldWhite([%C.%M:%yellow(%L)]) - %msg%n"/>
 
     <property name="LOG_PATTERN"
-              value="%d{yyyy-MM-dd HH:mm:ss}:%-4relative, [%thread], %level, [%C.%M:%line], %msg%n"/>
+              value="%d{yyyy-MM-dd HH:mm:ss, ${logback.timezone:-Asia/Seoul}}:%-4relative, [%thread], %level, [%C.%M:%line], %msg%n"/>
 
     <property name="INFO_LOG_PATTERN"
-              value="%d{yyyy-MM-dd HH:mm:ss}:%-4relative, %level, %msg%n"/>
+              value="%d{yyyy-MM-dd HH:mm:ss, ${logback.timezone:-Asia/Seoul}}:%-4relative, %level, %msg%n"/>
 
     <springProfile name="!prod">
         <include resource="console-appender.xml"/>
