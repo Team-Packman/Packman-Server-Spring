@@ -1,6 +1,6 @@
 <included>
     <appender name="FILE-INFO" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>./log/active/info/info-${BY_DATE}.log</file>
+        <file>./log/info.log</file>
         <filter class="packman.auth.filter.LogbackFilter"/>
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
             <level>INFO</level>
@@ -10,11 +10,10 @@
         <encoder>
             <pattern>${INFO_LOG_PATTERN}</pattern>
         </encoder>
-        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>.log/backup/info/info-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
-            <maxFileSize>100MB</maxFileSize>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>.log/info/info.%d{yyyy-MM-dd}.log</fileNamePattern>
             <maxHistory>60</maxHistory>
-            <totalSizeCap>3GB</totalSizeCap>
+            <totalSizeCap>10GB</totalSizeCap>
         </rollingPolicy>
     </appender>
 </included>

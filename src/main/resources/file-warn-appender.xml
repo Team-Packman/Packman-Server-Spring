@@ -1,6 +1,6 @@
 <included>
     <appender name="FILE-WARN" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>./log/active/warn/warn-${BY_DATE}.log</file>
+        <file>./log/warn.log</file>
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
             <level>WARN</level>
             <onMatch>ACCEPT</onMatch>
@@ -9,11 +9,10 @@
         <encoder>
             <pattern>${INFO_LOG_PATTERN}</pattern>
         </encoder>
-        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>.log/backup/warn/warn-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
-            <maxFileSize>100MB</maxFileSize>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>.log/warn/warn.%d{yyyy-MM-dd}.log</fileNamePattern>
             <maxHistory>60</maxHistory>
-            <totalSizeCap>3GB</totalSizeCap>
+            <totalSizeCap>10GB</totalSizeCap>
         </rollingPolicy>
     </appender>
 </included>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<configuration>
+<configuration scan = "true" scanPeriod = "30 seconds">
     <timestamp key="BY_DATE" datePattern="yyyy-MM-dd"/>
     <property name="CONSOLE_LOG_PATTERN"
               value="[%d{yyyy-MM-dd HH:mm:ss}:%-4relative] %green([%thread]) %highlight(%-5level) %boldWhite([%C.%M:%yellow(%L)]) - %msg%n"/>
@@ -16,6 +16,18 @@
 
         <root level="INFO">
             <appender-ref ref="CONSOLE"/>
+        </root>
+    </springProfile>
+
+    <springProfile name="dev">
+        <include resource="file-info-appender.xml"/>
+        <include resource="file-warn-appender.xml"/>
+        <include resource="file-error-appender.xml"/>
+
+        <root level="INFO">
+            <appender-ref ref="FILE-INFO"/>
+            <appender-ref ref="FILE-WARN"/>
+            <appender-ref ref="FILE-ERROR"/>
         </root>
     </springProfile>
 
