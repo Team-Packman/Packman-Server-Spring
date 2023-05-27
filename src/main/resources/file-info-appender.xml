@@ -11,7 +11,7 @@
             <pattern>${INFO_LOG_PATTERN}</pattern>
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>.log/info/info.%d{yyyy-MM-dd, ${logback.timezone:-Asia/Seoul}}.log</fileNamePattern>
+            <fileNamePattern>./log/info/info.%d{yyyy-MM-dd, ${logback.timezone:-Asia/Seoul}}.log</fileNamePattern>
             <maxHistory>60</maxHistory>
             <totalSizeCap>10GB</totalSizeCap>
         </rollingPolicy>
