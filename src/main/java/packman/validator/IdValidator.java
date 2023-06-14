@@ -5,11 +5,13 @@ import packman.entity.packingList.AlonePackingList;
 import packman.entity.packingList.PackingList;
 import packman.entity.packingList.TogetherAlonePackingList;
 import packman.entity.packingList.TogetherPackingList;
+import packman.entity.template.BasicTemplate;
 import packman.entity.template.Template;
 import packman.repository.CategoryRepository;
 import packman.repository.FolderPackingListRepository;
 import packman.repository.PackRepository;
 import packman.repository.UserRepository;
+import packman.repository.basicTemplate.BasicTemplateRepository;
 import packman.repository.packingList.AlonePackingListRepository;
 import packman.repository.packingList.PackingListRepository;
 import packman.repository.packingList.TogetherAlonePackingListRepository;
@@ -37,6 +39,12 @@ public class IdValidator {
     }
     public static Template validateTemplateId(TemplateRepository templateRepository, Long templateId) {
         return templateRepository.findByIdAndIsDeleted(templateId, false).orElseThrow(
+                () -> new CustomException(ResponseCode.NO_TEMPLATE)
+        );
+    }
+
+    public static BasicTemplate validateBasicTemplateId(BasicTemplateRepository basicTemplateRepository, Long templateId) {
+        return basicTemplateRepository.findByIdAndIsDeleted(templateId, false).orElseThrow(
                 () -> new CustomException(ResponseCode.NO_TEMPLATE)
         );
     }

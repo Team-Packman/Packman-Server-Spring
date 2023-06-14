@@ -9,6 +9,7 @@ import packman.dto.template.TemplateResponseMapping;
 import packman.entity.User;
 import packman.entity.template.Template;
 import packman.repository.UserRepository;
+import packman.repository.basicTemplate.BasicTemplateRepository;
 import packman.repository.template.TemplateRepository;
 import packman.util.LogMessage;
 
@@ -21,12 +22,13 @@ import static packman.validator.Validator.validateUserTemplate;
 @RequiredArgsConstructor
 public class TemplateService {
     private final TemplateRepository templateRepository;
+    private final BasicTemplateRepository basicTemplateRepository;
     private final UserRepository userRepository;
 
     public TemplateListResponseDto getAloneTemplateList(Long userId) {
 
         TemplateListResponseDto templateListResponseDto = TemplateListResponseDto.builder()
-                .basicTemplate(templateRepository.findByUserIdAndIsAlonedAndIsDeletedOrderByCreatedAt(null, true, false))
+                .basicTemplate(basicTemplateRepository.findByUserIdAndIsAlonedAndIsDeletedOrderByCreatedAt(null, true, false))
                 .myTemplate(templateRepository.findByUserIdAndIsAlonedAndIsDeletedOrderByCreatedAt(userId, true, false)).build();
 
         LogMessage.setNonDataLog("혼자 패킹 템플릿 리스트 조회", userId);
@@ -37,7 +39,7 @@ public class TemplateService {
     public TemplateListResponseDto getTogetherTemplateList(Long userId) {
 
         TemplateListResponseDto templateListResponseDto = TemplateListResponseDto.builder()
-                .basicTemplate(templateRepository.findByUserIdAndIsAlonedAndIsDeletedOrderByCreatedAt(null, false, false))
+                .basicTemplate(basicTemplateRepository.findByUserIdAndIsAlonedAndIsDeletedOrderByCreatedAt(null, false, false))
                 .myTemplate(templateRepository.findByUserIdAndIsAlonedAndIsDeletedOrderByCreatedAt(userId, false, false)).build();
 
         LogMessage.setNonDataLog("함께 패킹 템플릿 리스트 조회", userId);
