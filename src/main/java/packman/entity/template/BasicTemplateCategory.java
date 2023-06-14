@@ -29,11 +29,11 @@ public class BasicTemplateCategory {
 
     @OrderBy("id asc")
     @OneToMany(mappedBy = "basicTemplateCategory", cascade = CascadeType.ALL)
-    private List<BasicTemplatePack> basicTemplatePacks = new ArrayList<>();
+    private List<BasicTemplatePack> templatePacks = new ArrayList<>();
 
     public BasicTemplateCategory(BasicTemplate basicTemplate, String name){
         this.basicTemplate = basicTemplate;
         this.name = name;
     }
-    public void addTemplatePack(BasicTemplatePack basicTemplatePacks) { this.basicTemplatePacks.add(basicTemplatePacks); }
+    public void addTemplatePack(BasicTemplatePack basicTemplatePacks) { this.templatePacks.add(basicTemplatePacks); }
 }

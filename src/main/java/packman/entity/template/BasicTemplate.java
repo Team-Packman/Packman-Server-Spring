@@ -43,7 +43,7 @@ public class BasicTemplate extends TimeStamped {
 
     @OrderBy("id asc")
     @OneToMany(mappedBy = "basicTemplate", cascade = CascadeType.ALL)
-    private List<BasicTemplateCategory> basicTemplateCategories = new ArrayList<>();
+    private List<BasicTemplateCategory> categories = new ArrayList<>();
 
     public BasicTemplate(boolean isAloned, String title, AlonePackingList alonePackingList, User user){
         this.isAloned = isAloned;
@@ -52,5 +52,5 @@ public class BasicTemplate extends TimeStamped {
         this.user  = user;
     }
 
-    public void addTemplateCategory(BasicTemplateCategory basicTemplateCategory) { this.basicTemplateCategories.add(basicTemplateCategory); }
+    public void addTemplateCategory(BasicTemplateCategory basicTemplateCategory) { this.categories.add(basicTemplateCategory); }
 }
