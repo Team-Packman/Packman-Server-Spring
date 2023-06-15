@@ -114,10 +114,6 @@ public enum ResponseCode {
     SUCCESS_GET_TOGETHER_TEMPLATE_LIST(HttpStatus.OK, true, "함께 패킹 템플릿 리스트 조회 성공"),
     SUCCESS_GET_DETAILED_TEMPLATE(HttpStatus.OK, true, "템플릿 상세조회 성공"),
 
-    // basic template
-    NO_BASIC_TEMPLATE(HttpStatus.NOT_FOUND, false, "존재하지 않는 기본 템플릿입니다"),
-    SUCCESS_GET_BASIC_DETAILED_TEMPLATE(HttpStatus.OK, true, "기본 템플릿 상세조회 성공"),
-
     // 엿보기
     SUCCESS_GET_HELP(HttpStatus.OK, true, "엿보기 조회 성공"),
     
