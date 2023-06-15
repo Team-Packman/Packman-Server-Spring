@@ -5,6 +5,7 @@ import packman.dto.user.UserCreateDto;
 import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import packman.entity.template.BasicTemplate;
 import packman.entity.template.Template;
 
 import javax.persistence.*;
@@ -62,6 +63,9 @@ public class User extends TimeStamped implements UserDetails {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Template> templates = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<BasicTemplate> basicTemplates = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<UserGroup> userGroups = new ArrayList<>();

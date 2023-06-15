@@ -6,6 +6,7 @@ import packman.entity.packingList.AlonePackingList;
 import packman.entity.packingList.PackingList;
 import packman.entity.packingList.TogetherAlonePackingList;
 import packman.entity.packingList.TogetherPackingList;
+import packman.entity.template.BasicTemplate;
 import packman.entity.template.Template;
 import packman.repository.*;
 import packman.repository.packingList.AlonePackingListRepository;
@@ -139,6 +140,13 @@ public class Validator {
             throw new CustomException(ResponseCode.NO_TEMPLATE);
         }
     }
+
+    public static void validateUserBasicTemplate(BasicTemplate basicTemplate, User user) {
+        if (basicTemplate.getUser() != null && basicTemplate.getUser() != user) {
+            throw new CustomException(ResponseCode.NO_TEMPLATE);
+        }
+    }
+
 
     public static List<FolderPackingList> validateFolderLists(FolderPackingListRepository folderPackingListRepository, Long folderId, List<Long> listIds) {
         List<FolderPackingList> folderPackingLists = folderPackingListRepository.findByFolderIdAndAlonePackingListIdIn(folderId, listIds);

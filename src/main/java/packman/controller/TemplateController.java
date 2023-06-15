@@ -2,10 +2,7 @@ package packman.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.*;
 import packman.service.TemplateService;
 import packman.util.ResponseCode;
 import packman.util.ResponseMessage;
@@ -39,12 +36,12 @@ public class TemplateController {
     }
 
     @GetMapping("/{templateId}")
-    public ResponseEntity<ResponseMessage> getTemplate(@PathVariable Long templateId, HttpServletRequest request) {
+    public ResponseEntity<ResponseMessage> getTemplate(@PathVariable Long templateId, @RequestParam boolean isBasic, HttpServletRequest request) {
         Long userId = Long.valueOf(request.getUserPrincipal().getName());
 
         return ResponseMessage.toResponseEntity(
                 ResponseCode.SUCCESS_GET_DETAILED_TEMPLATE,
-                templateService.getTemplate(templateId, userId)
+                templateService.getTemplate(templateId, isBasic, userId)
         );
     }
 }

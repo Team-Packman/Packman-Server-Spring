@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import packman.entity.FolderPackingList;
+import packman.entity.template.BasicTemplate;
 import packman.entity.template.Template;
 
 import javax.persistence.*;
@@ -35,6 +36,9 @@ public class AlonePackingList {
 
     @OneToOne(mappedBy = "alonePackingList", cascade = CascadeType.ALL)
     private Template template;
+
+    @OneToOne(mappedBy = "alonePackingList", cascade = CascadeType.ALL)
+    private BasicTemplate basicTemplate;
 
     @OneToOne(mappedBy = "alonePackingList", cascade = CascadeType.ALL)
     private FolderPackingList folderPackingList;
