@@ -12,12 +12,12 @@ import packman.entity.FolderPackingList;
 import packman.entity.Pack;
 import packman.entity.packingList.AlonePackingList;
 import packman.entity.packingList.PackingList;
-import packman.entity.template.Template;
-import packman.entity.template.TemplateCategory;
-import packman.entity.template.TemplatePack;
+import packman.entity.template.*;
 import packman.repository.CategoryRepository;
 import packman.repository.FolderPackingListRepository;
 import packman.repository.FolderRepository;
+import packman.repository.basicTemplate.BasicTemplateCategoryRepository;
+import packman.repository.basicTemplate.BasicTemplateRepository;
 import packman.repository.packingList.AlonePackingListRepository;
 import packman.repository.packingList.PackingListRepository;
 import packman.repository.template.TemplateCategoryRepository;
@@ -46,13 +46,16 @@ public class AloneListService {
     private final FolderPackingListRepository folderPackingListRepository;
     private final CategoryRepository categoryRepository;
     private final TemplateRepository templateRepository;
+    private final BasicTemplateRepository basicTemplateRepository;
     private final TemplateCategoryRepository templateCategoryRepository;
+    private final BasicTemplateCategoryRepository basicTemplateCategoryRepository;
 
 
     public AloneListResponseDto createAloneList(ListCreateDto listCreateDto, Long userId) {
         Long folderId = Long.parseLong(listCreateDto.getFolderId());
         String title = listCreateDto.getTitle();
         LocalDate departureDate = LocalDate.parse(listCreateDto.getDepartureDate(), DateTimeFormatter.ISO_DATE);
+        Boolean isBasic = listCreateDto.getIsBasic();
         String inviteCode;
 
         // inviteCode 생성
@@ -81,19 +84,35 @@ public class AloneListService {
         if (listCreateDto.getTemplateId().equals("")) { //템플릿 X
             savedList.addCategory(new Category(savedList, "기본"));
         } else { // 템플릿 O
-            // 해당 템플릿이 존재하지 않는 경우
-            Template template = validateTemplateId(templateRepository, Long.parseLong(listCreateDto.getTemplateId()));
+            if (isBasic) {
+                // 기본 템플릿
+                BasicTemplate template = validateBasicTemplateId(basicTemplateRepository, Long.parseLong(listCreateDto.getTemplateId()));
 
-            List<TemplateCategory> categories = template.getCategories();
-            categories.forEach(m -> {
-                Category savedCategory = categoryRepository.save(new Category(savedList, m.getName()));
-                savedList.addCategory(savedCategory);
+                List<BasicTemplateCategory> categories = template.getCategories();
+                categories.forEach(m -> {
+                    Category savedCategory = categoryRepository.save(new Category(savedList, m.getName()));
+                    savedList.addCategory(savedCategory);
 
-                List<TemplatePack> packs = templateCategoryRepository.findById(m.getId()).get().getTemplatePacks();
-                packs.forEach(n -> {
-                    savedCategory.addPack(new Pack(savedCategory, n.getName()));
+                    List<BasicTemplatePack> packs = basicTemplateCategoryRepository.findById(m.getId()).get().getTemplatePacks();
+                    packs.forEach(n -> {
+                        savedCategory.addPack(new Pack(savedCategory, n.getName()));
+                    });
                 });
-            });
+            } else {
+                // 나만의 템플릿
+                Template template = validateTemplateId(templateRepository, Long.parseLong(listCreateDto.getTemplateId()));
+
+                List<TemplateCategory> categories = template.getCategories();
+                categories.forEach(m -> {
+                    Category savedCategory = categoryRepository.save(new Category(savedList, m.getName()));
+                    savedList.addCategory(savedCategory);
+
+                    List<TemplatePack> packs = templateCategoryRepository.findById(m.getId()).get().getTemplatePacks();
+                    packs.forEach(n -> {
+                        savedCategory.addPack(new Pack(savedCategory, n.getName()));
+                    });
+                });
+            }
         }
         ListResponseMapping savedCategories = packingListRepository.findByIdAndTitle(savedList.getId(), savedList.getTitle());
 
