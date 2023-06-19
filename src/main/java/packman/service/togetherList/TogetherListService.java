@@ -16,10 +16,10 @@ import packman.entity.packingList.AlonePackingList;
 import packman.entity.packingList.PackingList;
 import packman.entity.packingList.TogetherAlonePackingList;
 import packman.entity.packingList.TogetherPackingList;
-import packman.entity.template.Template;
-import packman.entity.template.TemplateCategory;
-import packman.entity.template.TemplatePack;
+import packman.entity.template.*;
 import packman.repository.*;
+import packman.repository.basicTemplate.BasicTemplateCategoryRepository;
+import packman.repository.basicTemplate.BasicTemplateRepository;
 import packman.repository.packingList.AlonePackingListRepository;
 import packman.repository.packingList.PackingListRepository;
 import packman.repository.packingList.TogetherAlonePackingListRepository;
@@ -52,17 +52,20 @@ public class TogetherListService {
     private final FolderPackingListRepository folderPackingListRepository;
     private final CategoryRepository categoryRepository;
     private final TemplateRepository templateRepository;
+    private final BasicTemplateRepository basicTemplateRepository;
     private final TemplateCategoryRepository templateCategoryRepository;
     private final PackRepository packRepository;
     private final GroupRepository groupRepository;
     private final UserGroupRepository userGroupRepository;
     private final TogetherAlonePackingListRepository togetherAlonePackingListRepository;
+    private final BasicTemplateCategoryRepository basicTemplateCategoryRepository;
 
     public TogetherListResponseDto createTogetherList(ListCreateDto listCreateDto, Long userId) {
         Long folderId = Long.parseLong(listCreateDto.getFolderId());
         String title = listCreateDto.getTitle();
         LocalDate departureDate = LocalDate.parse(listCreateDto.getDepartureDate(), DateTimeFormatter.ISO_DATE);
         String inviteCode;
+        Boolean isBasic = listCreateDto.getIsBasic();
 
         // inviteCode 생성
         do {
@@ -112,19 +115,33 @@ public class TogetherListService {
         if (listCreateDto.getTemplateId().equals("")) { //템플릿 X
             savedTogetherList.addCategory(new Category(savedTogetherList, "기본"));
         } else { // 템플릿 O
-            // 해당 템플릿이 존재하지 않는 경우
-            Template template = validateTemplateId(templateRepository, Long.parseLong(listCreateDto.getTemplateId()));
+            if(isBasic) {
+                // 기본 템플릿
+                BasicTemplate template = validateBasicTemplateId(basicTemplateRepository, Long.parseLong(listCreateDto.getTemplateId()));
+                List<BasicTemplateCategory> categories = template.getCategories();
+                categories.forEach(m -> {
+                    Category savedCategory = categoryRepository.save(new Category(savedTogetherList, m.getName()));
+                    savedTogetherList.addCategory(savedCategory);
 
-            List<TemplateCategory> categories = template.getCategories();
-            categories.forEach(m -> {
-                Category savedCategory = categoryRepository.save(new Category(savedTogetherList, m.getName()));
-                savedTogetherList.addCategory(savedCategory);
-
-                List<TemplatePack> packs = templateCategoryRepository.findById(m.getId()).get().getTemplatePacks();
-                packs.forEach(n -> {
-                    savedCategory.addPack(new Pack(savedCategory, n.getName()));
+                    List<BasicTemplatePack> packs = basicTemplateCategoryRepository.findById(m.getId()).get().getTemplatePacks();
+                    packs.forEach(n -> {
+                        savedCategory.addPack(new Pack(savedCategory, n.getName()));
+                    });
                 });
-            });
+            } else {
+                // 나만의 템플릿
+                Template template = validateTemplateId(templateRepository, Long.parseLong(listCreateDto.getTemplateId()));
+                List<TemplateCategory> categories = template.getCategories();
+                categories.forEach(m -> {
+                    Category savedCategory = categoryRepository.save(new Category(savedTogetherList, m.getName()));
+                    savedTogetherList.addCategory(savedCategory);
+
+                    List<TemplatePack> packs = templateCategoryRepository.findById(m.getId()).get().getTemplatePacks();
+                    packs.forEach(n -> {
+                        savedCategory.addPack(new Pack(savedCategory, n.getName()));
+                    });
+                });
+            }
         }
 
         ListResponseMapping savedMyIdCategories = packingListRepository.findByIdAndTitle(savedMyList.getId(), savedMyList.getTitle());
