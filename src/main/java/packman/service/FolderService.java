@@ -27,6 +27,7 @@ import packman.util.CustomException;
 import packman.util.ResponseCode;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -266,7 +267,9 @@ public class FolderService {
         ListInFolderDto listInFolderDto = listInFolderDtos.get(0);
 
         String departureDate = listInFolderDto.getDepartureDate();
-        LocalDate nowDate = LocalDate.now();
+
+        ZoneId koreaTimeZone = ZoneId.of("Asia/Seoul");
+        LocalDate nowDate = LocalDate.now(koreaTimeZone);
 
         long remainDay = ChronoUnit.DAYS.between(nowDate, LocalDate.parse(departureDate, DateTimeFormatter.ISO_DATE));
 
