@@ -125,7 +125,7 @@ public class AloneListService {
                 .category(savedCategories.getCategory())
                 .build();
 
-        LogMessage.setDataLog("혼자 패킹리스트 생성", aloneListLogDto, userId);
+        LogMessage.setDataLog("혼자 패킹리스트 생성", aloneListLogDto, userId, "click");
 
         return AloneListResponseDto.builder()
                 .id(Long.toString(savedList.getId()))
@@ -202,7 +202,7 @@ public class AloneListService {
                 .IsOwner(isOwner)
                 .build();
 
-        LogMessage.setDataLog("혼자 패킹리스트 초대", inviteAloneListResponseDto, userId);
+        LogMessage.setDataLog("혼자 패킹리스트 초대", inviteAloneListResponseDto, userId, "screen");
 
         return inviteAloneListResponseDto;
     }

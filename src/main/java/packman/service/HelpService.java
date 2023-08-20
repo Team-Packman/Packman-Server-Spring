@@ -15,6 +15,6 @@ public class HelpService {
     public void getHelp(Long userId) {
         validateUserId(userRepository, userId);
 
-        LogMessage.setNonDataLog("엿보기 조회", userId);
+        LogMessage.setNonDataLog("엿보기 조회", userId, "click");
     }
 }

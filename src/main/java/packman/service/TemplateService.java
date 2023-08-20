@@ -32,7 +32,7 @@ public class TemplateService {
                 .basicTemplate(basicTemplateRepository.findByUserIdAndIsAlonedAndIsDeletedOrderByCreatedAt(null, true, false))
                 .myTemplate(templateRepository.findByUserIdAndIsAlonedAndIsDeletedOrderByCreatedAt(userId, true, false)).build();
 
-        LogMessage.setNonDataLog("혼자 패킹 템플릿 리스트 조회", userId);
+        LogMessage.setNonDataLog("혼자 패킹 템플릿 리스트 조회", userId, "screen");
 
         return templateListResponseDto;
     }
@@ -43,7 +43,7 @@ public class TemplateService {
                 .basicTemplate(basicTemplateRepository.findByUserIdAndIsAlonedAndIsDeletedOrderByCreatedAt(null, false, false))
                 .myTemplate(templateRepository.findByUserIdAndIsAlonedAndIsDeletedOrderByCreatedAt(userId, false, false)).build();
 
-        LogMessage.setNonDataLog("함께 패킹 템플릿 리스트 조회", userId);
+        LogMessage.setNonDataLog("함께 패킹 템플릿 리스트 조회", userId, "screen");
 
         return templateListResponseDto;
     }
