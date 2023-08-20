@@ -176,7 +176,7 @@ public class TogetherListService {
                 .category(savedTogetherCategories.getCategory())
                 .build();
 
-        LogMessage.setDataLog("함께 패킹리스트 생성", togetherListLogDto, userId);
+        LogMessage.setDataLog("함께 패킹리스트 생성", togetherListLogDto, userId, "click");
 
         return togetherListResponseDto;
     }
@@ -318,7 +318,7 @@ public class TogetherListService {
 
         ListResponseMapping listResponseMapping = packingListRepository.findProjectionById(togetherPackingList.getId());
 
-        LogMessage.setNonDataLog("패킹리스트 수정", userId);
+        LogMessage.setNonDataLog("함께 패킹리스트 담당자 배정", userId, "click");
 
         return listResponseMapping;
     }
@@ -369,7 +369,7 @@ public class TogetherListService {
 
         MemberAddResponseDto memberAddResponseDto = MemberAddResponseDto.builder().listId(newTogetherAlonePackingList.getId().toString()).build();
 
-        LogMessage.setDataLog("함께 패킹리스트 초대 - 그룹원 추가", memberAddResponseDto, userId);
+        LogMessage.setDataLog("함께 패킹리스트 초대 - 그룹원 추가", memberAddResponseDto, userId, "screen");
 
         return memberAddResponseDto;
     }

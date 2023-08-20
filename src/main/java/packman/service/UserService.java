@@ -59,7 +59,7 @@ public class UserService {
                 .path(userCreateDto.getPath())
                 .build();
 
-        LogMessage.setDataLog("닉네임/프로필 등록", userLogDto, createdUser.getId());
+        LogMessage.setDataLog("닉네임/프로필 등록", userLogDto, createdUser.getId(), "click");
 
         return UserResponseDto.builder()
                 .isAlreadyUser(true)
@@ -93,7 +93,7 @@ public class UserService {
 
         userRepository.setUserIsDeletedByUserId(userId);
 
-        LogMessage.setNonDataLog("유저 탈퇴", userId);
+        LogMessage.setNonDataLog("유저 탈퇴", userId, "click");
     }
 
 

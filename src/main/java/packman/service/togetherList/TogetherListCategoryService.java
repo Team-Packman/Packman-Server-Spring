@@ -56,7 +56,7 @@ public class TogetherListCategoryService {
         // response
         ListResponseMapping categoryResponseDto = packingListRepository.findByIdAndTitle(Long.parseLong(categoryCreateDto.getListId()), packingList.getTitle());
 
-        LogMessage.setNonDataLog("패킹리스트 수정", userId);
+        LogMessage.setNonDataLog("함께 패킹리스트 카테고리 생성", userId, "click");
 
         return categoryResponseDto;
     }
@@ -91,7 +91,7 @@ public class TogetherListCategoryService {
         // response
         ListResponseMapping categoryResponseDto = packingListRepository.findByIdAndTitle(Long.parseLong(categoryUpdateDto.getListId()), packingList.getTitle());
 
-        LogMessage.setNonDataLog("패킹리스트 수정", userId);
+        LogMessage.setNonDataLog("함께 패킹리스트 카테고리 수정", userId, "click");
 
         return categoryResponseDto;
     }
@@ -115,7 +115,7 @@ public class TogetherListCategoryService {
         // delete
         categoryRepository.delete(category);
 
-        LogMessage.setNonDataLog("패킹리스트 수정", userId);
+        LogMessage.setNonDataLog("함께 패킹리스트 카테고리 삭제", userId, "click");
     }
 
 }

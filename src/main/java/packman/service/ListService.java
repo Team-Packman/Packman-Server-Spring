@@ -86,7 +86,7 @@ public class ListService {
                 .title(title)
                 .build();
 
-        LogMessage.setNonDataLog("패킹리스트 수정", userId);
+        LogMessage.setNonDataLog("패킹리스트 제목 수정", userId, "click");
 
         return listTitleResponseDto;
     }
@@ -123,7 +123,7 @@ public class ListService {
                 .departureDate(departureDateRequestDto.getDepartureDate())
                 .build();
 
-        LogMessage.setNonDataLog("패킹리스트 수정", userId);
+        LogMessage.setNonDataLog("패킹리스트 출발 날짜 수정", userId, "click");
 
         return departureDateResponseDto;
     }
