@@ -40,7 +40,7 @@ public class PackService {
 
         ListResponseMapping listResponseMapping = packingListRepository.findByIdAndTitle(aloneListId, packingList.getTitle());
 
-        LogMessage.setNonDataLog("패킹리스트 수정", userId);
+        LogMessage.setNonDataLog("혼자 패킹리스트 짐 생성", userId, "click");
 
         return listResponseMapping;
     }
@@ -54,7 +54,7 @@ public class PackService {
 
         ListResponseMapping listResponseMapping = packingListRepository.findByIdAndTitle(togetherListId, packingList.getTitle());
 
-        LogMessage.setNonDataLog("패킹리스트 수정", userId);
+        LogMessage.setNonDataLog("함께 패킹리스트 짐 생성", userId, "click");
 
         return listResponseMapping;
     }
@@ -81,7 +81,7 @@ public class PackService {
 
         ListResponseMapping listResponseMapping = packingListRepository.findByIdAndTitle(aloneListId, packingList.getTitle());
 
-        LogMessage.setNonDataLog("패킹리스트 수정", userId);
+        LogMessage.setNonDataLog("혼자 패킹리스트 짐 수정", userId, "click");
 
         return listResponseMapping;
     }
@@ -95,7 +95,7 @@ public class PackService {
 
         ListResponseMapping listResponseMapping = packingListRepository.findByIdAndTitle(togetherListId, packingList.getTitle());
 
-        LogMessage.setNonDataLog("패킹리스트 수정", userId);
+        LogMessage.setNonDataLog("함께 패킹리스트 짐 수정", userId, "click");
 
         return listResponseMapping;
     }
@@ -117,7 +117,7 @@ public class PackService {
 
         packRepository.delete(validateListCategoryPack(packingList, categoryId, packId, categoryRepository, packRepository));
 
-        LogMessage.setNonDataLog("패킹리스트 수정", userId);
+        LogMessage.setNonDataLog("혼자 패킹리스트 짐 삭제", userId, "click");
     }
 
     public void deleteTogetherPack(Long listId, Long categoryId, Long packId, Long userId) {
@@ -125,6 +125,6 @@ public class PackService {
 
         packRepository.delete(validateListCategoryPack(packingList, categoryId, packId, categoryRepository, packRepository));
 
-        LogMessage.setNonDataLog("패킹리스트 수정", userId);
+        LogMessage.setNonDataLog("함께 패킹리스트 짐 삭제", userId, "click");
     }
 }
