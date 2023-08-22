@@ -17,6 +17,6 @@ public class AlarmService {
     public void getAlarm(Long userId) {
         validateUserId(userRepository, userId);
 
-        LogMessage.setNonDataLog("알림 조회", userId, "click");
+        LogMessage.setNonDataLog("알림 조회 테스트", userId, "click");
     }
 }
