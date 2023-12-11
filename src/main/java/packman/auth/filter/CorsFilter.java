@@ -14,7 +14,7 @@ import java.util.List;
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class CorsFilter implements Filter {
-    private final List<String> ALLOWED_ORIGINS = Arrays.asList("https://www.packman.kr", "https://www.packgirl.ml", "http://localhost:3000");
+    private final List<String> ALLOWED_ORIGINS = Arrays.asList("https://www.packman.kr", "https://www.packgirl.ml", "http://localhost:3000", "https://api.packman.kr");
 
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain)
             throws IOException, ServletException {
