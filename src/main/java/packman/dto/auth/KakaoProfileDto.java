@@ -36,5 +36,6 @@ public class KakaoProfileDto {
     @Data
     public static class Profile {
         public String nickname;
+        public String is_default_nickname;
     }
 }
